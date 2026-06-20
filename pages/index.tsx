@@ -3,7 +3,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { games, getTrendingGames } from "@/data/games";
-import { useDexScreenerTrending } from "@/hooks/useDexScreener";
+import { useDexScreenerTrending, useDexScreenerToken } from "@/hooks/useDexScreener";
 import { Header } from "@/components/Header";
 import { StatsTicker } from "@/components/StatsTicker";
 import { FilterTabs } from "@/components/FilterTabs";
@@ -46,6 +46,10 @@ export default function Home() {
 
   const { games: dexGames, loading: dexLoading } = useDexScreenerTrending(12);
 
+  // Live DexScreener feed for the pinned featured project (Kintara).
+  const FEATURED_TOKEN_MINT = "Tqj8yFmagrg7oorpQkVGYR52r96RFTamvWfth9bpump";
+  const { liveGame: liveFeatured } = useDexScreenerToken(FEATURED_TOKEN_MINT, 30000);
+
   const allGames = useMemo(() => {
     const seen = new Set<string>();
     const merged: Game[] = [];
@@ -58,7 +62,24 @@ export default function Home() {
     return merged;
   }, [dexGames]);
 
-  const kintara = useMemo(() => allGames.find((g) => g.id === "1"), [allGames]);
+  const kintara = useMemo(() => {
+    const staticKintara = allGames.find((g) => g.id === "1");
+    if (!staticKintara || !liveFeatured) return staticKintara;
+
+    return {
+      ...staticKintara,
+      price: liveFeatured.price,
+      priceChange24h: liveFeatured.priceChange24h,
+      marketCap: liveFeatured.marketCap,
+      volume24h: liveFeatured.volume24h,
+      holders: liveFeatured.holders,
+      thumbnail: liveFeatured.thumbnail || staticKintara.thumbnail,
+      banner: liveFeatured.banner || staticKintara.banner,
+      website: liveFeatured.website || staticKintara.website,
+      tokenSymbol: liveFeatured.tokenSymbol || staticKintara.tokenSymbol,
+    };
+  }, [allGames, liveFeatured]);
+
   const trendingGames = useMemo(
     () => (dexGames.length > 0 ? dexGames : getTrendingGames()),
     [dexGames]

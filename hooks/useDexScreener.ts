@@ -242,6 +242,56 @@ export function useDexScreenerTrending(limit = 12) {
   return { games, loading, error };
 }
 
+/**
+ * Fetch live pair data for a single token address.
+ * Useful for pinning a featured project (e.g. Kintara) to real DexScreener data.
+ */
+export function useDexScreenerToken(tokenAddress: string | undefined, refreshInterval = 30000) {
+  const [pair, setPair] = useState<DexPair | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!tokenAddress) return;
+    let cancelled = false;
+
+    async function fetchToken() {
+      try {
+        setLoading(true);
+        const res = await fetch(
+          `https://api.dexscreener.com/tokens/v1/solana/${tokenAddress}`
+        );
+        if (!res.ok) throw new Error("Failed to fetch token data");
+        const data: DexPair[] = await res.json();
+        const bestPair = data.sort((a, b) => (b.volume?.h24 || 0) - (a.volume?.h24 || 0))[0];
+
+        if (!cancelled) {
+          setPair(bestPair || null);
+          setError(null);
+        }
+      } catch (err) {
+        if (!cancelled) setError(err instanceof Error ? err.message : "Unknown error");
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+
+    fetchToken();
+    const interval = setInterval(fetchToken, refreshInterval);
+    return () => {
+      cancelled = true;
+      clearInterval(interval);
+    };
+  }, [tokenAddress, refreshInterval]);
+
+  const liveGame = useMemo(() => {
+    if (!pair) return null;
+    return pairToGame(pair);
+  }, [pair]);
+
+  return { pair, liveGame, loading, error };
+}
+
 const GAMING_KEYWORDS = [
   "game", "games", "gaming", "play", "p2e", "mmo", "rpg", "metaverse",
   "craft", "city", "runner", "battle", "arena", "nft", "verse", "world",
