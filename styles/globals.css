@@ -1,26 +1,208 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #111113;
+  --foreground: #ffffff;
+  --card: #161618;
+  --card-foreground: #ffffff;
+  --popover: #161618;
+  --popover-foreground: #ffffff;
+  --primary: #ff2a8c;
+  --primary-foreground: #000000;
+  --secondary: #171717;
+  --secondary-foreground: #ffffff;
+  --muted: #171717;
+  --muted-foreground: #b4b4b4;
+  --accent: #ff2a8c;
+  --accent-foreground: #000000;
+  --destructive: #ff4444;
+  --border: #262626;
+  --input: #262626;
+  --ring: #ff2a8c;
+  --positive: #34d399;
+  --negative: #ff4444;
+  --radius: 0.75rem;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-positive: var(--positive);
+  --color-negative: var(--negative);
+  --radius-sm: calc(var(--radius) * 0.5);
+  --radius-md: calc(var(--radius) * 0.75);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.25);
+  --font-sans: var(--font-family-body), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-family-heading), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-mono), ui-monospace, monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground font-sans;
+    font-weight: 500;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Custom utilities */
+@layer utilities {
+  .text-glow {
+    text-shadow: 0 0 20px rgba(255, 42, 140, 0.4);
+  }
+  .text-gradient {
+    background: linear-gradient(135deg, #ff2a8c 0%, #00f0ff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .glow-pink {
+    box-shadow: 0 0 20px rgba(255, 42, 140, 0.25);
+  }
+  .glow-cyan {
+    box-shadow: 0 0 20px rgba(0, 240, 255, 0.2);
+  }
+  .glass {
+    background: rgba(22, 22, 24, 0.85);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .glass-strong {
+    background: rgba(22, 22, 24, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  .bg-grid {
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+  .bg-noise {
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    opacity: 0.03;
+  }
+  .bg-mesh {
+    background-color: #111113;
+    background-image:
+      radial-gradient(at 15% 15%, rgba(255, 42, 140, 0.18) 0px, transparent 45%),
+      radial-gradient(at 85% 20%, rgba(0, 240, 255, 0.10) 0px, transparent 45%),
+      radial-gradient(at 75% 85%, rgba(255, 42, 140, 0.12) 0px, transparent 45%),
+      radial-gradient(at 20% 80%, rgba(0, 240, 255, 0.06) 0px, transparent 45%);
+    background-size: 150% 150%;
+    animation: mesh-move 18s ease-in-out infinite;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@keyframes mesh-move {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes blob {
+  0%, 100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  33% {
+    transform: translate(30px, -50px) scale(1.1);
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
+  }
+}
+
+@keyframes pulse-live {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.25);
+  }
+}
+
+/* Floating particles rising from bottom (GOALIES-style) */
+@keyframes particle-rise {
+  0% {
+    transform: translateY(0) translateX(0) scale(1);
+    opacity: 0;
+  }
+  5% {
+    opacity: var(--particle-opacity, 0.5);
+  }
+  25% {
+    transform: translateY(-25vh) translateX(10px) scale(1.1);
+  }
+  50% {
+    transform: translateY(-50vh) translateX(-5px) scale(0.9);
+  }
+  75% {
+    transform: translateY(-75vh) translateX(8px) scale(1);
+    opacity: var(--particle-opacity, 0.5);
+  }
+  95% {
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(-120vh) translateX(0) scale(0.5);
+    opacity: 0;
+  }
+}
+
+.animate-blob {
+  animation: blob 10s infinite ease-in-out;
+}
+
+.animate-blob-delay-1 {
+  animation: blob 12s infinite ease-in-out;
+  animation-delay: 2s;
+}
+
+.animate-blob-delay-2 {
+  animation: blob 14s infinite ease-in-out;
+  animation-delay: 4s;
+}
+
+.animate-pulse-live {
+  animation: pulse-live 2s ease-in-out infinite;
 }
