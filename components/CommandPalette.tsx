@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useMemo, useRef } from "react";
 import { Game } from "@/types/game";
-import { games } from "@/data/games";
 import { Search, Compass, Flame, Sparkles, Bookmark, X } from "lucide-react";
 
 interface CommandPaletteProps {
@@ -11,6 +10,7 @@ interface CommandPaletteProps {
   onSelectGame: (game: Game) => void;
   onTabChange: (tab: string) => void;
   onFilterChange: (filter: string) => void;
+  games: Game[];
 }
 
 const commands = [
@@ -29,6 +29,7 @@ export function CommandPalette({
   onSelectGame,
   onTabChange,
   onFilterChange,
+  games,
 }: CommandPaletteProps) {
   const [query, setQuery] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -82,7 +83,7 @@ export function CommandPalette({
           g.genre.toLowerCase().includes(q)
       )
       .slice(0, 6);
-  }, [query]);
+  }, [query, games]);
 
   const commandResults = useMemo(() => {
     if (!query.trim()) return commands;

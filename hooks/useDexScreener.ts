@@ -31,12 +31,15 @@ interface DexPair {
   };
 }
 
-const FEATURED_PAIR_ADDRESSES = [
-  "bgk8umqrdg3qxql32jjbc89u41n3gschhzamwdpjt4b9",
-  "3jtcvdjp9cszn9mjgxwlw37m48aubsry5es6wfcznqlm",
-  "frxrs52rlf45nywimjeoquh4g7crry7ny13fxn6t4dd",
-  "25axhwudq3jy7seaisoeum9ljfpvzdrhey2b2c7ogngk",
-  "acvda6hu6zcqdu7rabhu5t8vhh5hwufjgh6rxya8wgq",
+// Known Solana gaming token addresses. These are always treated as games and
+// fetched directly so they always appear on the platform.
+const WHITELISTED_TOKEN_ADDRESSES = [
+  "Tqj8yFmagrg7oorpQkVGYR52r96RFTamvWfth9bpump", // kintara
+  "2pL9J9mTD9RAGS9jnNeB2kKR62ar8pnQAV2sMgyrpump", // wasabicraft
+  "GENEtH5amGSi8kHAtQoezp1XEXwZJ8vcuePYnXdKrMYz", // genopets
+  "DFL1zNkaGPWm1BqAVqRjCZvHmwTFrEaJtbzJWgseoNJh", // defi land
+  "3dgCCb15HMQSA4Pn3Tfii5vRk7aRqTH95LJjxzsG2Mug", // honeyland
+  "H53UGEyBrB9easo9ego8yYk7o4Zq1G5cCtkxD3E3hZav", // mixmob
 ];
 
 function inferGenre(text: string): { genre: string; tags: string[] } {
@@ -86,11 +89,31 @@ function highResBanner(url: string): string {
   return url.replace(/width=\d+&height=\d+/, "width=600&height=200");
 }
 
-function pairToGame(pair: DexPair, profile?: DexProfile): Game {
+// Generate a branded placeholder icon when DexScreener has no image for a token.
+function tokenPlaceholder(symbol: string): string {
+  const clean = symbol.replace(/^\$/, "").slice(0, 3).toUpperCase();
+  const svg = `
+    <svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
+      <rect width="256" height="256" fill="#161618" />
+      <rect x="16" y="16" width="224" height="224" rx="48" fill="none" stroke="#ff2a8c" stroke-width="6" />
+      <text x="128" y="148" font-family="ui-sans-serif, system-ui, sans-serif" font-size="72" font-weight="700" fill="#ff2a8c" text-anchor="middle">${clean}</text>
+    </svg>
+  `.trim();
+  return `data:image/svg+xml;base64,${btoa(svg)}`;
+}
+
+function pairToGame(
+  pair: DexPair,
+  profile?: DexProfile,
+  logoOverrides: Record<string, string> = {}
+): Game {
   const name = pair.baseToken.name;
   const symbol = pair.baseToken.symbol;
-  const icon = highResIcon(profile?.icon || pair.info?.imageUrl || "");
-  const banner = highResBanner(profile?.header || pair.info?.header || profile?.openGraph || "");
+  const override = logoOverrides[pair.baseToken.address.toLowerCase()];
+  const rawIcon = highResIcon(profile?.icon || pair.info?.imageUrl || override || "");
+  const icon = rawIcon || tokenPlaceholder(symbol);
+  const rawBanner = highResBanner(profile?.header || pair.info?.header || profile?.openGraph || override || "");
+  const banner = rawBanner || icon;
 
   const website =
     profile?.links?.find((l) => l.label?.toLowerCase() === "website")?.url ||
@@ -138,7 +161,11 @@ function pairToGame(pair: DexPair, profile?: DexProfile): Game {
   };
 }
 
-function profileToGame(profile: DexProfile, pair?: DexPair): Game {
+function profileToGame(
+  profile: DexProfile,
+  pair?: DexPair,
+  logoOverrides: Record<string, string> = {}
+): Game {
   return pairToGame(
     pair || ({
       chainId: profile.chainId,
@@ -149,14 +176,16 @@ function profileToGame(profile: DexProfile, pair?: DexPair): Game {
       volume: { h24: 0 },
       marketCap: 0,
     } as DexPair),
-    profile
+    profile,
+    logoOverrides
   );
 }
 
-export function useDexScreenerTrending(limit = 12) {
+export function useDexScreenerTrending(limit = 50) {
   const [profiles, setProfiles] = useState<DexProfile[]>([]);
   const [pairs, setPairs] = useState<DexPair[]>([]);
   const [featuredPairs, setFeaturedPairs] = useState<DexPair[]>([]);
+  const [logoOverrides, setLogoOverrides] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -167,18 +196,39 @@ export function useDexScreenerTrending(limit = 12) {
       try {
         setLoading(true);
 
-        // Fetch featured pairs in parallel
-        const featuredRes = await Promise.all(
-          FEATURED_PAIR_ADDRESSES.map((addr) =>
-            fetch(`https://api.dexscreener.com/latest/dex/pairs/solana/${addr}`).then((r) =>
-              r.ok ? (r.json() as Promise<{ pairs?: DexPair[] }>) : Promise.resolve({ pairs: [] })
+        // Fetch pairs for whitelisted gaming tokens so known games always show.
+        const whitelistedRes = await Promise.all(
+          WHITELISTED_TOKEN_ADDRESSES.map((addr) =>
+            fetch(`https://api.dexscreener.com/tokens/v1/solana/${addr}`).then((r) =>
+              r.ok ? (r.json() as Promise<DexPair[]>) : Promise.resolve([])
             )
           )
         );
-        const featured = featuredRes
-          .flatMap((r) => r.pairs || [])
+        const whitelistedPairs = whitelistedRes
+          .flat()
           .filter((p): p is DexPair => !!p);
-        if (!cancelled) setFeaturedPairs(featured);
+        if (!cancelled) setFeaturedPairs(whitelistedPairs);
+
+        // Fetch fallback logos from CoinGecko for whitelisted gaming tokens.
+        const logoMap: Record<string, string> = {};
+        await Promise.all(
+          WHITELISTED_TOKEN_ADDRESSES.map(async (addr) => {
+            try {
+              const res = await fetch(
+                `https://api.coingecko.com/api/v3/coins/solana/contract/${addr}`,
+                { signal: AbortSignal.timeout(5000) }
+              );
+              if (!res.ok) return;
+              const data = await res.json();
+              if (data.image?.large) {
+                logoMap[addr.toLowerCase()] = data.image.large;
+              }
+            } catch {
+              // Ignore individual CoinGecko failures.
+            }
+          })
+        );
+        if (!cancelled) setLogoOverrides(logoMap);
 
         // Fetch latest token profiles
         const res = await fetch("https://api.dexscreener.com/token-profiles/latest/v1");
@@ -186,29 +236,28 @@ export function useDexScreenerTrending(limit = 12) {
         const data: DexProfile[] = await res.json();
         const solanaProfiles = data
           .filter((p) => p.chainId === "solana")
-          .filter(
-            (p) =>
-              !featured.some(
-                (fp) => fp.baseToken.address.toLowerCase() === p.tokenAddress.toLowerCase()
-              )
-          )
           .slice(0, limit);
 
         if (cancelled) return;
         setProfiles(solanaProfiles);
 
-        const addresses = solanaProfiles.map((p) => p.tokenAddress).join(",");
+        // Batch pair requests to stay safely under URL length limits.
+        const BATCH_SIZE = 30;
+        const addresses = solanaProfiles.map((p) => p.tokenAddress);
         let pairData: DexPair[] = [];
-        if (addresses) {
+        for (let i = 0; i < addresses.length; i += BATCH_SIZE) {
+          const batch = addresses.slice(i, i + BATCH_SIZE).join(",");
+          if (!batch) continue;
           const pairRes = await fetch(
-            `https://api.dexscreener.com/tokens/v1/solana/${addresses}`
+            `https://api.dexscreener.com/tokens/v1/solana/${batch}`
           );
           if (!pairRes.ok) throw new Error("Failed to fetch token pairs");
-          pairData = await pairRes.json();
+          const batchPairs: DexPair[] = await pairRes.json();
+          pairData.push(...batchPairs);
         }
 
         if (cancelled) return;
-        setPairs([...featured, ...pairData]);
+        setPairs([...whitelistedPairs, ...pairData]);
       } catch (err) {
         if (!cancelled) setError(err instanceof Error ? err.message : "Unknown error");
       } finally {
@@ -223,7 +272,15 @@ export function useDexScreenerTrending(limit = 12) {
   }, [limit]);
 
   const games = useMemo(() => {
-    const featuredGames = featuredPairs.map((pair) => pairToGame(pair));
+    const featuredGames = featuredPairs
+      .filter(isGamingPair)
+      .map((pair) => {
+        const profile = profiles.find(
+          (p) =>
+            p.tokenAddress.toLowerCase() === pair.baseToken.address.toLowerCase()
+        );
+        return pairToGame(pair, profile, logoOverrides);
+      });
 
     const profileGames = profiles
       .filter((profile) => isGamingProfile(profile, pairs))
@@ -231,13 +288,27 @@ export function useDexScreenerTrending(limit = 12) {
         const pair = pairs.find(
           (p) => p.baseToken.address.toLowerCase() === profile.tokenAddress.toLowerCase()
         );
-        return profileToGame(profile, pair);
+        return profileToGame(profile, pair, logoOverrides);
       });
 
-    return [...featuredGames, ...profileGames].filter(
-      (g) => g.price > 0 || g.marketCap > 0
-    );
-  }, [profiles, pairs, featuredPairs]);
+    const merged = [...featuredGames, ...profileGames]
+      .filter((g) => g.price > 0 || g.marketCap > 0)
+      .filter(
+        (g) => !isBlockedToken(g.name, g.tokenSymbol, g.tokenMint || "")
+      );
+
+    // Dedupe by token mint/id; prefer entries with a real thumbnail.
+    const byKey = new Map<string, Game>();
+    for (const game of merged) {
+      const key = game.tokenMint || game.id;
+      const existing = byKey.get(key);
+      if (!existing || (existing.thumbnail?.startsWith("data:") && !game.thumbnail?.startsWith("data:"))) {
+        byKey.set(key, game);
+      }
+    }
+
+    return Array.from(byKey.values());
+  }, [profiles, pairs, featuredPairs, logoOverrides]);
 
   return { games, loading, error };
 }
@@ -292,24 +363,96 @@ export function useDexScreenerToken(tokenAddress: string | undefined, refreshInt
   return { pair, liveGame, loading, error };
 }
 
+// Tokens that should never be treated as games regardless of description keywords.
+const BLOCKED_SYMBOLS = new Set(["nudaeng", "ballsack", "ballsack coin"]);
+
+// Strict gaming keywords. Avoid generic terms like "play", "world", or "nft"
+// that let meme tokens slip through.
 const GAMING_KEYWORDS = [
-  "game", "games", "gaming", "play", "p2e", "mmo", "rpg", "metaverse",
-  "craft", "city", "runner", "battle", "arena", "nft", "verse", "world",
-  "saga", "quest", "dungeon", "kingdom", "empire", "colony", "sim", "simulator",
+  "game", "games", "gaming", "gamer", "gamers",
+  "play-to-earn", "p2e", "p2w", "play2earn",
+  "mmo", "mmorpg", "rpg", "roleplay", "role-playing",
+  "metaverse", "virtual world",
+  "craft", "crafting",
+  "runner", "racing",
+  "battle", "battler", "arena",
+  "quest", "dungeon", "raid", "roguelike",
+  "strategy", "tactics",
+  "simulator", "simulation",
+  "shooter", "fps", "action",
+  "card game", "trading card",
+  "mobil game", "mobile gaming",
+  "idle game", "idle rpg",
 ];
 
+function normalizeText(...parts: (string | undefined)[]): string {
+  return parts.filter(Boolean).join(" ").toLowerCase();
+}
+
+function isBlockedToken(name: string, symbol: string, address: string): boolean {
+  const text = normalizeText(name, symbol, address);
+  return BLOCKED_SYMBOLS.has(symbol.toLowerCase()) ||
+    BLOCKED_SYMBOLS.has(name.toLowerCase()) ||
+    Array.from(BLOCKED_SYMBOLS).some((term) => text.includes(term));
+}
+
+function isWhitelistedGame(address: string): boolean {
+  return WHITELISTED_TOKEN_ADDRESSES.some(
+    (a) => a.toLowerCase() === address.toLowerCase()
+  );
+}
+
+function isGamingText(text: string): boolean {
+  const lower = text.toLowerCase();
+  return GAMING_KEYWORDS.some((kw) => lower.includes(kw.toLowerCase()));
+}
+
 function isGamingProfile(profile: DexProfile, pairs: DexPair[]): boolean {
+  if (isWhitelistedGame(profile.tokenAddress)) return true;
+
   const pair = pairs.find(
     (p) => p.baseToken.address.toLowerCase() === profile.tokenAddress.toLowerCase()
   );
-  const text = [
-    profile.description || "",
-    pair?.baseToken?.name || "",
-    pair?.baseToken?.symbol || "",
-    profile.links?.map((l) => `${l.label || ""} ${l.url}`).join(" ") || "",
-    pair?.info?.websites?.map((w) => w.url).join(" ") || "",
-  ]
-    .join(" ")
-    .toLowerCase();
-  return GAMING_KEYWORDS.some((kw) => text.includes(kw));
+
+  if (
+    isBlockedToken(
+      pair?.baseToken?.name || "",
+      pair?.baseToken?.symbol || "",
+      profile.tokenAddress
+    )
+  ) {
+    return false;
+  }
+
+  const text = normalizeText(
+    profile.description,
+    pair?.baseToken?.name,
+    pair?.baseToken?.symbol,
+    profile.links?.map((l) => `${l.label || ""} ${l.url}`).join(" "),
+    pair?.info?.websites?.map((w) => w.url).join(" ")
+  );
+
+  return isGamingText(text);
+}
+
+function isGamingPair(pair: DexPair): boolean {
+  if (isWhitelistedGame(pair.baseToken.address)) return true;
+
+  if (
+    isBlockedToken(
+      pair.baseToken.name,
+      pair.baseToken.symbol,
+      pair.baseToken.address
+    )
+  ) {
+    return false;
+  }
+
+  const text = normalizeText(
+    pair.baseToken.name,
+    pair.baseToken.symbol,
+    pair.info?.websites?.map((w) => w.url).join(" ")
+  );
+
+  return isGamingText(text);
 }

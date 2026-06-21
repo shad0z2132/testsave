@@ -33,6 +33,7 @@ import {
   Clock,
   Circle,
   CircleDot,
+  HelpCircle,
 } from "lucide-react";
 
 const sections = [
@@ -595,6 +596,20 @@ function RoadmapCard({
   phase: { phase: string; title: string; status: string; items: string[] };
   index: number;
 }) {
+  const isRevealed = index === 0;
+
+  const hiddenStyles = {
+    border: "border-border/40",
+    glow: "",
+    dot: "bg-muted-foreground/30",
+    badgeBg: "bg-white/[0.03]",
+    badgeText: "text-muted-foreground",
+    badgeIcon: HelpCircle,
+    itemIcon: Circle,
+    itemColor: "text-muted-foreground",
+    label: "???",
+  };
+
   const upcomingStyles = {
     border: "border-border/60",
     glow: "",
@@ -607,7 +622,7 @@ function RoadmapCard({
     label: "Upcoming",
   };
 
-  const styles =
+  const revealedStyles =
     {
       completed: {
         border: "border-emerald-500/30",
@@ -634,6 +649,7 @@ function RoadmapCard({
       upcoming: upcomingStyles,
     }[phase.status] || upcomingStyles;
 
+  const styles = isRevealed ? revealedStyles : hiddenStyles;
   const BadgeIcon = styles.badgeIcon;
   const ItemIcon = styles.itemIcon;
 
@@ -643,12 +659,12 @@ function RoadmapCard({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
-      className={`relative overflow-hidden rounded-2xl border ${styles.border} bg-card/30 p-5 backdrop-blur-sm transition-all hover:bg-card/50 ${styles.glow}`}
+      className={`relative overflow-hidden rounded-2xl border ${styles.border} ${isRevealed ? "bg-card/30" : "bg-black/20"} p-5 backdrop-blur-sm transition-all hover:bg-card/50 ${styles.glow}`}
     >
       {/* Status dot */}
       <div className={`absolute left-4 top-5 h-2.5 w-2.5 rounded-full ${styles.dot}`} />
 
-      <div className="pl-6">
+      <div className={`pl-6 ${isRevealed ? "" : "blur-[5px] select-none"}`}>
         <div className="mb-3 flex flex-wrap items-start justify-between gap-3">
           <div>
             <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
@@ -673,6 +689,15 @@ function RoadmapCard({
           ))}
         </div>
       </div>
+
+      {!isRevealed && (
+        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-2 bg-black/10 backdrop-blur-[1px]">
+          <HelpCircle size={32} className="text-primary drop-shadow-[0_0_12px_rgba(255,42,140,0.5)]" />
+          <span className="text-[10px] font-bold uppercase tracking-widest text-foreground/80">
+            Coming soon
+          </span>
+        </div>
+      )}
     </motion.div>
   );
 }

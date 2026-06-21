@@ -1,9 +1,8 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { games, getTrendingGames } from "@/data/games";
-import { useDexScreenerTrending, useDexScreenerToken } from "@/hooks/useDexScreener";
+import { useDexScreenerTrending } from "@/hooks/useDexScreener";
 import { Header } from "@/components/Header";
 import { StatsTicker } from "@/components/StatsTicker";
 import { FilterTabs } from "@/components/FilterTabs";
@@ -44,47 +43,25 @@ export default function Home() {
     localStorage.setItem("savepoint-saved-games", JSON.stringify(savedGames));
   }, [savedGames]);
 
-  const { games: dexGames, loading: dexLoading } = useDexScreenerTrending(12);
+  const { games: dexGames, loading: dexLoading } = useDexScreenerTrending(100);
 
-  // Live DexScreener feed for the pinned featured project (Kintara).
-  const FEATURED_TOKEN_MINT = "Tqj8yFmagrg7oorpQkVGYR52r96RFTamvWfth9bpump";
-  const { liveGame: liveFeatured } = useDexScreenerToken(FEATURED_TOKEN_MINT, 30000);
+  // Score projects by activity, size, and momentum to surface the most relevant ones.
+  const scoreGame = useCallback((game: Game): number => {
+    const volumeScore = Math.log10(game.volume24h + 1);
+    const mcapScore = Math.log10(game.marketCap + 1);
+    const holderScore = Math.log10(game.holders + 1);
+    const momentumScore = Math.min(Math.max(game.priceChange24h, 0), 100) / 100;
 
-  const allGames = useMemo(() => {
-    const seen = new Set<string>();
-    const merged: Game[] = [];
-    for (const g of [...dexGames, ...games]) {
-      if (!seen.has(g.id)) {
-        seen.add(g.id);
-        merged.push(g);
-      }
-    }
-    return merged;
-  }, [dexGames]);
+    return volumeScore * 0.35 + mcapScore * 0.25 + holderScore * 0.2 + momentumScore * 0.2;
+  }, []);
 
-  const kintara = useMemo(() => {
-    const staticKintara = allGames.find((g) => g.id === "1");
-    if (!staticKintara || !liveFeatured) return staticKintara;
+  const sortedGames = useMemo(() => {
+    return [...dexGames].sort((a, b) => scoreGame(b) - scoreGame(a));
+  }, [dexGames, scoreGame]);
 
-    return {
-      ...staticKintara,
-      price: liveFeatured.price,
-      priceChange24h: liveFeatured.priceChange24h,
-      marketCap: liveFeatured.marketCap,
-      volume24h: liveFeatured.volume24h,
-      holders: liveFeatured.holders,
-      thumbnail: liveFeatured.thumbnail || staticKintara.thumbnail,
-      banner: liveFeatured.banner || staticKintara.banner,
-      website: liveFeatured.website || staticKintara.website,
-      tokenSymbol: liveFeatured.tokenSymbol || staticKintara.tokenSymbol,
-    };
-  }, [allGames, liveFeatured]);
-
-  const trendingGames = useMemo(
-    () => (dexGames.length > 0 ? dexGames : getTrendingGames()),
-    [dexGames]
-  );
-  const featuredGame = kintara || trendingGames[0] || allGames[0];
+  const allGames = useMemo(() => sortedGames, [sortedGames]);
+  const trendingGames = useMemo(() => sortedGames, [sortedGames]);
+  const featuredGame = sortedGames[0] || null;
 
   const filteredGames = useMemo(() => {
     let result = [...allGames];
@@ -160,6 +137,7 @@ export default function Home() {
           onSelectGame={handleSelectGame}
           onTabChange={setActiveTab}
           onFilterChange={setActiveFilter}
+          games={allGames}
         />
 
         <WalletModal open={walletOpen} onOpenChange={setWalletOpen} />
@@ -178,7 +156,7 @@ export default function Home() {
             onConnect={() => setWalletOpen(true)}
             onSearchClick={() => setCommandOpen(true)}
           />
-          <StatsTicker />
+          <StatsTicker games={allGames} />
 
           <main className="mx-auto max-w-6xl px-4 pb-20">
             <AnimatePresence mode="wait">
@@ -189,7 +167,7 @@ export default function Home() {
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.2, ease: "easeOut" }}
               >
-                {activeTab === "discover" && activeFilter === "All" && !searchQuery && (
+                {activeTab === "discover" && activeFilter === "All" && !searchQuery && featuredGame && (
                   <>
                     <FeaturedGame
                       game={featuredGame}
@@ -260,7 +238,7 @@ export default function Home() {
             </AnimatePresence>
           </main>
 
-          <Footer />
+          <Footer games={allGames} />
         </div>
       </div>
 

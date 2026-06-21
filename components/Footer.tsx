@@ -4,7 +4,8 @@ import { Logo } from "./Logo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import { games } from "@/data/games";
+import { games as staticGames } from "@/data/games";
+import { Game } from "@/types/game";
 import {
   ArrowUp,
   Gamepad2,
@@ -17,7 +18,11 @@ import {
   Globe,
 } from "lucide-react";
 
-export function Footer() {
+interface FooterProps {
+  games?: Game[];
+}
+
+export function Footer({ games = staticGames }: FooterProps) {
   const totalGames = games.length;
   const totalTokens = games.filter((g) => g.tokenMint).length;
   const totalVolume = games.reduce((acc, g) => acc + g.volume24h, 0);
