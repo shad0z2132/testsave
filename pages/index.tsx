@@ -149,10 +149,9 @@ export default function Home() {
   };
 
   return (
-    <div className="relative min-h-screen bg-background">
+    <div className="relative min-h-screen bg-background bg-grid">
       {/* Background effects */}
       <DustParticles />
-      <div className="pointer-events-none fixed inset-0 z-0 bg-noise" />
 
       <div className="relative z-10">
         <CommandPalette

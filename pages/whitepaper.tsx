@@ -164,8 +164,8 @@ export default function Whitepaper() {
   }, []);
 
   return (
-    <div className="relative min-h-screen bg-background">
-      <div className="pointer-events-none fixed inset-0 z-0 bg-noise" />
+    <div className="relative min-h-screen bg-background bg-grid">
+      {/* Subtle grid background */}
 
       <div className="relative z-10">
         {/* Header */}
