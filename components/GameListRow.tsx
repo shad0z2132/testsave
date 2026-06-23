@@ -6,6 +6,7 @@ import { Game } from "@/types/game";
 import { Badge } from "@/components/ui/badge";
 import { formatPrice, formatPercent, formatUsd, formatNumber } from "@/lib/format";
 import { Save, TrendingUp, TrendingDown } from "lucide-react";
+import { SafetyBadge } from "./SafetyBadge";
 
 interface GameListRowProps {
   game: Game;
@@ -14,12 +15,6 @@ interface GameListRowProps {
   isSaved?: boolean;
   onToggleSave?: (e: React.MouseEvent, gameId: string) => void;
   index?: number;
-}
-
-function SafetyDot({ score }: { score: number }) {
-  if (score >= 80) return <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.6)]" />;
-  if (score >= 60) return <span className="h-1.5 w-1.5 rounded-full bg-yellow-400 shadow-[0_0_6px_rgba(250,204,21,0.6)]" />;
-  return <span className="h-1.5 w-1.5 rounded-full bg-red-400 shadow-[0_0_6px_rgba(248,113,113,0.6)]" />;
 }
 
 const rankStyles: Record<number, string> = {
@@ -80,10 +75,7 @@ export function GameListRow({ game, rank, onSelect, isSaved, onToggleSave, index
         <div className="flex items-center gap-2 text-[10px] text-foreground/50">
           <span className="uppercase tracking-wider">{game.genre}</span>
           <span>·</span>
-          <span className="flex items-center gap-1 uppercase tracking-wider">
-            <SafetyDot score={game.safetyScore} />
-            SAFETY {game.safetyScore}
-          </span>
+          <SafetyBadge score={game.safetyScore} breakdown={game.safetyBreakdown} size="sm" />
         </div>
       </div>
 

@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { Game } from "@/types/game";
 import { Badge } from "@/components/ui/badge";
 import { Logo } from "./Logo";
+import { SafetyBadge } from "./SafetyBadge";
 import { formatPrice, formatPercent, formatUsd } from "@/lib/format";
 import { Flame, ChevronRight, ChevronLeft, TrendingUp, TrendingDown } from "lucide-react";
 
@@ -111,9 +112,12 @@ function TrendingShelfCard({
           <h4 className="truncate font-semibold tracking-tight text-foreground transition-colors group-hover:text-white">
             {game.name}
           </h4>
-          <p className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
-            {game.tokenSymbol}
-          </p>
+          <div className="mt-1 flex items-center gap-2">
+            <p className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+              {game.tokenSymbol}
+            </p>
+            <SafetyBadge score={game.safetyScore} breakdown={game.safetyBreakdown} size="sm" />
+          </div>
 
           <div className="mt-2 flex items-center justify-between">
             <p className="font-mono text-sm font-bold text-foreground">
