@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Game } from "@/types/game";
 import { computeSafetyScore, passesSafetyThreshold } from "@/lib/safety";
+import { games as staticGames } from "@/data/games";
 import {
   WHITELISTED_GAMING_TOKEN_ADDRESSES,
   BLOCKED_TOKEN_SYMBOLS,
@@ -11,6 +12,12 @@ const DEXSCREENER_PROFILE_LIMIT = 100;
 const CACHE_TTL_MS = 10 * 60 * 1000; // 10 minutes
 
 const cache = new Map<string, { data: Game[]; timestamp: number }>();
+
+const curatedGameMap = new Map(
+  staticGames
+    .filter((g) => g.tokenMint)
+    .map((g) => [g.tokenMint!.toLowerCase(), g])
+);
 
 interface DexProfile {
   url: string;
@@ -61,13 +68,6 @@ interface BirdeyeSecurity {
   renounced?: boolean;
   mutableMetadata?: boolean;
   top10HolderPercent?: number;
-}
-
-interface JupiterToken {
-  address: string;
-  symbol: string;
-  name: string;
-  tags?: string[];
 }
 
 interface SolscanTokenMeta {
@@ -187,23 +187,6 @@ async function fetchWhitelistedPairs(): Promise<DexPair[]> {
     })
   );
   return results.flat();
-}
-
-async function fetchJupiterTokens(): Promise<Map<string, JupiterToken>> {
-  try {
-    const res = await fetch("https://tokens.jup.ag/tokens?tags=verified", {
-      signal: AbortSignal.timeout(8000),
-    });
-    if (!res.ok) throw new Error("Failed to fetch Jupiter tokens");
-    const data: JupiterToken[] = await res.json();
-    const map = new Map<string, JupiterToken>();
-    for (const token of data) {
-      map.set(token.address.toLowerCase(), token);
-    }
-    return map;
-  } catch {
-    return new Map();
-  }
 }
 
 async function fetchHeliusMetadata(addresses: string[]): Promise<Map<string, HeliusTokenMetadata>> {
@@ -338,41 +321,46 @@ function tokenPlaceholder(symbol: string): string {
 function pairToGame(
   pair: DexPair,
   profile?: DexProfile,
-  jupiterToken?: JupiterToken,
   helius?: HeliusTokenMetadata,
   birdeye?: BirdeyeSecurity,
   solscan?: SolscanTokenMeta
 ): Game {
-  const name = pair.baseToken.name;
+  const curated = curatedGameMap.get(pair.baseToken.address.toLowerCase());
+  const name = curated?.name || pair.baseToken.name;
   const symbol = pair.baseToken.symbol;
-  const overrideIcon = profile?.icon || pair.info?.imageUrl || "";
+  const overrideIcon = profile?.icon || pair.info?.imageUrl || curated?.thumbnail || "";
   const rawIcon = highResIcon(overrideIcon);
   const icon = rawIcon || tokenPlaceholder(symbol);
   const rawBanner = highResBanner(
-    profile?.header || pair.info?.header || profile?.openGraph || ""
+    profile?.header || pair.info?.header || profile?.openGraph || curated?.banner || ""
   );
   const banner = rawBanner || icon;
 
   const website =
+    curated?.website ||
     profile?.links?.find((l) => l.label?.toLowerCase() === "website")?.url ||
     pair.info?.websites?.[0]?.url ||
     pair.url;
 
   const xUrl =
+    curated?.xUrl ||
     profile?.links?.find((l) => l.type === "twitter")?.url ||
     profile?.links?.find((l) => l.label?.toLowerCase() === "twitter")?.url ||
     pair.info?.socials?.find((s) => s.type === "twitter")?.url;
 
   const discordUrl =
+    curated?.discordUrl ||
     profile?.links?.find((l) => l.type === "discord")?.url ||
     pair.info?.socials?.find((s) => s.type === "discord")?.url;
 
   const telegramUrl =
+    curated?.telegramUrl ||
     profile?.links?.find((l) => l.type === "telegram")?.url ||
     pair.info?.socials?.find((s) => s.type === "telegram")?.url;
 
-  const description = profile?.description || `${symbol} on ${pair.chainId}`;
-  const tagline = description.split("\n")[0].slice(0, 80) || `${symbol} token`;
+  const description =
+    curated?.description || profile?.description || `${symbol} on ${pair.chainId}`;
+  const tagline = curated?.tagline || description.split("\n")[0].slice(0, 80) || `${symbol} token`;
 
   const gamingText = normalizeText(description, name, symbol, website);
   const gamingKeywordMatch = isGamingText(gamingText);
@@ -387,7 +375,6 @@ function pairToGame(
   const liquidityAbove5k = (pair.liquidity?.usd || 0) >= 5000;
 
   const { score, breakdown } = computeSafetyScore({
-    jupiterVerified: Boolean(jupiterToken),
     mintAuthorityRevoked: mintRevoked,
     freezeAuthorityRevoked: freezeRevoked,
     top10HoldersBelow30: top10Percent !== null ? top10Percent < 30 : null,
@@ -395,16 +382,17 @@ function pairToGame(
     hasWebsiteAndX,
     gamingKeywordMatch,
     liquidityAbove5k,
+    curatedGame: Boolean(curated),
   });
 
   return {
     id: `dex-${pair.baseToken.address}`,
     name,
-    slug: name.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+    slug: curated?.slug || name.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
     description,
     tagline,
-    genre: inferGenre(`${description} ${name} ${symbol} ${website}`),
-    status: "live",
+    genre: curated?.genre || inferGenre(`${description} ${name} ${symbol} ${website}`),
+    status: curated?.status || "live",
     tokenSymbol: symbol.startsWith("$") ? symbol : `$${symbol}`,
     tokenMint: pair.baseToken.address,
     price: parseFloat(pair.priceUsd) || 0,
@@ -421,7 +409,7 @@ function pairToGame(
     discordUrl,
     telegramUrl,
     playUrl: pair.url,
-    tags: inferTags(`${description} ${name} ${symbol} ${website}`),
+    tags: curated?.tags || inferTags(`${description} ${name} ${symbol} ${website}`),
     trending: true,
   };
 }
@@ -466,11 +454,12 @@ function hasAuthorityInfo(helius?: HeliusTokenMetadata): boolean {
 }
 
 async function buildGames(): Promise<Game[]> {
-  const [profiles, whitelistedPairs, jupiterMap] = await Promise.all([
+  const [profiles, whitelistedPairs] = await Promise.all([
     fetchDexScreenerProfiles(DEXSCREENER_PROFILE_LIMIT),
     fetchWhitelistedPairs(),
-    fetchJupiterTokens(),
   ]);
+
+
 
   // Merge whitelisted pairs with profile-derived pairs, preferring whitelisted pairs when both exist.
   const pairMap = new Map<string, DexPair>();
@@ -553,9 +542,7 @@ async function buildGames(): Promise<Game[]> {
     const helius = heliusMap.get(key);
     const birdeye = birdeyeMap.get(key);
     const solscan = solscanMap.get(key);
-    const jupiterToken = jupiterMap.get(key);
-
-    const game = pairToGame(pair, profile, jupiterToken, helius, birdeye, solscan);
+    const game = pairToGame(pair, profile, helius, birdeye, solscan);
 
     if (game.price > 0 || game.marketCap > 0 || isWhitelistedGame(pair.baseToken.address)) {
       games.push(game);
