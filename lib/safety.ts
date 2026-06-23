@@ -10,6 +10,7 @@ export interface SafetySignals {
   liquidityAbove5k: boolean;
   curatedGame: boolean;
   dexscreenerPaid: boolean;
+  dexscreenerSocialsUpdated: boolean;
 }
 
 export const SAFETY_THRESHOLD = 40;
@@ -27,6 +28,7 @@ export function computeSafetyScore(signals: SafetySignals): {
     { label: "Gaming keywords match", passed: signals.gamingKeywordMatch, points: 10 },
     { label: "Liquidity above $5k", passed: signals.liquidityAbove5k, points: 5 },
     { label: "DexScreener paid profile", passed: signals.dexscreenerPaid, points: 5 },
+    { label: "DexScreener socials updated", passed: signals.dexscreenerSocialsUpdated, points: 5 },
     { label: "Curated game", passed: signals.curatedGame, points: 15 },
   ];
 

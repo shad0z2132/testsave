@@ -184,27 +184,72 @@ async function fetchSolscanMetadata(address: string): Promise<SolscanTokenMeta |
   }
 }
 
-async function fetchDexScreenerPaid(addresses: string[]): Promise<Set<string>> {
-  const paid = new Set<string>();
-  if (addresses.length === 0) return paid;
+interface DexProfile {
+  chainId?: string;
+  tokenAddress?: string;
+  links?: { type?: string; label?: string; url?: string }[];
+}
 
+async function fetchDexScreenerPresence(addresses: string[]): Promise<{
+  paid: Set<string>;
+  socialsUpdated: Set<string>;
+}> {
+  const paid = new Set<string>();
+  const socialsUpdated = new Set<string>();
+  if (addresses.length === 0) return { paid, socialsUpdated };
+
+  // Paid boosts.
   try {
     const res = await fetch("https://api.dexscreener.com/token-boosts/latest/v1", {
       signal: AbortSignal.timeout(8000),
     });
-    if (!res.ok) return paid;
-
-    const data: { chainId?: string; tokenAddress?: string }[] = await res.json();
-    for (const item of data) {
-      if (item.chainId === "solana" && item.tokenAddress) {
-        paid.add(item.tokenAddress.toLowerCase());
+    if (res.ok) {
+      const data: { chainId?: string; tokenAddress?: string }[] = await res.json();
+      for (const item of data) {
+        if (item.chainId === "solana" && item.tokenAddress) {
+          paid.add(item.tokenAddress.toLowerCase());
+        }
       }
     }
   } catch {
     // Ignore DexScreener boosts failures.
   }
 
-  return paid;
+  // Updated profiles with socials.
+  try {
+    const res = await fetch("https://api.dexscreener.com/token-profiles/latest/v1", {
+      signal: AbortSignal.timeout(8000),
+    });
+    if (res.ok) {
+      const data: DexProfile[] = await res.json();
+      for (const item of data) {
+        if (item.chainId !== "solana" || !item.tokenAddress) continue;
+        const links = item.links ?? [];
+        const hasWebsite = links.some(
+          (l) =>
+            l.url &&
+            (l.type === "website" ||
+              l.label?.toLowerCase() === "website" ||
+              (!l.type && !l.label))
+        );
+        const hasX = links.some(
+          (l) =>
+            l.url &&
+            (l.type === "twitter" ||
+              l.label?.toLowerCase() === "twitter" ||
+              l.url.toLowerCase().includes("x.com") ||
+              l.url.toLowerCase().includes("twitter.com"))
+        );
+        if (hasWebsite && hasX) {
+          socialsUpdated.add(item.tokenAddress.toLowerCase());
+        }
+      }
+    }
+  } catch {
+    // Ignore DexScreener profile failures.
+  }
+
+  return { paid, socialsUpdated };
 }
 
 function isAuthorityRevoked(
@@ -275,7 +320,8 @@ function pairToGame(
   rpcAuthority?: { mintRevoked: boolean; freezeRevoked: boolean },
   birdeye?: BirdeyeSecurity,
   solscan?: SolscanTokenMeta,
-  dexscreenerPaid = false
+  dexscreenerPaid = false,
+  dexscreenerSocialsUpdated = false
 ): Game {
   const curated = curatedGameMap.get(pair.baseToken.address.toLowerCase());
   const name = curated?.name || pair.baseToken.name;
@@ -331,6 +377,7 @@ function pairToGame(
     liquidityAbove5k,
     curatedGame: Boolean(curated),
     dexscreenerPaid,
+    dexscreenerSocialsUpdated,
   });
 
   return {
@@ -448,8 +495,8 @@ async function buildGames(): Promise<Game[]> {
     solscanEntries.filter(([, d]) => d !== null) as [string, SolscanTokenMeta][]
   );
 
-  // DexScreener paid profile / boost detection.
-  const paidSet = await fetchDexScreenerPaid(addresses);
+  // DexScreener paid boost + profile-with-socials detection.
+  const { paid: paidSet, socialsUpdated: socialsUpdatedSet } = await fetchDexScreenerPresence(addresses);
 
   const games: Game[] = [];
 
@@ -459,7 +506,8 @@ async function buildGames(): Promise<Game[]> {
     const birdeye = birdeyeMap.get(key);
     const solscan = solscanMap.get(key);
     const dexscreenerPaid = paidSet.has(key);
-    const game = pairToGame(pair, authority, birdeye, solscan, dexscreenerPaid);
+    const dexscreenerSocialsUpdated = socialsUpdatedSet.has(key);
+    const game = pairToGame(pair, authority, birdeye, solscan, dexscreenerPaid, dexscreenerSocialsUpdated);
 
     games.push(game);
   }
