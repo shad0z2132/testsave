@@ -2,7 +2,6 @@
 
 import { Logo } from "./Logo";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { games as staticGames } from "@/data/games";
 import { Game } from "@/types/game";
@@ -13,9 +12,6 @@ import {
   TrendingUp,
   Users,
   X,
-  MessageCircle,
-  Send,
-  Globe,
 } from "lucide-react";
 
 interface FooterProps {
@@ -35,32 +31,27 @@ export function Footer({ games = staticGames }: FooterProps) {
     { icon: Users, label: "Holders", value: `${(totalHolders / 1000).toFixed(1)}K` },
   ];
 
-  const links = {
+  const links: Record<string, { label: string; href: string; soon?: boolean }[]> = {
     Platform: [
-      { label: "Discover", href: "#" },
-      { label: "Trending", href: "#" },
-      { label: "New Games", href: "#" },
-      { label: "Saved", href: "#" },
+      { label: "Discover", href: "/" },
+      { label: "Trending", href: "/" },
+      { label: "New Games", href: "/" },
+      { label: "Saved", href: "/" },
     ],
     Resources: [
       { label: "Whitepaper", href: "/whitepaper" },
-      { label: "Submit Game", href: "#" },
-      { label: "API", href: "#" },
-      { label: "Docs", href: "#" },
-      { label: "Brand Kit", href: "#" },
+      { label: "Submit Game", href: "#", soon: true },
+      { label: "API", href: "#", soon: true },
+      { label: "Docs", href: "#", soon: true },
     ],
     Legal: [
-      { label: "Privacy", href: "#" },
-      { label: "Terms", href: "#" },
-      { label: "Disclaimer", href: "#" },
+      { label: "Privacy", href: "#", soon: true },
+      { label: "Terms", href: "#", soon: true },
     ],
   };
 
   const socials = [
     { icon: X, href: "https://x.com/savepoint", label: "X" },
-    { icon: MessageCircle, href: "#", label: "Discord" },
-    { icon: Send, href: "#", label: "Telegram" },
-    { icon: Globe, href: "#", label: "Website" },
   ];
 
   const scrollToTop = () => {
@@ -110,13 +101,23 @@ export function Footer({ games = staticGames }: FooterProps) {
               </h4>
               <ul className="space-y-2">
                 {items.map((item) => (
-                  <li key={item.label}>
+                  <li key={item.label} className="flex items-center gap-2">
                     <a
                       href={item.href}
-                      className="text-sm text-foreground/50 transition-colors hover:text-primary"
+                      className={`text-sm transition-colors ${
+                        item.soon
+                          ? "cursor-default text-foreground/30"
+                          : "text-foreground/50 hover:text-primary"
+                      }`}
+                      onClick={item.soon ? (e) => e.preventDefault() : undefined}
                     >
                       {item.label}
                     </a>
+                    {item.soon && (
+                      <span className="rounded-full bg-white/[0.05] px-1.5 py-0 text-[9px] font-bold uppercase tracking-wider text-foreground/40">
+                        Soon
+                      </span>
+                    )}
                   </li>
                 ))}
               </ul>

@@ -1,18 +1,11 @@
 "use client";
 
-import { X } from "lucide-react";
+import { X, Wallet, Clock } from "lucide-react";
 
 interface WalletModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
-
-const wallets = [
-  { id: "phantom", name: "Phantom", icon: "🦊" },
-  { id: "solflare", name: "Solflare", icon: "🔥" },
-  { id: "backpack", name: "Backpack", icon: "🎒" },
-  { id: "walletconnect", name: "WalletConnect", icon: "🔗" },
-];
 
 export function WalletModal({ open, onOpenChange }: WalletModalProps) {
   if (!open) return null;
@@ -36,30 +29,27 @@ export function WalletModal({ open, onOpenChange }: WalletModalProps) {
           </button>
         </div>
 
-        <div className="p-2">
-          {wallets.map((wallet) => (
-            <button
-              key={wallet.id}
-              onClick={() => {
-                // TODO: WEB3 - integrate real wallet adapter
-                console.log(`Connect ${wallet.name}`);
-                onOpenChange(false);
-              }}
-              className="flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left transition-colors hover:bg-white/[0.03]"
-            >
-              <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-secondary text-lg">
-                {wallet.icon}
-              </span>
-              <span className="font-medium text-foreground">{wallet.name}</span>
-            </button>
-          ))}
+        <div className="flex flex-col items-center p-8 text-center">
+          <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+            <Wallet size={28} />
+          </div>
+          <h4 className="mt-4 text-lg font-semibold text-foreground">Wallets coming soon</h4>
+          <p className="mt-2 max-w-[16rem] text-sm text-muted-foreground">
+            Wallet connection, portfolio tracking, and in-app swaps are on the roadmap.
+          </p>
+          <div className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
+            <Clock size={12} />
+            Phase 3
+          </div>
         </div>
 
-        <div className="border-t border-border/60 px-4 py-3 text-center text-xs text-muted-foreground">
-          New to Solana?{" "}
-          <a href="#" className="text-primary hover:underline">
-            Get a wallet
-          </a>
+        <div className="border-t border-border/60 px-4 py-3 text-center">
+          <button
+            onClick={() => onOpenChange(false)}
+            className="text-xs text-muted-foreground transition-colors hover:text-foreground"
+          >
+            Close
+          </button>
         </div>
       </div>
     </div>

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Logo } from "./Logo";
 import { RoadmapSheet } from "./RoadmapSheet";
+import { Tooltip } from "@/components/ui/tooltip";
 import { games } from "@/data/games";
 import { Game } from "@/types/game";
 import { cn } from "@/lib/utils";
@@ -358,18 +359,30 @@ export function LeftSidebar({
 
       {/* Bottom actions */}
       <div className="relative border-t border-border/40 bg-white/[0.02] p-2">
-        <button className="group relative mb-1.5 flex w-full items-center justify-center gap-1.5 overflow-hidden rounded-md bg-primary py-2 text-xs font-semibold text-primary-foreground transition-all hover:shadow-[0_0_20px_rgba(255,42,140,0.3)] active:scale-[0.98]">
-          <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
-          <Plus size={14} className="relative z-10" />
-          <span className="relative z-10">Submit Game</span>
-        </button>
-        <button
-          onClick={onConnect}
-          className="flex w-full items-center justify-center gap-1.5 rounded-md border border-border/60 bg-white/[0.03] py-1.5 text-xs font-medium text-foreground transition-all hover:border-primary hover:bg-white/[0.06] hover:text-primary active:scale-[0.98]"
-        >
-          <Wallet size={14} />
-          Connect Wallet
-        </button>
+        <Tooltip content="Game submissions are coming soon." side="right">
+          <button
+            disabled
+            className="group relative mb-1.5 flex w-full cursor-not-allowed items-center justify-center gap-1.5 overflow-hidden rounded-md bg-primary/50 py-2 text-xs font-semibold text-primary-foreground/70 transition-all active:scale-[0.98]"
+          >
+            <Plus size={14} />
+            <span>Submit Game</span>
+            <span className="ml-1 rounded-full bg-black/20 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-primary-foreground/80">
+              Soon
+            </span>
+          </button>
+        </Tooltip>
+        <Tooltip content="Wallet connection is coming soon (Phase 3)." side="right">
+          <button
+            onClick={onConnect}
+            className="flex w-full items-center justify-center gap-1.5 rounded-md border border-border/60 bg-white/[0.03] py-1.5 text-xs font-medium text-foreground transition-all hover:border-primary hover:bg-white/[0.06] hover:text-primary active:scale-[0.98]"
+          >
+            <Wallet size={14} />
+            <span>Connect Wallet</span>
+            <span className="ml-1 rounded-full bg-primary/10 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-primary">
+              Soon
+            </span>
+          </button>
+        </Tooltip>
       </div>
     </aside>
   );

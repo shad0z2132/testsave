@@ -32,7 +32,6 @@ import {
   Flame,
   Clock,
   Circle,
-  CircleDot,
   HelpCircle,
 } from "lucide-react";
 

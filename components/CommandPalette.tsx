@@ -58,14 +58,6 @@ export function CommandPalette({
   }, [open, onOpenChange]);
 
   useEffect(() => {
-    if (open) {
-      setQuery("");
-      setSelectedIndex(0);
-      justOpenedRef.current = true;
-    }
-  }, [open]);
-
-  useEffect(() => {
     if (justOpenedRef.current && inputRef.current) {
       inputRef.current.focus();
       justOpenedRef.current = false;

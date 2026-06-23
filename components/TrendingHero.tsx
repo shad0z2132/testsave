@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Logo } from "./Logo";
 import { formatPercent, formatPrice, formatNumber } from "@/lib/format";
+import { SafetyBadge } from "./SafetyBadge";
 import { Flame, TrendingUp, ExternalLink, Gamepad2 } from "lucide-react";
 
 interface TrendingHeroProps {
@@ -78,18 +79,7 @@ function PodiumCard({
           <Badge variant="outline" className="border-primary/30 bg-primary/10 text-primary">
             {game.genre}
           </Badge>
-          <Badge
-            variant="outline"
-            className={`border-border ${
-              game.safetyScore >= 80
-                ? "bg-emerald-950/30 text-emerald-400"
-                : game.safetyScore >= 60
-                ? "bg-yellow-950/30 text-yellow-400"
-                : "bg-red-950/30 text-red-400"
-            }`}
-          >
-            Safety {game.safetyScore}
-          </Badge>
+          <SafetyBadge score={game.safetyScore} breakdown={game.safetyBreakdown} />
         </div>
 
         <h3 className={`font-bold tracking-tight text-foreground transition-colors group-hover:text-white ${featured ? "text-xl sm:text-2xl" : "text-base"}`}>

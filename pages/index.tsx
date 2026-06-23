@@ -43,7 +43,7 @@ export default function Home() {
     localStorage.setItem("savepoint-saved-games", JSON.stringify(savedGames));
   }, [savedGames]);
 
-  const { games: dexGames, loading: dexLoading } = useDexScreenerTrending(100);
+  const { games: dexGames, loading: dexLoading, error: dexError, retry: retryDex } = useDexScreenerTrending();
 
   // Score projects by activity, size, and momentum to surface the most relevant ones.
   const scoreGame = useCallback((game: Game): number => {
@@ -220,6 +220,8 @@ export default function Home() {
                   onSelectGame={handleSelectGame}
                   onToggleSave={handleToggleSave}
                   isLoading={dexLoading}
+                  error={dexError}
+                  onRetry={retryDex}
                   title={
                     showTrendingHero
                       ? "More trending"
@@ -242,7 +244,13 @@ export default function Home() {
         </div>
       </div>
 
-      <GameDetail game={selectedGame} open={detailOpen} onOpenChange={setDetailOpen} />
+      <GameDetail
+        game={selectedGame}
+        open={detailOpen}
+        onOpenChange={setDetailOpen}
+        isSaved={selectedGame ? savedGames.includes(selectedGame.id) : false}
+        onToggleSave={handleToggleSave}
+      />
     </div>
   );
 }

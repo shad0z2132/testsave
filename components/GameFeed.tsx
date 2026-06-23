@@ -7,7 +7,7 @@ import { GameCard } from "./GameCard";
 import { GameListRow } from "./GameListRow";
 import { GameCardSkeleton } from "./GameCardSkeleton";
 import { GameListRowSkeleton } from "./GameListRowSkeleton";
-import { LayoutGrid, List, Search } from "lucide-react";
+import { LayoutGrid, List, Search, AlertTriangle, RefreshCw } from "lucide-react";
 
 interface GameFeedProps {
   games: Game[];
@@ -16,6 +16,8 @@ interface GameFeedProps {
   onToggleSave: (e: React.MouseEvent, gameId: string) => void;
   title?: string;
   isLoading?: boolean;
+  error?: string | null;
+  onRetry?: () => void;
   id?: string;
 }
 
@@ -26,6 +28,8 @@ export function GameFeed({
   onToggleSave,
   title,
   isLoading = false,
+  error,
+  onRetry,
   id,
 }: GameFeedProps) {
   const [view, setView] = useState<"grid" | "list">("grid");
@@ -77,7 +81,28 @@ export function GameFeed({
       </div>
 
       <AnimatePresence mode="wait">
-        {isLoading ? (
+        {error ? (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex flex-col items-center justify-center rounded-xl border border-red-500/20 bg-red-950/10 py-16 text-center"
+          >
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-500/10">
+              <AlertTriangle size={20} className="text-red-400" />
+            </div>
+            <p className="mt-3 text-sm font-medium text-foreground">Failed to load games</p>
+            <p className="max-w-xs px-4 text-xs text-muted-foreground">{error}</p>
+            {onRetry && (
+              <button
+                onClick={onRetry}
+                className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-white/[0.03] px-4 py-2 text-xs font-medium text-foreground transition-all hover:border-primary hover:text-primary"
+              >
+                <RefreshCw size={12} />
+                Try again
+              </button>
+            )}
+          </motion.div>
+        ) : isLoading ? (
           view === "grid" ? (
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
               {Array.from({ length: 12 }).map((_, i) => (

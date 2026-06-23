@@ -13,15 +13,18 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { formatNumber, formatUsd, formatPercent, formatPrice } from "@/lib/format";
+import { SafetyBadge } from "./SafetyBadge";
 import { ExternalLink, Gamepad2, Save, BarChart3 } from "lucide-react";
 
 interface GameDetailProps {
   game: Game | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  isSaved?: boolean;
+  onToggleSave?: (e: React.MouseEvent, gameId: string) => void;
 }
 
-export function GameDetail({ game, open, onOpenChange }: GameDetailProps) {
+export function GameDetail({ game, open, onOpenChange, isSaved, onToggleSave }: GameDetailProps) {
   if (!game) return null;
 
   const isPositive = game.priceChange24h >= 0;
@@ -77,18 +80,7 @@ export function GameDetail({ game, open, onOpenChange }: GameDetailProps) {
               >
                 {game.status}
               </Badge>
-              <Badge
-                variant="outline"
-                className={`${
-                  game.safetyScore >= 80
-                    ? "border-emerald-500/30 bg-emerald-950/30 text-emerald-400"
-                    : game.safetyScore >= 60
-                    ? "border-yellow-500/30 bg-yellow-950/30 text-yellow-400"
-                    : "border-red-500/30 bg-red-950/30 text-red-400"
-                }`}
-              >
-                Safety {game.safetyScore}
-              </Badge>
+              <SafetyBadge score={game.safetyScore} breakdown={game.safetyBreakdown} />
             </div>
             <SheetTitle className="text-2xl font-bold">{game.name}</SheetTitle>
             <SheetDescription className="text-sm text-muted-foreground">
@@ -118,9 +110,12 @@ export function GameDetail({ game, open, onOpenChange }: GameDetailProps) {
             )}
             <Button
               variant="outline"
-              className="border-border text-muted-foreground hover:border-primary hover:text-primary"
+              onClick={(e) => onToggleSave?.(e, game.id)}
+              className={`border-border transition-all hover:border-primary hover:scale-105 active:scale-95 ${
+                isSaved ? "text-primary" : "text-muted-foreground hover:text-primary"
+              }`}
             >
-              <Save size={16} />
+              <Save size={16} className={isSaved ? "fill-primary" : ""} />
             </Button>
           </div>
 

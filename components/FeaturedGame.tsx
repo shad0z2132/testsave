@@ -11,6 +11,7 @@ import {
   formatPrice,
   formatNumber,
 } from "@/lib/format";
+import { Tooltip } from "@/components/ui/tooltip";
 import {
   ExternalLink,
   Flame,
@@ -21,6 +22,8 @@ import {
   TrendingDown,
   Users,
   BarChart3,
+  Check,
+  X,
 } from "lucide-react";
 
 interface FeaturedGameProps {
@@ -219,7 +222,37 @@ export function FeaturedGame({
 
             {/* Price block */}
             <div className="flex items-center gap-4 rounded-xl border border-border/60 bg-black/20 p-3 transition-colors group-hover:border-primary/20 group-hover:bg-white/[0.02]">
-              <SafetyRing score={game.safetyScore} />
+              <Tooltip
+                content={
+                  <div className="space-y-1.5">
+                    <p className="font-semibold text-foreground">Safety Score: {game.safetyScore}/100</p>
+                    {game.safetyBreakdown ? (
+                      <div className="space-y-1">
+                        {game.safetyBreakdown.map((item) => (
+                          <div
+                            key={item.label}
+                            className={`flex items-center justify-between gap-2 ${
+                              item.passed ? "text-emerald-400" : "text-foreground/40"
+                            }`}
+                          >
+                            <span className="flex items-center gap-1.5">
+                              {item.passed ? <Check size={10} /> : <X size={10} />}
+                              {item.label}
+                            </span>
+                            <span className="font-mono text-[10px]">+{item.points}</span>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-foreground/60">Score not available.</p>
+                    )}
+                  </div>
+                }
+              >
+                <div className="cursor-help">
+                  <SafetyRing score={game.safetyScore} />
+                </div>
+              </Tooltip>
               <div className="text-right">
                 <p className="font-mono text-2xl font-bold text-foreground">
                   {formatPrice(game.price)}

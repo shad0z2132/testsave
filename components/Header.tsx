@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Logo } from "./Logo";
+import { Tooltip } from "@/components/ui/tooltip";
 import { Search, Wallet, Command } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -53,14 +54,16 @@ export function Header({ onConnect, onSearchClick }: HeaderProps) {
             >
               <Search size={16} />
             </button>
-            <Button
-              size="sm"
-              onClick={onConnect}
-              className="hidden rounded-full border border-primary bg-primary/10 px-4 text-primary shadow-[0_0_0_0_rgba(255,42,140,0)] transition-all hover:scale-105 hover:border-primary hover:bg-primary hover:text-primary-foreground hover:shadow-[0_0_24px_rgba(255,42,140,0.35)] sm:flex"
-            >
-              <Wallet size={14} className="mr-1.5" />
-              Connect
-            </Button>
+            <Tooltip content="Wallet connection is coming soon (Phase 3)." side="bottom">
+              <Button
+                size="sm"
+                onClick={onConnect}
+                className="hidden rounded-full border border-primary bg-primary/10 px-4 text-primary shadow-[0_0_0_0_rgba(255,42,140,0)] transition-all hover:scale-105 hover:border-primary hover:bg-primary hover:text-primary-foreground hover:shadow-[0_0_24px_rgba(255,42,140,0.35)] sm:flex"
+              >
+                <Wallet size={14} className="mr-1.5" />
+                Connect
+              </Button>
+            </Tooltip>
           </div>
         </div>
       </div>

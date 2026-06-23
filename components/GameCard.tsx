@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { Game } from "@/types/game";
 import { Badge } from "@/components/ui/badge";
+import { SafetyBadge } from "./SafetyBadge";
 import { formatUsd, formatPercent, formatPrice } from "@/lib/format";
 import { Save, TrendingUp, TrendingDown } from "lucide-react";
 
@@ -41,22 +42,6 @@ function Sparkline({ positive }: { positive: boolean }) {
         strokeLinejoin="round"
       />
     </svg>
-  );
-}
-
-function SafetyDot({ score }: { score: number }) {
-  if (score >= 80) {
-    return (
-      <span className="flex h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.6)]" />
-    );
-  }
-  if (score >= 60) {
-    return (
-      <span className="flex h-1.5 w-1.5 rounded-full bg-yellow-400 shadow-[0_0_6px_rgba(250,204,21,0.6)]" />
-    );
-  }
-  return (
-    <span className="flex h-1.5 w-1.5 rounded-full bg-red-400 shadow-[0_0_6px_rgba(248,113,113,0.6)]" />
   );
 }
 
@@ -148,10 +133,7 @@ export function GameCard({ game, onSelect, isSaved, onToggleSave, index = 0 }: G
           </div>
 
           <div className="mt-2 flex items-center justify-between border-t border-border/40 pt-2 text-[10px] text-foreground/50">
-            <div className="flex items-center gap-1">
-              <SafetyDot score={game.safetyScore} />
-              <span className="font-mono uppercase tracking-wider">SAFETY {game.safetyScore}</span>
-            </div>
+            <SafetyBadge score={game.safetyScore} breakdown={game.safetyBreakdown} size="sm" />
             <span className="font-mono uppercase tracking-wider">{formatUsd(game.marketCap)} MC</span>
           </div>
         </div>

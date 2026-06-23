@@ -5,7 +5,16 @@ export default function Document() {
     <Html lang="en">
       <Head>
         <link rel="icon" type="image/png" href="/savepointlogonobg.png" />
-        <meta name="description" content="Your checkpoint for Solana games." />
+        <meta name="description" content="SavePoint — your checkpoint for Solana games. Discover, track, and analyze verified web3 gaming tokens with real safety scores." />
+        <meta name="theme-color" content="#000000" />
+        <meta property="og:title" content="SavePoint — Your checkpoint for Solana games" />
+        <meta property="og:description" content="Discover verified Solana gaming tokens with real safety scores and live market data." />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="/savepointlogonobg.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="SavePoint — Your checkpoint for Solana games" />
+        <meta name="twitter:description" content="Discover verified Solana gaming tokens with real safety scores and live market data." />
+        <meta name="twitter:image" content="/savepointlogonobg.png" />
       </Head>
       <body className="antialiased">
         <Main />
