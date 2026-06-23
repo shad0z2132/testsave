@@ -32,18 +32,11 @@ interface DexPair {
   };
 }
 
-interface HeliusTokenMetadata {
-  mint?: string;
-  mintAuthority?: string | null;
-  freezeAuthority?: string | null;
-  supply?: number;
-  decimals?: number;
-  onChainInfo?: {
-    mintAuthority?: string | null;
-    freezeAuthority?: string | null;
-    supply?: string;
-    decimals?: number;
-  };
+interface RpcAccountInfo {
+  data: [string, "base64"];
+  owner: string;
+  executable: boolean;
+  lamports: number;
 }
 
 interface BirdeyeSecurity {
@@ -91,30 +84,63 @@ async function fetchDexScreenerPairs(addresses: string[]): Promise<DexPair[]> {
   return pairs;
 }
 
-async function fetchHeliusMetadata(addresses: string[]): Promise<Map<string, HeliusTokenMetadata>> {
+function parseMintAccount(base64: string): {
+  mintRevoked: boolean;
+  freezeRevoked: boolean;
+} {
+  const buf = Buffer.from(base64, "base64");
+  // Standard SPL Token / Token-2022 mint account layout (first 82 bytes):
+  // 0-3   : mint authority option (u32 LE, 0 = revoked)
+  // 4-35  : mint authority pubkey (if option == 1)
+  // 36-43 : supply (u64 LE)
+  // 44    : decimals (u8)
+  // 45    : isInitialized (u8)
+  // 46-49 : freeze authority option (u32 LE, 0 = revoked)
+  // 50-81 : freeze authority pubkey (if option == 1)
+  const mintOption = buf.length >= 4 ? buf.readUInt32LE(0) : 1;
+  const freezeOption = buf.length >= 50 ? buf.readUInt32LE(46) : 1;
+  return {
+    mintRevoked: mintOption === 0,
+    freezeRevoked: freezeOption === 0,
+  };
+}
+
+async function fetchMintAuthorities(addresses: string[]): Promise<
+  Map<string, { mintRevoked: boolean; freezeRevoked: boolean }>
+> {
   const apiKey = process.env.HELIUS_API_KEY;
-  if (!apiKey || addresses.length === 0) return new Map();
+  const map = new Map<string, { mintRevoked: boolean; freezeRevoked: boolean }>();
+  if (!apiKey || addresses.length === 0) return map;
 
-  const map = new Map<string, HeliusTokenMetadata>();
+  const BATCH_SIZE = 100;
 
-  try {
-    const res = await fetch(`https://api.helius.xyz/v0/tokens/metadata?api-key=${apiKey}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ mintAccounts: addresses }),
-      signal: AbortSignal.timeout(10000),
-    });
+  for (let i = 0; i < addresses.length; i += BATCH_SIZE) {
+    const batch = addresses.slice(i, i + BATCH_SIZE);
+    try {
+      const res = await fetch(`https://mainnet.helius-rpc.com/?api-key=${apiKey}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          jsonrpc: "2.0",
+          id: 1,
+          method: "getMultipleAccounts",
+          params: [batch, { encoding: "base64" }],
+        }),
+        signal: AbortSignal.timeout(10000),
+      });
 
-    if (!res.ok) return map;
-    const data: HeliusTokenMetadata[] = await res.json();
+      if (!res.ok) continue;
+      const json = await res.json();
+      const accounts: (RpcAccountInfo | null)[] = json.result?.value ?? [];
 
-    for (const item of data) {
-      if (item.mint) {
-        map.set(item.mint.toLowerCase(), item);
+      for (let j = 0; j < batch.length; j++) {
+        const info = accounts[j];
+        if (!info?.data?.[0]) continue;
+        map.set(batch[j].toLowerCase(), parseMintAccount(info.data[0]));
       }
+    } catch {
+      // Ignore RPC failures; token will rely on fallbacks or null signals.
     }
-  } catch {
-    // Ignore Helius metadata failures.
   }
 
   return map;
@@ -158,21 +184,45 @@ async function fetchSolscanMetadata(address: string): Promise<SolscanTokenMeta |
   }
 }
 
-function isAuthorityRevoked(helius?: HeliusTokenMetadata, birdeye?: BirdeyeSecurity, solscan?: SolscanTokenMeta): {
+async function fetchDexScreenerPaid(addresses: string[]): Promise<Set<string>> {
+  const paid = new Set<string>();
+  if (addresses.length === 0) return paid;
+
+  try {
+    const res = await fetch("https://api.dexscreener.com/token-boosts/latest/v1", {
+      signal: AbortSignal.timeout(8000),
+    });
+    if (!res.ok) return paid;
+
+    const data: { chainId?: string; tokenAddress?: string }[] = await res.json();
+    for (const item of data) {
+      if (item.chainId === "solana" && item.tokenAddress) {
+        paid.add(item.tokenAddress.toLowerCase());
+      }
+    }
+  } catch {
+    // Ignore DexScreener boosts failures.
+  }
+
+  return paid;
+}
+
+function isAuthorityRevoked(
+  rpc?: { mintRevoked: boolean; freezeRevoked: boolean },
+  birdeye?: BirdeyeSecurity,
+  solscan?: SolscanTokenMeta
+): {
   mintRevoked: boolean | null;
   freezeRevoked: boolean | null;
 } {
+  if (rpc) {
+    return { mintRevoked: rpc.mintRevoked, freezeRevoked: rpc.freezeRevoked };
+  }
+
   let mintRevoked: boolean | null = null;
   let freezeRevoked: boolean | null = null;
 
-  // Helius priority
-  const heliusMint = helius?.mintAuthority ?? helius?.onChainInfo?.mintAuthority;
-  const heliusFreeze = helius?.freezeAuthority ?? helius?.onChainInfo?.freezeAuthority;
-
-  if (heliusMint !== undefined) mintRevoked = heliusMint === null || heliusMint === "";
-  if (heliusFreeze !== undefined) freezeRevoked = heliusFreeze === null || heliusFreeze === "";
-
-  // Birdeye confirmation
+  // Birdeye fallback
   if (birdeye) {
     if (birdeye.mintAuthority !== undefined) {
       mintRevoked = birdeye.mintAuthority === null || birdeye.mintAuthority === "";
@@ -222,9 +272,10 @@ function tokenPlaceholder(symbol: string): string {
 
 function pairToGame(
   pair: DexPair,
-  helius?: HeliusTokenMetadata,
+  rpcAuthority?: { mintRevoked: boolean; freezeRevoked: boolean },
   birdeye?: BirdeyeSecurity,
-  solscan?: SolscanTokenMeta
+  solscan?: SolscanTokenMeta,
+  dexscreenerPaid = false
 ): Game {
   const curated = curatedGameMap.get(pair.baseToken.address.toLowerCase());
   const name = curated?.name || pair.baseToken.name;
@@ -261,7 +312,7 @@ function pairToGame(
   const gamingText = normalizeText(description, name, symbol, website);
   const gamingKeywordMatch = isGamingText(gamingText);
 
-  const { mintRevoked, freezeRevoked } = isAuthorityRevoked(helius, birdeye, solscan);
+  const { mintRevoked, freezeRevoked } = isAuthorityRevoked(rpcAuthority, birdeye, solscan);
 
   const top10Percent: number | null = birdeye?.top10HolderPercent ?? null;
 
@@ -279,6 +330,7 @@ function pairToGame(
     gamingKeywordMatch,
     liquidityAbove5k,
     curatedGame: Boolean(curated),
+    dexscreenerPaid,
   });
 
   return {
@@ -342,13 +394,6 @@ function inferTags(text: string): string[] {
   return Array.from(tags);
 }
 
-function hasAuthorityInfo(helius?: HeliusTokenMetadata): boolean {
-  if (!helius) return false;
-  const mint = helius.mintAuthority ?? helius.onChainInfo?.mintAuthority;
-  const freeze = helius.freezeAuthority ?? helius.onChainInfo?.freezeAuthority;
-  return mint !== undefined && freeze !== undefined;
-}
-
 async function buildGames(): Promise<Game[]> {
   // SavePoint is manually curated. We only show games listed in data/games.ts.
   const curatedMints = staticGames
@@ -371,12 +416,12 @@ async function buildGames(): Promise<Game[]> {
   // Collect addresses for batch on-chain enrichment.
   const addresses = enriched.map(({ pair }) => pair.baseToken.address);
 
-  // Primary: batched Helius metadata.
-  const heliusMap = await fetchHeliusMetadata(addresses);
+  // Primary: read mint authority directly from chain via Helius RPC.
+  const authorityMap = await fetchMintAuthorities(addresses);
 
-  // Fallback 1: Birdeye for tokens Helius couldn't cover.
+  // Fallback 1: Birdeye for tokens missing RPC authority data or for holder distribution.
   const birdeyeAddresses = addresses.filter(
-    (addr) => !hasAuthorityInfo(heliusMap.get(addr.toLowerCase()))
+    (addr) => !authorityMap.has(addr.toLowerCase())
   );
   const birdeyeEntries = await Promise.all(
     birdeyeAddresses.map(async (addr) => {
@@ -391,7 +436,7 @@ async function buildGames(): Promise<Game[]> {
   // Fallback 2: Solscan for tokens still missing authority data.
   const solscanAddresses = addresses.filter((addr) => {
     const key = addr.toLowerCase();
-    return !hasAuthorityInfo(heliusMap.get(key)) && !birdeyeMap.get(key);
+    return !authorityMap.has(key) && !birdeyeMap.get(key);
   });
   const solscanEntries = await Promise.all(
     solscanAddresses.map(async (addr) => {
@@ -403,14 +448,18 @@ async function buildGames(): Promise<Game[]> {
     solscanEntries.filter(([, d]) => d !== null) as [string, SolscanTokenMeta][]
   );
 
+  // DexScreener paid profile / boost detection.
+  const paidSet = await fetchDexScreenerPaid(addresses);
+
   const games: Game[] = [];
 
   for (const { pair } of enriched) {
     const key = pair.baseToken.address.toLowerCase();
-    const helius = heliusMap.get(key);
+    const authority = authorityMap.get(key);
     const birdeye = birdeyeMap.get(key);
     const solscan = solscanMap.get(key);
-    const game = pairToGame(pair, helius, birdeye, solscan);
+    const dexscreenerPaid = paidSet.has(key);
+    const game = pairToGame(pair, authority, birdeye, solscan, dexscreenerPaid);
 
     games.push(game);
   }
