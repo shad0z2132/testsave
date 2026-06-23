@@ -2,13 +2,8 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { Game } from "@/types/game";
 import { computeSafetyScore, passesSafetyThreshold } from "@/lib/safety";
 import { games as staticGames } from "@/data/games";
-import {
-  WHITELISTED_GAMING_TOKEN_ADDRESSES,
-  BLOCKED_TOKEN_SYMBOLS,
-  GAMING_KEYWORDS,
-} from "@/lib/constants";
+import { GAMING_KEYWORDS } from "@/lib/constants";
 
-const DEXSCREENER_PROFILE_LIMIT = 100;
 const CACHE_TTL_MS = 10 * 60 * 1000; // 10 minutes
 
 const cache = new Map<string, { data: Game[]; timestamp: number }>();
@@ -18,17 +13,6 @@ const curatedGameMap = new Map(
     .filter((g) => g.tokenMint)
     .map((g) => [g.tokenMint!.toLowerCase(), g])
 );
-
-interface DexProfile {
-  url: string;
-  chainId: string;
-  tokenAddress: string;
-  icon: string;
-  header?: string;
-  openGraph?: string;
-  description?: string;
-  links?: { label?: string; type?: string; url: string }[];
-}
 
 interface DexPair {
   chainId: string;
@@ -84,73 +68,9 @@ function normalizeText(...parts: (string | undefined)[]): string {
   return parts.filter(Boolean).join(" ").toLowerCase();
 }
 
-function isBlockedToken(name: string, symbol: string, address: string): boolean {
-  const text = normalizeText(name, symbol, address);
-  return (
-    BLOCKED_TOKEN_SYMBOLS.has(symbol.toLowerCase()) ||
-    BLOCKED_TOKEN_SYMBOLS.has(name.toLowerCase()) ||
-    Array.from(BLOCKED_TOKEN_SYMBOLS).some((term) => text.includes(term))
-  );
-}
-
-function isWhitelistedGame(address: string): boolean {
-  return WHITELISTED_GAMING_TOKEN_ADDRESSES.some(
-    (a) => a.toLowerCase() === address.toLowerCase()
-  );
-}
-
 function isGamingText(text: string): boolean {
   const lower = text.toLowerCase();
   return GAMING_KEYWORDS.some((kw) => lower.includes(kw.toLowerCase()));
-}
-
-function isGamingProfile(profile: DexProfile, pair?: DexPair): boolean {
-  if (isWhitelistedGame(profile.tokenAddress)) return true;
-
-  if (
-    isBlockedToken(
-      pair?.baseToken?.name || "",
-      pair?.baseToken?.symbol || "",
-      profile.tokenAddress
-    )
-  ) {
-    return false;
-  }
-
-  const text = normalizeText(
-    profile.description,
-    pair?.baseToken?.name,
-    pair?.baseToken?.symbol,
-    profile.links?.map((l) => `${l.label || ""} ${l.url}`).join(" "),
-    pair?.info?.websites?.map((w) => w.url).join(" ")
-  );
-
-  return isGamingText(text);
-}
-
-function isGamingPair(pair: DexPair): boolean {
-  if (isWhitelistedGame(pair.baseToken.address)) return true;
-
-  if (isBlockedToken(pair.baseToken.name, pair.baseToken.symbol, pair.baseToken.address)) {
-    return false;
-  }
-
-  const text = normalizeText(
-    pair.baseToken.name,
-    pair.baseToken.symbol,
-    pair.info?.websites?.map((w) => w.url).join(" ")
-  );
-
-  return isGamingText(text);
-}
-
-async function fetchDexScreenerProfiles(limit: number): Promise<DexProfile[]> {
-  const res = await fetch("https://api.dexscreener.com/token-profiles/latest/v1", {
-    signal: AbortSignal.timeout(8000),
-  });
-  if (!res.ok) throw new Error("Failed to fetch DexScreener profiles");
-  const data: DexProfile[] = await res.json();
-  return data.filter((p) => p.chainId === "solana").slice(0, limit);
 }
 
 async function fetchDexScreenerPairs(addresses: string[]): Promise<DexPair[]> {
@@ -169,24 +89,6 @@ async function fetchDexScreenerPairs(addresses: string[]): Promise<DexPair[]> {
   }
 
   return pairs;
-}
-
-async function fetchWhitelistedPairs(): Promise<DexPair[]> {
-  const results = await Promise.all(
-    WHITELISTED_GAMING_TOKEN_ADDRESSES.map(async (addr) => {
-      try {
-        const res = await fetch(`https://api.dexscreener.com/tokens/v1/solana/${addr}`, {
-          signal: AbortSignal.timeout(8000),
-        });
-        if (!res.ok) return [];
-        const data: DexPair[] = await res.json();
-        return data;
-      } catch {
-        return [];
-      }
-    })
-  );
-  return results.flat();
 }
 
 async function fetchHeliusMetadata(addresses: string[]): Promise<Map<string, HeliusTokenMetadata>> {
@@ -320,7 +222,6 @@ function tokenPlaceholder(symbol: string): string {
 
 function pairToGame(
   pair: DexPair,
-  profile?: DexProfile,
   helius?: HeliusTokenMetadata,
   birdeye?: BirdeyeSecurity,
   solscan?: SolscanTokenMeta
@@ -328,38 +229,33 @@ function pairToGame(
   const curated = curatedGameMap.get(pair.baseToken.address.toLowerCase());
   const name = curated?.name || pair.baseToken.name;
   const symbol = pair.baseToken.symbol;
-  const overrideIcon = profile?.icon || pair.info?.imageUrl || curated?.thumbnail || "";
+  const overrideIcon = pair.info?.imageUrl || curated?.thumbnail || "";
   const rawIcon = highResIcon(overrideIcon);
   const icon = rawIcon || tokenPlaceholder(symbol);
   const rawBanner = highResBanner(
-    profile?.header || pair.info?.header || profile?.openGraph || curated?.banner || ""
+    pair.info?.header || curated?.banner || ""
   );
   const banner = rawBanner || icon;
 
   const website =
     curated?.website ||
-    profile?.links?.find((l) => l.label?.toLowerCase() === "website")?.url ||
     pair.info?.websites?.[0]?.url ||
     pair.url;
 
   const xUrl =
     curated?.xUrl ||
-    profile?.links?.find((l) => l.type === "twitter")?.url ||
-    profile?.links?.find((l) => l.label?.toLowerCase() === "twitter")?.url ||
     pair.info?.socials?.find((s) => s.type === "twitter")?.url;
 
   const discordUrl =
     curated?.discordUrl ||
-    profile?.links?.find((l) => l.type === "discord")?.url ||
     pair.info?.socials?.find((s) => s.type === "discord")?.url;
 
   const telegramUrl =
     curated?.telegramUrl ||
-    profile?.links?.find((l) => l.type === "telegram")?.url ||
     pair.info?.socials?.find((s) => s.type === "telegram")?.url;
 
   const description =
-    curated?.description || profile?.description || `${symbol} on ${pair.chainId}`;
+    curated?.description || `${symbol} on ${pair.chainId}`;
   const tagline = curated?.tagline || description.split("\n")[0].slice(0, 80) || `${symbol} token`;
 
   const gamingText = normalizeText(description, name, symbol, website);
@@ -454,51 +350,23 @@ function hasAuthorityInfo(helius?: HeliusTokenMetadata): boolean {
 }
 
 async function buildGames(): Promise<Game[]> {
-  const [profiles, whitelistedPairs] = await Promise.all([
-    fetchDexScreenerProfiles(DEXSCREENER_PROFILE_LIMIT),
-    fetchWhitelistedPairs(),
-  ]);
+  // SavePoint is manually curated. We only show games listed in data/games.ts.
+  const curatedMints = staticGames
+    .map((g) => g.tokenMint)
+    .filter((mint): mint is string => Boolean(mint));
 
-
-
-  // Merge whitelisted pairs with profile-derived pairs, preferring whitelisted pairs when both exist.
+  const pairs = await fetchDexScreenerPairs(curatedMints);
   const pairMap = new Map<string, DexPair>();
-  for (const pair of whitelistedPairs) {
-    pairMap.set(pair.baseToken.address.toLowerCase(), pair);
-  }
-
-  const profileAddresses = profiles.map((p) => p.tokenAddress.toLowerCase());
-  const profilePairs = await fetchDexScreenerPairs(profileAddresses);
-
-  for (const pair of profilePairs) {
+  for (const pair of pairs) {
     const key = pair.baseToken.address.toLowerCase();
     if (!pairMap.has(key)) {
       pairMap.set(key, pair);
     }
   }
 
-  const allPairs = Array.from(pairMap.values());
-
-  // Filter to gaming-related tokens.
-  const gamingPairs = allPairs.filter((pair) => isGamingPair(pair));
-  const gamingProfiles = profiles.filter((profile) => {
-    const pair = allPairs.find(
-      (p) => p.baseToken.address.toLowerCase() === profile.tokenAddress.toLowerCase()
-    );
-    return isGamingProfile(profile, pair);
-  });
-
-  // Merge pairs with their profiles.
-  const enriched = gamingPairs.map((pair) => {
-    const profile =
-      gamingProfiles.find(
-        (p) => p.tokenAddress.toLowerCase() === pair.baseToken.address.toLowerCase()
-      ) ||
-      profiles.find(
-        (p) => p.tokenAddress.toLowerCase() === pair.baseToken.address.toLowerCase()
-      );
-    return { pair, profile };
-  });
+  const enriched = staticGames
+    .filter((g) => g.tokenMint && pairMap.has(g.tokenMint.toLowerCase()))
+    .map((g) => ({ game: g, pair: pairMap.get(g.tokenMint!.toLowerCase())! }));
 
   // Collect addresses for batch on-chain enrichment.
   const addresses = enriched.map(({ pair }) => pair.baseToken.address);
@@ -537,29 +405,17 @@ async function buildGames(): Promise<Game[]> {
 
   const games: Game[] = [];
 
-  for (const { pair, profile } of enriched) {
+  for (const { pair } of enriched) {
     const key = pair.baseToken.address.toLowerCase();
     const helius = heliusMap.get(key);
     const birdeye = birdeyeMap.get(key);
     const solscan = solscanMap.get(key);
-    const game = pairToGame(pair, profile, helius, birdeye, solscan);
+    const game = pairToGame(pair, helius, birdeye, solscan);
 
-    if (game.price > 0 || game.marketCap > 0 || isWhitelistedGame(pair.baseToken.address)) {
-      games.push(game);
-    }
+    games.push(game);
   }
 
-  // Dedupe by token mint, prefer entries with a real thumbnail.
-  const byMint = new Map<string, Game>();
-  for (const game of games) {
-    const key = game.tokenMint || game.id;
-    const existing = byMint.get(key);
-    if (!existing || (existing.thumbnail?.startsWith("data:") && !game.thumbnail?.startsWith("data:"))) {
-      byMint.set(key, game);
-    }
-  }
-
-  return Array.from(byMint.values())
+  return games
     .filter((g) => passesSafetyThreshold(g.safetyScore))
     .sort((a, b) => b.volume24h - a.volume24h);
 }
