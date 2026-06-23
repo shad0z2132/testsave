@@ -39,7 +39,7 @@ export function Footer({ games = staticGames }: FooterProps) {
       { label: "Saved", href: "/" },
     ],
     Resources: [
-      { label: "Whitepaper", href: "/whitepaper" },
+      { label: "Docs", href: "/docs" },
       { label: "Submit Game", href: "#", soon: true },
       { label: "API", href: "#", soon: true },
       { label: "Docs", href: "#", soon: true },

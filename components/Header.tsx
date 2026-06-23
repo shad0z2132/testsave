@@ -42,10 +42,10 @@ export function Header({ onConnect, onSearchClick }: HeaderProps) {
           {/* Actions */}
           <div className="flex items-center gap-2">
             <Link
-              href="/whitepaper"
+              href="/docs"
               className="hidden rounded-full border border-border/60 bg-white/[0.03] px-3 py-1.5 text-xs font-medium text-foreground/70 transition-all hover:border-primary/40 hover:bg-white/[0.06] hover:text-primary sm:flex"
             >
-              Whitepaper
+              Docs
             </Link>
             <button
               onClick={onSearchClick}
