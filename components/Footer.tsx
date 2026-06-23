@@ -146,10 +146,20 @@ export function Footer({ games = staticGames }: FooterProps) {
 
         <Separator className="my-6 bg-border/40" />
 
+        {/* Disclaimer */}
+        <div className="mb-6 rounded-xl border border-border/40 bg-white/[0.02] p-4">
+          <p className="text-[11px] leading-relaxed text-foreground/40">
+            Projects listed on SavePoint are vetted and scored using publicly available on-chain and market data.
+            These scores are for informational purposes only and do not constitute financial advice.
+            The SavePoint team is not responsible for the actions of third-party projects or tokens.
+            Always do your own research (DYOR) before investing, trading, or interacting with any token.
+          </p>
+        </div>
+
         {/* Bottom section */}
         <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
           <p className="text-xs text-foreground/40">
-            © {new Date().getFullYear()} SavePoint. All rights reserved. Not financial advice.
+            © {new Date().getFullYear()} SavePoint. All rights reserved.
           </p>
 
           <div className="flex items-center gap-3">
