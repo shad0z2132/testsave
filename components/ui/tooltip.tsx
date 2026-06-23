@@ -56,7 +56,7 @@ export function Tooltip({
     const viewportWidth = window.innerWidth;
     let finalLeft = left;
     if (side === "top" || side === "bottom") {
-      finalLeft = Math.max(gap, Math.min(left, viewportWidth - width - gap));
+      finalLeft = Math.max(gap + width / 2, Math.min(left, viewportWidth - width / 2 - gap));
     }
 
     setPosition({ top, left: finalLeft });
@@ -81,7 +81,12 @@ export function Tooltip({
     };
   }, [visible, updatePosition]);
 
-  const isHorizontalCenter = side === "top" || side === "bottom";
+  const transformMap = {
+    top: "translateX(-50%) translateY(-100%)",
+    bottom: "translateX(-50%)",
+    left: "translateX(-100%) translateY(-50%)",
+    right: "translateY(-50%)",
+  };
 
   return (
     <>
@@ -106,7 +111,7 @@ export function Tooltip({
               top: position.top,
               left: position.left,
               width,
-              transform: isHorizontalCenter ? "translateX(-50%)" : side === "left" ? "translateX(-100%) translateY(-50%)" : "translateY(-50%)",
+              transform: transformMap[side],
             }}
           >
             <div className="rounded-lg border border-border/60 bg-[#0f0f11] p-2.5 text-xs shadow-[0_0_30px_rgba(0,0,0,0.5)]">
