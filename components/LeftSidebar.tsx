@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { Logo } from "./Logo";
 import { RoadmapSheet } from "./RoadmapSheet";
 import { Tooltip } from "@/components/ui/tooltip";
@@ -31,6 +32,7 @@ import {
   ChevronDown,
   X,
   Check,
+  BookOpen,
 } from "lucide-react";
 
 interface LeftSidebarProps {
@@ -318,6 +320,18 @@ export function LeftSidebar({
               count={getCount(genre.id)}
             />
           ))}
+        </SidebarSection>
+
+        <div className="my-2 h-px bg-border/40" />
+
+        <SidebarSection title="Resources" defaultOpen>
+          <Link
+            href="/docs"
+            className="group relative flex w-full items-center gap-2.5 rounded-md px-2.5 py-1.5 text-left text-[14px] text-foreground/70 transition-all duration-200 hover:bg-white/[0.04] hover:text-foreground"
+          >
+            <BookOpen size={16} className="text-muted-foreground transition-colors group-hover:text-foreground" />
+            <span>Docs</span>
+          </Link>
         </SidebarSection>
       </div>
 
