@@ -31,25 +31,23 @@ export function Tooltip({
   const updatePosition = useCallback(() => {
     if (!triggerRef.current) return;
     const rect = triggerRef.current.getBoundingClientRect();
-    const scrollX = window.scrollX || window.pageXOffset;
-    const scrollY = window.scrollY || window.pageYOffset;
     const gap = 8;
 
     let top = 0;
     let left = 0;
 
     if (side === "top") {
-      top = rect.top + scrollY - gap;
-      left = rect.left + scrollX + rect.width / 2;
+      top = rect.top - gap;
+      left = rect.left + rect.width / 2;
     } else if (side === "bottom") {
-      top = rect.bottom + scrollY + gap;
-      left = rect.left + scrollX + rect.width / 2;
+      top = rect.bottom + gap;
+      left = rect.left + rect.width / 2;
     } else if (side === "left") {
-      top = rect.top + scrollY + rect.height / 2;
-      left = rect.left + scrollX - gap;
+      top = rect.top + rect.height / 2;
+      left = rect.left - gap;
     } else if (side === "right") {
-      top = rect.top + scrollY + rect.height / 2;
-      left = rect.right + scrollX + gap;
+      top = rect.top + rect.height / 2;
+      left = rect.right + gap;
     }
 
     // Keep tooltip within viewport horizontally.
