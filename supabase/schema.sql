@@ -103,6 +103,42 @@ BEGIN
 END;
 $$;
 
+-- Community chat: real-time public chat feed
+CREATE TABLE IF NOT EXISTS chat_messages (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  wallet_address TEXT,
+  display_name TEXT,
+  content TEXT NOT NULL CHECK (length(content) <= 500),
+  reply_to UUID REFERENCES chat_messages(id) ON DELETE SET NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_chat_messages_created_at
+  ON chat_messages(created_at DESC);
+
+ALTER TABLE chat_messages ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Allow public read of chat messages"
+  ON chat_messages
+  FOR SELECT
+  USING (true);
+
+CREATE POLICY "Allow public insert of chat messages"
+  ON chat_messages
+  FOR INSERT
+  WITH CHECK (length(content) <= 500);
+
+-- Enable realtime for chat
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_publication_tables
+    WHERE schemaname = 'public' AND tablename = 'chat_messages'
+  ) THEN
+    ALTER PUBLICATION supabase_realtime ADD TABLE chat_messages;
+  END IF;
+END $$;
+
 -- Saved games: per-wallet saved game list synced across devices
 CREATE TABLE IF NOT EXISTS saved_games (
   wallet TEXT NOT NULL,
