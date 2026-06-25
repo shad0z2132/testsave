@@ -53,7 +53,7 @@ const roadmap = [
   { phase: "Phase 1", title: "Launchpad", status: "completed", items: ["Curated game directory", "Live DexScreener data", "Safety scoring engine"] },
   { phase: "Phase 2", title: "Discovery", status: "in-progress", items: ["Advanced filters", "Saved watchlists", "Expanded game library"] },
   { phase: "Phase 3", title: "Trading", status: "upcoming", items: ["Wallet connection", "Portfolio tracking", "Price alerts"] },
-  { phase: "Phase 4", title: "Community", status: "upcoming", items: ["Game submissions", "Community voting", "Rewards"] },
+  { phase: "Phase 4", title: "Community", status: "in-progress", items: ["Game submissions", "Community voting", "Rewards"] },
 ];
 
 const faqs = [
@@ -67,7 +67,7 @@ const faqs = [
   },
   {
     q: "How can I submit a game?",
-    a: "Game submissions are coming soon. For now, reach out to us on X @savepoint with a project suggestion.",
+    a: "Paste a Solana DexScreener link on the Submit page. We pull the token name, symbol, and mint automatically. The community votes on submissions, and the most popular ones are reviewed by the SavePoint team before listing.",
   },
   {
     q: "Where does the price data come from?",

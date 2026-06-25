@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { Logo } from "./Logo";
 import { RoadmapSheet } from "./RoadmapSheet";
 import { Tooltip } from "@/components/ui/tooltip";
@@ -33,6 +34,7 @@ import {
   X,
   Check,
   BookOpen,
+  Users,
 } from "lucide-react";
 
 interface LeftSidebarProps {
@@ -87,31 +89,25 @@ const roadmapStatus = {
   upcoming: { color: "text-foreground/50", bg: "bg-white/[0.03]", border: "border-border/40", dot: "bg-foreground/30" },
 };
 
-function SidebarButton({
+function SidebarItem({
   active,
   onClick,
+  href,
   icon: Icon,
   label,
   count,
   iconColor,
 }: {
-  active: boolean;
-  onClick: () => void;
+  active?: boolean;
+  onClick?: () => void;
+  href?: string;
   icon: React.ElementType;
   label: string;
   count?: number;
   iconColor?: string;
 }) {
-  return (
-    <button
-      onClick={onClick}
-      className={cn(
-        "group relative flex w-full items-center gap-2.5 rounded-md px-2.5 py-1.5 text-left text-[14px] transition-all duration-200",
-        active
-          ? "bg-primary/15 font-medium text-foreground"
-          : "text-foreground/70 hover:bg-white/[0.04] hover:text-foreground"
-      )}
-    >
+  const content = (
+    <>
       {active && (
         <span className="absolute left-0 top-1/2 h-4 w-0.5 -translate-y-1/2 rounded-full bg-primary shadow-[0_0_10px_rgba(255,42,140,0.8)]" />
       )}
@@ -133,6 +129,27 @@ function SidebarButton({
           {count}
         </span>
       )}
+    </>
+  );
+
+  const className = cn(
+    "group relative flex w-full items-center gap-2.5 rounded-md px-2.5 py-1.5 text-left text-[14px] transition-all duration-200",
+    active
+      ? "bg-primary/15 font-medium text-foreground"
+      : "text-foreground/70 hover:bg-white/[0.04] hover:text-foreground"
+  );
+
+  if (href) {
+    return (
+      <Link href={href} className={className}>
+        {content}
+      </Link>
+    );
+  }
+
+  return (
+    <button onClick={onClick} className={className}>
+      {content}
     </button>
   );
 }
@@ -190,6 +207,8 @@ export function LeftSidebar({
   onConnect,
   allGames = games,
 }: LeftSidebarProps) {
+  const router = useRouter();
+  const isHome = router.pathname === "/";
   const [roadmapOpen, setRoadmapOpen] = useState(false);
   const getCount = (filter: string) => {
     if (filter === "All") return allGames.length;
@@ -210,7 +229,10 @@ export function LeftSidebar({
       <div className="absolute inset-y-0 right-0 w-px bg-gradient-to-b from-transparent via-border/30 to-transparent" />
 
       {/* Logo */}
-      <div className="flex h-12 items-center gap-2 border-b border-border/40 px-3">
+      <Link
+        href="/"
+        className="flex h-12 items-center gap-2 border-b border-border/40 px-3 transition-colors hover:opacity-90"
+      >
         <div className="relative">
           <Logo size={24} />
           <span className="absolute -bottom-0.5 -right-0.5 flex h-1.5 w-1.5 rounded-full bg-primary shadow-[0_0_6px_rgba(255,42,140,0.8)]" />
@@ -221,7 +243,7 @@ export function LeftSidebar({
             Solana Games
           </span>
         </div>
-      </div>
+      </Link>
 
       {/* Project tagline */}
       <div className="px-3 py-2.5">
@@ -263,13 +285,24 @@ export function LeftSidebar({
       <div className="flex-1 overflow-y-auto px-2 py-2 scrollbar-hide">
         <SidebarSection title="Platform" defaultOpen>
           {navItems.map((item) => (
-            <SidebarButton
+            <SidebarItem
               key={item.id}
-              active={activeTab === item.id && activeFilter === "All"}
-              onClick={() => {
-                onTabChange(item.id);
-                onFilterChange("All");
-              }}
+              active={isHome && activeTab === item.id && activeFilter === "All"}
+              onClick={
+                isHome
+                  ? () => {
+                      onTabChange(item.id);
+                      onFilterChange("All");
+                    }
+                  : undefined
+              }
+              href={
+                !isHome
+                  ? item.id === "discover"
+                    ? "/"
+                    : `/?tab=${item.id}`
+                  : undefined
+              }
               icon={item.icon}
               label={item.label}
             />
@@ -280,7 +313,7 @@ export function LeftSidebar({
 
         <SidebarSection title="Explore" defaultOpen>
           {trendingCategories.map((cat) => (
-            <SidebarButton
+            <SidebarItem
               key={cat.id}
               active={activeFilter === cat.id}
               onClick={() => onFilterChange(cat.id)}
@@ -295,7 +328,7 @@ export function LeftSidebar({
 
         <SidebarSection title="Status" defaultOpen>
           {statuses.map((status) => (
-            <SidebarButton
+            <SidebarItem
               key={status.id}
               active={activeFilter === status.id}
               onClick={() => onFilterChange(status.id)}
@@ -311,7 +344,7 @@ export function LeftSidebar({
 
         <SidebarSection title="Genres" defaultOpen>
           {genres.map((genre) => (
-            <SidebarButton
+            <SidebarItem
               key={genre.id}
               active={activeFilter === genre.id}
               onClick={() => onFilterChange(genre.id)}
@@ -331,6 +364,20 @@ export function LeftSidebar({
           >
             <BookOpen size={16} className="text-muted-foreground transition-colors group-hover:text-foreground" />
             <span>Docs</span>
+          </Link>
+          <Link
+            href="/community"
+            className="group relative flex w-full items-center gap-2.5 rounded-md px-2.5 py-1.5 text-left text-[14px] text-foreground/70 transition-all duration-200 hover:bg-white/[0.04] hover:text-foreground"
+          >
+            <Users size={16} className="text-muted-foreground transition-colors group-hover:text-foreground" />
+            <span>Community</span>
+          </Link>
+          <Link
+            href="/submit"
+            className="group relative flex w-full items-center gap-2.5 rounded-md px-2.5 py-1.5 text-left text-[14px] text-foreground/70 transition-all duration-200 hover:bg-white/[0.04] hover:text-foreground"
+          >
+            <Plus size={16} className="text-muted-foreground transition-colors group-hover:text-foreground" />
+            <span>Submit Game</span>
           </Link>
         </SidebarSection>
       </div>
@@ -373,18 +420,13 @@ export function LeftSidebar({
 
       {/* Bottom actions */}
       <div className="relative border-t border-border/40 bg-white/[0.02] p-2">
-        <Tooltip content="Game submissions are coming soon." side="right">
-          <button
-            disabled
-            className="group relative mb-1.5 flex w-full cursor-not-allowed items-center justify-center gap-1.5 overflow-hidden rounded-md bg-primary/50 py-2 text-xs font-semibold text-primary-foreground/70 transition-all active:scale-[0.98]"
-          >
-            <Plus size={14} />
-            <span>Submit Game</span>
-            <span className="ml-1 rounded-full bg-black/20 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-primary-foreground/80">
-              Soon
-            </span>
-          </button>
-        </Tooltip>
+        <Link
+          href="/submit"
+          className="group relative mb-1.5 flex w-full items-center justify-center gap-1.5 overflow-hidden rounded-md bg-primary py-2 text-xs font-semibold text-primary-foreground transition-all hover:bg-primary/90 active:scale-[0.98]"
+        >
+          <Plus size={14} />
+          <span>Submit Game</span>
+        </Link>
         <Tooltip content="Wallet connection is coming soon (Phase 3)." side="right">
           <button
             onClick={onConnect}

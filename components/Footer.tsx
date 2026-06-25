@@ -40,9 +40,8 @@ export function Footer({ games = staticGames }: FooterProps) {
     ],
     Resources: [
       { label: "Docs", href: "/docs" },
-      { label: "Submit Game", href: "#", soon: true },
-      { label: "API", href: "#", soon: true },
-      { label: "Docs", href: "#", soon: true },
+      { label: "Community", href: "/community" },
+      { label: "Submit Game", href: "/submit" },
     ],
     Legal: [
       { label: "Privacy", href: "#", soon: true },

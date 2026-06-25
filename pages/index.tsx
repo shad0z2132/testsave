@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect, useCallback } from "react";
+import { useRouter } from "next/router";
 import { motion, AnimatePresence } from "framer-motion";
 import { useDexScreenerTrending } from "@/hooks/useDexScreener";
 import { Header } from "@/components/Header";
@@ -42,6 +43,21 @@ export default function Home() {
   useEffect(() => {
     localStorage.setItem("savepoint-saved-games", JSON.stringify(savedGames));
   }, [savedGames]);
+
+  // Sync tab/filter from URL query when navigating from another page.
+  const router = useRouter();
+  useEffect(() => {
+    const tab = typeof router.query.tab === "string" ? router.query.tab : undefined;
+    const filter = typeof router.query.filter === "string" ? router.query.filter : undefined;
+
+    if (tab && ["discover", "trending", "new", "saved"].includes(tab)) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setActiveTab(tab);
+    }
+    if (filter) {
+      setActiveFilter(filter);
+    }
+  }, [router.query.tab, router.query.filter]);
 
   const { games: dexGames, loading: dexLoading, error: dexError, retry: retryDex } = useDexScreenerTrending();
 

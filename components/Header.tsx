@@ -18,13 +18,16 @@ export function Header({ onConnect, onSearchClick }: HeaderProps) {
       <div className="relative border-b border-border/40 bg-background/60 backdrop-blur-xl transition-colors duration-300 hover:bg-background/75">
         <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">
           {/* Logo - only on mobile where sidebar is hidden */}
-          <div className="flex items-center gap-2.5 lg:hidden">
+          <Link
+            href="/"
+            className="flex items-center gap-2.5 lg:hidden"
+          >
             <div className="relative">
               <Logo size={28} />
               <span className="absolute -bottom-0.5 -right-0.5 flex h-2 w-2 rounded-full bg-primary shadow-[0_0_8px_rgba(255,42,140,0.8)]" />
             </div>
             <span className="text-lg font-bold tracking-tight">SavePoint</span>
-          </div>
+          </Link>
 
           {/* Desktop search trigger */}
           <button
@@ -46,6 +49,12 @@ export function Header({ onConnect, onSearchClick }: HeaderProps) {
               className="hidden rounded-full border border-border/60 bg-white/[0.03] px-3 py-1.5 text-xs font-medium text-foreground/70 transition-all hover:border-primary/40 hover:bg-white/[0.06] hover:text-primary sm:flex"
             >
               Docs
+            </Link>
+            <Link
+              href="/community"
+              className="hidden rounded-full border border-border/60 bg-white/[0.03] px-3 py-1.5 text-xs font-medium text-foreground/70 transition-all hover:border-primary/40 hover:bg-white/[0.06] hover:text-primary sm:flex"
+            >
+              Community
             </Link>
             <button
               onClick={onSearchClick}

@@ -35,3 +35,6 @@ npm run build
 - Game detail side panel
 - Safety score badges
 - Save games to personal watchlist
+- Community game submissions
+- Anonymous voting on upcoming listings
+- Admin review dashboard
