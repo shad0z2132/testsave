@@ -100,7 +100,7 @@ export default function CommunityPage() {
 
                   <Link
                     href="/submit"
-                    className="inline-flex items-center justify-center gap-2 rounded-full border border-primary bg-card px-4 py-2 text-sm font-medium text-primary transition-all hover:scale-105 hover:bg-primary hover:text-primary-foreground"
+                    className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full border border-primary bg-card px-4 py-2 text-sm font-medium text-primary transition-all hover:scale-105 hover:bg-primary hover:text-primary-foreground"
                   >
                     <Plus size={16} />
                     Submit a project
