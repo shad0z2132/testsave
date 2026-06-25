@@ -108,13 +108,15 @@ export function CommunityChat({ className }: CommunityChatProps) {
   const [guestName, setGuestName] = useLocalStorage(GUEST_NAME_KEY);
   const [input, setInput] = useState("");
   const [showNameInput, setShowNameInput] = useState(false);
-  const bottomRef = useRef<HTMLDivElement>(null);
+  const messagesRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const { messages, loading, error, sending, sendMessage, refetch } = useChat();
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    const container = messagesRef.current;
+    if (!container) return;
+    container.scrollTo({ top: container.scrollHeight, behavior: "smooth" });
   }, [messages]);
 
   const handleSubmit = useCallback(
@@ -229,7 +231,7 @@ export function CommunityChat({ className }: CommunityChatProps) {
       </AnimatePresence>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4 scrollbar-hide">
+      <div ref={messagesRef} className="flex-1 overflow-y-auto p-4 scrollbar-hide">
         {loading && messages.length === 0 ? (
           <div className="flex h-full items-center justify-center gap-2 text-foreground/50">
             <Loader2 size={16} className="animate-spin" />
@@ -263,7 +265,6 @@ export function CommunityChat({ className }: CommunityChatProps) {
                 isOwn={!!walletAddress && msg.wallet_address === walletAddress}
               />
             ))}
-            <div ref={bottomRef} />
           </div>
         )}
       </div>
