@@ -27,9 +27,9 @@ interface SubmissionCardProps {
 }
 
 const rankStyles: Record<number, string> = {
-  1: "bg-yellow-400/15 text-yellow-400 border-yellow-400/30",
-  2: "bg-slate-300/15 text-slate-300 border-slate-300/30",
-  3: "bg-amber-600/15 text-amber-500 border-amber-500/30",
+  1: "bg-lime/15 text-lime border-lime/30",
+  2: "bg-cyan-400/15 text-cyan-400 border-cyan-400/30",
+  3: "bg-lime/10 text-lime/80 border-lime/20",
 };
 
 export function SubmissionCard({ submission, index = 0, rank, onVote }: SubmissionCardProps) {
