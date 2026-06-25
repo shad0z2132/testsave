@@ -7,13 +7,12 @@ import { Badge } from "@/components/ui/badge";
 import { formatPrice, formatPercent, formatUsd, formatNumber } from "@/lib/format";
 import { Save, TrendingUp, TrendingDown } from "lucide-react";
 import { SafetyBadge } from "./SafetyBadge";
+import { useSavedGames } from "@/hooks/useSavedGames";
 
 interface GameListRowProps {
   game: Game;
   rank: number;
   onSelect: (game: Game) => void;
-  isSaved?: boolean;
-  onToggleSave?: (e: React.MouseEvent, gameId: string) => void;
   index?: number;
 }
 
@@ -23,7 +22,13 @@ const rankStyles: Record<number, string> = {
   3: "bg-amber-600/20 text-amber-500",
 };
 
-export function GameListRow({ game, rank, onSelect, isSaved, onToggleSave, index = 0 }: GameListRowProps) {
+export function GameListRow({ game, rank, onSelect, index = 0 }: GameListRowProps) {
+  const { isSaved, toggleSave } = useSavedGames();
+
+  const handleToggleSave = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    toggleSave(game.id);
+  };
   const isPositive = game.priceChange24h >= 0;
   const ChangeIcon = isPositive ? TrendingUp : TrendingDown;
 
@@ -110,10 +115,10 @@ export function GameListRow({ game, rank, onSelect, isSaved, onToggleSave, index
 
       {/* Save */}
       <button
-        onClick={(e) => onToggleSave?.(e, game.id)}
+        onClick={handleToggleSave}
         className="ml-2 flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-foreground/50 transition-all hover:bg-white/[0.05] hover:text-primary active:scale-95"
       >
-        <Save size={14} className={isSaved ? "fill-primary text-primary" : ""} />
+        <Save size={14} className={isSaved(game.id) ? "fill-primary text-primary" : ""} />
       </button>
     </motion.div>
   );

@@ -11,9 +11,7 @@ import { LayoutGrid, List, Search, AlertTriangle, RefreshCw } from "lucide-react
 
 interface GameFeedProps {
   games: Game[];
-  savedGames: string[];
   onSelectGame: (game: Game) => void;
-  onToggleSave: (e: React.MouseEvent, gameId: string) => void;
   title?: string;
   isLoading?: boolean;
   error?: string | null;
@@ -23,9 +21,7 @@ interface GameFeedProps {
 
 export function GameFeed({
   games,
-  savedGames,
   onSelectGame,
-  onToggleSave,
   title,
   isLoading = false,
   error,
@@ -143,8 +139,6 @@ export function GameFeed({
                 game={game}
                 index={index}
                 onSelect={onSelectGame}
-                isSaved={savedGames.includes(game.id)}
-                onToggleSave={onToggleSave}
               />
             ))}
           </motion.div>
@@ -164,8 +158,6 @@ export function GameFeed({
                 rank={index + 1}
                 index={index}
                 onSelect={onSelectGame}
-                isSaved={savedGames.includes(game.id)}
-                onToggleSave={onToggleSave}
               />
             ))}
           </motion.div>

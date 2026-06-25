@@ -5,14 +5,13 @@ import Image from "next/image";
 import { Game } from "@/types/game";
 import { Badge } from "@/components/ui/badge";
 import { SafetyBadge } from "./SafetyBadge";
+import { useSavedGames } from "@/hooks/useSavedGames";
 import { formatUsd, formatPercent, formatPrice } from "@/lib/format";
 import { Save, TrendingUp, TrendingDown } from "lucide-react";
 
 interface GameCardProps {
   game: Game;
   onSelect: (game: Game) => void;
-  isSaved?: boolean;
-  onToggleSave?: (e: React.MouseEvent, gameId: string) => void;
   index?: number;
 }
 
@@ -45,9 +44,15 @@ function Sparkline({ positive }: { positive: boolean }) {
   );
 }
 
-export function GameCard({ game, onSelect, isSaved, onToggleSave, index = 0 }: GameCardProps) {
+export function GameCard({ game, onSelect, index = 0 }: GameCardProps) {
+  const { isSaved, toggleSave, isConnected } = useSavedGames();
   const isPositive = game.priceChange24h >= 0;
   const ChangeIcon = isPositive ? TrendingUp : TrendingDown;
+
+  const handleToggleSave = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    toggleSave(game.id);
+  };
 
   return (
     <motion.div
@@ -86,10 +91,11 @@ export function GameCard({ game, onSelect, isSaved, onToggleSave, index = 0 }: G
 
           {/* Save button */}
           <button
-            onClick={(e) => onToggleSave?.(e, game.id)}
+            onClick={handleToggleSave}
             className="absolute left-2 top-2 flex h-7 w-7 items-center justify-center rounded-md bg-black/50 text-white/80 backdrop-blur-sm transition-all hover:scale-105 hover:bg-black/70 hover:text-primary active:scale-95"
+            title={isConnected ? undefined : "Saved locally. Connect wallet to sync."}
           >
-            <Save size={13} className={isSaved ? "fill-primary text-primary" : ""} />
+            <Save size={13} className={isSaved(game.id) ? "fill-primary text-primary" : ""} />
           </button>
         </div>
 

@@ -102,3 +102,23 @@ BEGIN
   RETURN new_count;
 END;
 $$;
+
+-- Saved games: per-wallet saved game list synced across devices
+CREATE TABLE IF NOT EXISTS saved_games (
+  wallet TEXT NOT NULL,
+  game_id TEXT NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  PRIMARY KEY (wallet, game_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_saved_games_wallet
+  ON saved_games(wallet);
+
+ALTER TABLE saved_games ENABLE ROW LEVEL SECURITY;
+
+-- Service-role API manages saves server-side
+CREATE POLICY "Allow service role full access on saved_games"
+  ON saved_games
+  FOR ALL
+  USING (true)
+  WITH CHECK (true);

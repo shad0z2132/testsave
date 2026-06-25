@@ -14,17 +14,17 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { formatNumber, formatUsd, formatPercent, formatPrice } from "@/lib/format";
 import { SafetyBadge } from "./SafetyBadge";
+import { useSavedGames } from "@/hooks/useSavedGames";
 import { ExternalLink, Gamepad2, Save, BarChart3 } from "lucide-react";
 
 interface GameDetailProps {
   game: Game | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  isSaved?: boolean;
-  onToggleSave?: (e: React.MouseEvent, gameId: string) => void;
 }
 
-export function GameDetail({ game, open, onOpenChange, isSaved, onToggleSave }: GameDetailProps) {
+export function GameDetail({ game, open, onOpenChange }: GameDetailProps) {
+  const { isSaved, toggleSave } = useSavedGames();
   if (!game) return null;
 
   const isPositive = game.priceChange24h >= 0;
@@ -110,12 +110,12 @@ export function GameDetail({ game, open, onOpenChange, isSaved, onToggleSave }: 
             )}
             <Button
               variant="outline"
-              onClick={(e) => onToggleSave?.(e, game.id)}
+              onClick={() => toggleSave(game.id)}
               className={`border-border transition-all hover:border-primary hover:scale-105 active:scale-95 ${
-                isSaved ? "text-primary" : "text-muted-foreground hover:text-primary"
+                isSaved(game.id) ? "text-primary" : "text-muted-foreground hover:text-primary"
               }`}
             >
-              <Save size={16} className={isSaved ? "fill-primary" : ""} />
+              <Save size={16} className={isSaved(game.id) ? "fill-primary" : ""} />
             </Button>
           </div>
 

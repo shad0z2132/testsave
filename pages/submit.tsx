@@ -8,13 +8,11 @@ import { Footer } from "@/components/Footer";
 import { DustParticles } from "@/components/DustParticles";
 import { LeftSidebar } from "@/components/LeftSidebar";
 import { SubmissionForm } from "@/components/SubmissionForm";
-import { WalletModal } from "@/components/WalletModal";
 import { CommandPalette } from "@/components/CommandPalette";
 import { ArrowLeft } from "lucide-react";
 import { useState } from "react";
 
 export default function SubmitPage() {
-  const [walletOpen, setWalletOpen] = useState(false);
   const [commandOpen, setCommandOpen] = useState(false);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
@@ -41,21 +39,17 @@ export default function SubmitPage() {
             games={[]}
           />
 
-          <WalletModal open={walletOpen} onOpenChange={setWalletOpen} />
-
           <LeftSidebar
             activeTab="submit"
             activeFilter="All"
             onTabChange={() => {}}
             onFilterChange={() => {}}
-            onConnect={() => setWalletOpen(true)}
             mobileOpen={mobileSidebarOpen}
             onMobileOpenChange={setMobileSidebarOpen}
           />
 
           <div className="flex min-h-screen flex-col lg:ml-56">
             <Header
-              onConnect={() => setWalletOpen(true)}
               onSearchClick={() => setCommandOpen(true)}
               onMenuClick={() => setMobileSidebarOpen(true)}
             />

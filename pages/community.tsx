@@ -9,7 +9,6 @@ import { Footer } from "@/components/Footer";
 import { DustParticles } from "@/components/DustParticles";
 import { LeftSidebar } from "@/components/LeftSidebar";
 import { SubmissionCard, Submission } from "@/components/SubmissionCard";
-import { WalletModal } from "@/components/WalletModal";
 import { CommandPalette } from "@/components/CommandPalette";
 import { Plus, ArrowRight, RefreshCw, Loader2, Trophy, Clock, BarChart3, Inbox } from "lucide-react";
 
@@ -20,7 +19,6 @@ export default function CommunityPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState<SortMode>("top");
-  const [walletOpen, setWalletOpen] = useState(false);
   const [commandOpen, setCommandOpen] = useState(false);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
@@ -91,21 +89,17 @@ export default function CommunityPage() {
             games={[]}
           />
 
-          <WalletModal open={walletOpen} onOpenChange={setWalletOpen} />
-
           <LeftSidebar
             activeTab="community"
             activeFilter="All"
             onTabChange={() => {}}
             onFilterChange={() => {}}
-            onConnect={() => setWalletOpen(true)}
             mobileOpen={mobileSidebarOpen}
             onMobileOpenChange={setMobileSidebarOpen}
           />
 
           <div className="flex min-h-screen flex-col lg:ml-56">
             <Header
-              onConnect={() => setWalletOpen(true)}
               onSearchClick={() => setCommandOpen(true)}
               onMenuClick={() => setMobileSidebarOpen(true)}
             />

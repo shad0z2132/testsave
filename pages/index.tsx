@@ -4,6 +4,7 @@ import { useState, useMemo, useEffect, useCallback } from "react";
 import { useRouter } from "next/router";
 import { motion, AnimatePresence } from "framer-motion";
 import { useDexScreenerTrending } from "@/hooks/useDexScreener";
+import { useSavedGames } from "@/hooks/useSavedGames";
 import { Header } from "@/components/Header";
 import { StatsTicker } from "@/components/StatsTicker";
 import { FilterTabs } from "@/components/FilterTabs";
@@ -16,7 +17,6 @@ import { TrendingHero } from "@/components/TrendingHero";
 import { TrendingShelf } from "@/components/TrendingShelf";
 import { LeftSidebar } from "@/components/LeftSidebar";
 import { CommandPalette } from "@/components/CommandPalette";
-import { WalletModal } from "@/components/WalletModal";
 import { Game } from "@/types/game";
 import { Search } from "lucide-react";
 
@@ -26,24 +26,9 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedGame, setSelectedGame] = useState<Game | null>(null);
   const [detailOpen, setDetailOpen] = useState(false);
-  const [walletOpen, setWalletOpen] = useState(false);
   const [commandOpen, setCommandOpen] = useState(false);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
-  const [savedGames, setSavedGames] = useState<string[]>(() => {
-    if (typeof window === "undefined") return [];
-    const saved = localStorage.getItem("savepoint-saved-games");
-    if (!saved) return [];
-    try {
-      return JSON.parse(saved);
-    } catch {
-      return [];
-    }
-  });
-
-  // Persist saved games
-  useEffect(() => {
-    localStorage.setItem("savepoint-saved-games", JSON.stringify(savedGames));
-  }, [savedGames]);
+  const { savedIds } = useSavedGames();
 
   // Sync tab/filter from URL query when navigating from another page.
   const router = useRouter();
@@ -113,7 +98,7 @@ export default function Home() {
     } else if (activeTab === "new") {
       result = result.filter((g) => g.status === "alpha" || g.status === "beta");
     } else if (activeTab === "saved") {
-      result = result.filter((g) => savedGames.includes(g.id));
+      result = result.filter((g) => savedIds.includes(g.id));
     }
 
     // Genre/status filtering
@@ -128,7 +113,7 @@ export default function Home() {
     }
 
     return result;
-  }, [activeTab, activeFilter, searchQuery, savedGames, allGames]);
+  }, [activeTab, activeFilter, searchQuery, savedIds, allGames]);
 
   const showTrendingHero =
     activeTab === "trending" && activeFilter === "All" && !searchQuery;
@@ -147,13 +132,6 @@ export default function Home() {
     setDetailOpen(true);
   };
 
-  const handleToggleSave = (e: React.MouseEvent, gameId: string) => {
-    e.stopPropagation();
-    setSavedGames((prev) =>
-      prev.includes(gameId) ? prev.filter((id) => id !== gameId) : [...prev, gameId]
-    );
-  };
-
   return (
     <div className="relative min-h-screen bg-background bg-grid">
       {/* Background effects */}
@@ -169,14 +147,11 @@ export default function Home() {
           games={allGames}
         />
 
-        <WalletModal open={walletOpen} onOpenChange={setWalletOpen} />
-
         <LeftSidebar
           activeTab={activeTab}
           activeFilter={activeFilter}
           onTabChange={setActiveTab}
           onFilterChange={setActiveFilter}
-          onConnect={() => setWalletOpen(true)}
           allGames={allGames}
           mobileOpen={mobileSidebarOpen}
           onMobileOpenChange={setMobileSidebarOpen}
@@ -184,7 +159,6 @@ export default function Home() {
 
         <div className="flex min-h-screen flex-col lg:ml-56">
           <Header
-            onConnect={() => setWalletOpen(true)}
             onSearchClick={() => setCommandOpen(true)}
             onMenuClick={() => setMobileSidebarOpen(true)}
           />
@@ -204,8 +178,6 @@ export default function Home() {
                     <FeaturedGame
                       game={featuredGame}
                       onSelect={handleSelectGame}
-                      isSaved={savedGames.includes(featuredGame.id)}
-                      onToggleSave={handleToggleSave}
                     />
 
                     {/* Slogan */}
@@ -248,9 +220,7 @@ export default function Home() {
 
                 <GameFeed
                   games={feedGames}
-                  savedGames={savedGames}
                   onSelectGame={handleSelectGame}
-                  onToggleSave={handleToggleSave}
                   isLoading={dexLoading}
                   error={dexError}
                   onRetry={retryDex}
@@ -280,8 +250,6 @@ export default function Home() {
         game={selectedGame}
         open={detailOpen}
         onOpenChange={setDetailOpen}
-        isSaved={selectedGame ? savedGames.includes(selectedGame.id) : false}
-        onToggleSave={handleToggleSave}
       />
     </div>
   );

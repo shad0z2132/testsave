@@ -12,6 +12,7 @@ import {
   formatNumber,
 } from "@/lib/format";
 import { Tooltip } from "@/components/ui/tooltip";
+import { useSavedGames } from "@/hooks/useSavedGames";
 import {
   ExternalLink,
   Flame,
@@ -29,8 +30,6 @@ import {
 interface FeaturedGameProps {
   game: Game;
   onSelect: (game: Game) => void;
-  isSaved?: boolean;
-  onToggleSave?: (e: React.MouseEvent, gameId: string) => void;
 }
 
 function PriceSparkline({ positive }: { positive: boolean }) {
@@ -114,11 +113,15 @@ function SafetyRing({ score }: { score: number }) {
 export function FeaturedGame({
   game,
   onSelect,
-  isSaved,
-  onToggleSave,
 }: FeaturedGameProps) {
+  const { isSaved, toggleSave } = useSavedGames();
   const isPositive = game.priceChange24h >= 0;
   const ChangeIcon = isPositive ? TrendingUp : TrendingDown;
+
+  const handleToggleSave = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    toggleSave(game.id);
+  };
 
   return (
     <motion.section
@@ -284,12 +287,12 @@ export function FeaturedGame({
             <Button
               variant="outline"
               size="icon"
-              onClick={(e) => onToggleSave?.(e, game.id)}
+              onClick={handleToggleSave}
               className={`border-border transition-all hover:border-primary hover:scale-105 active:scale-95 ${
-                isSaved ? "text-primary" : "text-muted-foreground hover:text-primary"
+                isSaved(game.id) ? "text-primary" : "text-muted-foreground hover:text-primary"
               }`}
             >
-              <Save size={16} className={isSaved ? "fill-primary" : ""} />
+              <Save size={16} className={isSaved(game.id) ? "fill-primary" : ""} />
             </Button>
             <a
               href={game.website}

@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { Logo } from "./Logo";
 import { RoadmapSheet } from "./RoadmapSheet";
-import { Tooltip } from "@/components/ui/tooltip";
 import {
   Sheet,
   SheetContent,
@@ -16,6 +15,8 @@ import { games } from "@/data/games";
 import { Game } from "@/types/game";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
+import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
+import { useSavedGames } from "@/hooks/useSavedGames";
 import {
   Compass,
   Flame,
@@ -35,7 +36,6 @@ import {
   Rocket,
   CircleDot,
   Plus,
-  Wallet,
   ChevronDown,
   X,
   Check,
@@ -48,7 +48,6 @@ interface LeftSidebarProps {
   activeFilter: string;
   onTabChange: (tab: string) => void;
   onFilterChange: (filter: string) => void;
-  onConnect: () => void;
   allGames?: Game[];
   mobileOpen?: boolean;
   onMobileOpenChange?: (open: boolean) => void;
@@ -213,7 +212,6 @@ interface SidebarContentProps {
   activeFilter: string;
   onTabChange: (tab: string) => void;
   onFilterChange: (filter: string) => void;
-  onConnect: () => void;
   allGames?: Game[];
   isMobile?: boolean;
   onNavigate?: () => void;
@@ -224,7 +222,6 @@ function SidebarContent({
   activeFilter,
   onTabChange,
   onFilterChange,
-  onConnect,
   allGames = games,
   isMobile,
   onNavigate,
@@ -232,8 +229,10 @@ function SidebarContent({
   const router = useRouter();
   const isHome = router.pathname === "/";
   const [roadmapOpen, setRoadmapOpen] = useState(false);
+  const { savedIds } = useSavedGames();
 
   const getCount = (filter: string) => {
+    if (filter === "Saved") return savedIds.length;
     if (filter === "All") return allGames.length;
     const lower = filter.toLowerCase();
     return allGames.filter(
@@ -467,18 +466,7 @@ function SidebarContent({
           <Plus size={15} />
           <span>Submit Game</span>
         </Link>
-        <Tooltip content="Wallet connection is coming soon (Phase 3)." side="right">
-          <button
-            onClick={onConnect}
-            className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-border/60 bg-white/[0.03] py-2 text-xs font-medium text-foreground transition-all hover:border-primary hover:bg-white/[0.06] hover:text-primary active:scale-[0.98]"
-          >
-            <Wallet size={14} />
-            <span>Connect Wallet</span>
-            <span className="ml-1 rounded-full bg-primary/10 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-primary">
-              Soon
-            </span>
-          </button>
-        </Tooltip>
+        <WalletMultiButton className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-border/60 bg-white/[0.03] py-2 text-xs font-medium text-foreground transition-all hover:!border-primary hover:!bg-white/[0.06] hover:!text-primary active:scale-[0.98] wallet-adapter-button-trigger" />
       </div>
     </>
   );
