@@ -10,13 +10,13 @@ export default function Document() {
         <meta property="og:title" content="SavePoint — Your checkpoint for Solana games" />
         <meta property="og:description" content="Discover verified Solana gaming tokens with real safety scores and live market data." />
         <meta property="og:type" content="website" />
-        <meta property="og:image" content="https://www.savepoint.run/SAVEPOINT2.png" />
+        <meta property="og:image" content="https://www.savepoint.run/SAVEPOINT2.png?v=2" />
         <meta property="og:image:width" content="3750" />
         <meta property="og:image:height" content="1250" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="SavePoint — Your checkpoint for Solana games" />
         <meta name="twitter:description" content="Discover verified Solana gaming tokens with real safety scores and live market data." />
-        <meta name="twitter:image" content="https://www.savepoint.run/SAVEPOINT2.png" />
+        <meta name="twitter:image" content="https://www.savepoint.run/SAVEPOINT2.png?v=2" />
       </Head>
       <body className="antialiased">
         <Main />
