@@ -11,7 +11,6 @@ import {
   SheetContent,
   SheetHeader,
   SheetTitle,
-  SheetTrigger,
 } from "@/components/ui/sheet";
 import { games } from "@/data/games";
 import { Game } from "@/types/game";
@@ -42,7 +41,6 @@ import {
   Check,
   BookOpen,
   Users,
-  LayoutGrid,
 } from "lucide-react";
 
 interface LeftSidebarProps {
