@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
 import { Footer } from "@/components/Footer";
+import { RoadmapPhases } from "@/components/RoadmapPhases";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft,
@@ -54,13 +55,6 @@ const safetyChecks = [
   { icon: Database, label: "Token age & liquidity", desc: "Older tokens with real liquidity are safer." },
   { icon: Globe, label: "Website & socials", desc: "Real projects have verifiable online presence." },
   { icon: CheckCircle2, label: "Curated game metadata", desc: "Whitelist games are manually reviewed." },
-];
-
-const roadmap = [
-  { phase: "Phase 1", title: "Launchpad", status: "completed", items: ["Curated game directory", "Live DexScreener data", "Safety scoring engine"] },
-  { phase: "Phase 2", title: "Discovery", status: "in-progress", items: ["Advanced filters", "Saved watchlists", "Expanded game library"] },
-  { phase: "Phase 3", title: "Trading", status: "upcoming", items: ["Wallet connection", "Portfolio tracking", "Price alerts"] },
-  { phase: "Phase 4", title: "Community", status: "in-progress", items: ["Game submissions", "Community voting", "Rewards"] },
 ];
 
 const sectionContent: Record<string, string> = {
@@ -145,9 +139,10 @@ export default function Docs() {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4 }}
-              className="rounded-2xl border border-border/40 bg-card p-8 text-center shadow-[0_0_60px_rgba(204, 255, 0, 0.06)] sm:p-12"
+              className="relative overflow-hidden rounded-2xl border border-white/[0.12] bg-[#0a0a0a] p-8 text-center shadow-[0_0_60px_rgba(204,255,0,0.06)] sm:p-12"
             >
-              <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-medium uppercase tracking-wider text-primary">
+              <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-lime/50 to-transparent" />
+              <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-lime/30 bg-lime/10 px-3 py-1 text-xs font-medium uppercase tracking-wider text-lime">
                 <Sparkles size={12} />
                 Documentation
               </div>
@@ -168,7 +163,7 @@ export default function Docs() {
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     placeholder="Search docs..."
-                    className="h-11 w-full rounded-xl border border-border/60 bg-white/[0.03] pl-10 pr-4 text-sm text-foreground placeholder:text-muted-foreground outline-none transition-colors focus:border-primary/50 focus:bg-white/[0.04]"
+                    className="h-11 w-full rounded-xl border border-white/[0.12] bg-black pl-10 pr-4 text-sm text-foreground placeholder:text-muted-foreground outline-none transition-colors focus:border-lime/50 focus:bg-white/[0.04]"
                   />
                 </div>
               </div>
@@ -190,9 +185,10 @@ export default function Docs() {
                   initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.4, delay: index * 0.05 }}
-                  className="group rounded-xl border border-border/40 bg-card p-5 transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-[0_0_24px_rgba(204, 255, 0, 0.08)]"
+                  className="group relative overflow-hidden rounded-xl border border-white/[0.12] bg-[#0a0a0a] p-5 transition-all hover:-translate-y-0.5 hover:border-lime/40 hover:shadow-[0_0_24px_rgba(204,255,0,0.08)]"
                 >
-                  <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+                  <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-lime/50 to-transparent" />
+                  <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-lime/10 text-lime transition-colors group-hover:bg-lime group-hover:text-black">
                     <link.icon size={20} />
                   </div>
                   <h3 className="font-bold text-foreground">{link.title}</h3>
@@ -207,7 +203,7 @@ export default function Docs() {
             <div className="mb-6 lg:hidden">
               <button
                 onClick={() => setMobileTocOpen(!mobileTocOpen)}
-                className="flex w-full items-center justify-between rounded-xl border border-border/40 bg-card p-3 text-sm font-medium text-foreground transition-colors hover:border-primary/40"
+                className="flex w-full items-center justify-between rounded-xl border border-white/[0.12] bg-[#0a0a0a] p-3 text-sm font-medium text-foreground transition-colors hover:border-lime/40"
               >
                 <span className="flex items-center gap-2">
                   <Menu size={16} className="text-muted-foreground" />
@@ -226,7 +222,8 @@ export default function Docs() {
                     exit={{ height: 0, opacity: 0 }}
                     className="overflow-hidden"
                   >
-                    <div className="mt-2 rounded-xl border border-border/40 bg-card p-2">
+                    <div className="relative mt-2 overflow-hidden rounded-xl border border-white/[0.12] bg-[#0a0a0a] p-2">
+                      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-lime/50 to-transparent" />
                       {sections
                         .filter((s) => filteredSections.includes(s.id))
                         .map((section) => (
@@ -234,9 +231,9 @@ export default function Docs() {
                             key={section.id}
                             href={`#${section.id}`}
                             onClick={() => setMobileTocOpen(false)}
-                            className="group flex items-center gap-3 rounded-md px-3 py-2 text-sm text-foreground/60 transition-colors hover:bg-white/[0.03] hover:text-foreground"
+                            className="group flex items-center gap-3 rounded-md px-3 py-2 text-sm text-foreground/60 transition-colors hover:bg-white/[0.03] hover:text-lime"
                           >
-                            <section.icon size={16} className="text-muted-foreground group-hover:text-primary" />
+                            <section.icon size={16} className="text-muted-foreground group-hover:text-lime" />
                             {section.title}
                           </a>
                         ))}
@@ -249,9 +246,10 @@ export default function Docs() {
             {/* Sidebar TOC */}
             <aside className="hidden lg:block">
               <div className="sticky top-24 space-y-6">
-                <div className="rounded-xl border border-border/40 bg-card p-4 shadow-[0_0_24px_rgba(204, 255, 0, 0.04)]">
+                <div className="relative overflow-hidden rounded-xl border border-white/[0.12] bg-[#0a0a0a] p-4 shadow-[0_0_24px_rgba(204,255,0,0.04)]">
+                  <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-lime/50 to-transparent" />
                   <p className="mb-3 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                    <span className="h-1 w-1 rounded-full bg-primary/70" />
+                    <span className="h-1 w-1 rounded-full bg-lime/70" />
                     On this page
                   </p>
                   <nav className="space-y-1">
@@ -261,25 +259,26 @@ export default function Docs() {
                         <a
                           key={section.id}
                           href={`#${section.id}`}
-                          className="group flex items-center gap-3 rounded-md px-3 py-2 text-sm text-foreground/60 transition-colors hover:bg-white/[0.03] hover:text-foreground"
+                          className="group flex items-center gap-3 rounded-md px-3 py-2 text-sm text-foreground/60 transition-colors hover:bg-white/[0.03] hover:text-lime"
                         >
-                          <section.icon size={16} className="text-muted-foreground group-hover:text-primary" />
+                          <section.icon size={16} className="text-muted-foreground group-hover:text-lime" />
                           {section.title}
                         </a>
                       ))}
                   </nav>
                 </div>
 
-                <div className="rounded-xl border border-border/40 bg-card p-4">
+                <div className="relative overflow-hidden rounded-xl border border-white/[0.12] bg-[#0a0a0a] p-4">
+                  <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-lime/50 to-transparent" />
                   <p className="mb-3 text-xs font-bold uppercase tracking-wider text-muted-foreground">
                     Useful links
                   </p>
                   <div className="space-y-1">
-                    <Link href="/community" className="group flex items-center gap-2 rounded-md px-3 py-2 text-sm text-foreground/60 transition-colors hover:bg-white/[0.03] hover:text-primary">
+                    <Link href="/community" className="group flex items-center gap-2 rounded-md px-3 py-2 text-sm text-foreground/60 transition-colors hover:bg-white/[0.03] hover:text-lime">
                       <Vote size={14} />
                       Community voting
                     </Link>
-                    <Link href="/submit" className="group flex items-center gap-2 rounded-md px-3 py-2 text-sm text-foreground/60 transition-colors hover:bg-white/[0.03] hover:text-primary">
+                    <Link href="/submit" className="group flex items-center gap-2 rounded-md px-3 py-2 text-sm text-foreground/60 transition-colors hover:bg-white/[0.03] hover:text-lime">
                       <Plus size={14} />
                       Submit a game
                     </Link>
@@ -318,9 +317,10 @@ export default function Docs() {
                   {safetyChecks.map((check) => (
                     <div
                       key={check.label}
-                      className="rounded-xl border border-border/40 bg-card p-5 transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-[0_0_20px_rgba(204, 255, 0, 0.06)]"
+                      className="group relative overflow-hidden rounded-xl border border-white/[0.12] bg-[#0a0a0a] p-5 transition-all hover:-translate-y-0.5 hover:border-lime/30 hover:shadow-[0_0_20px_rgba(204,255,0,0.06)]"
                     >
-                      <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-lime/50 to-transparent" />
+                      <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-lime/10 text-lime transition-colors group-hover:bg-lime group-hover:text-black">
                         <check.icon size={20} />
                       </div>
                       <h3 className="font-bold text-foreground">{check.label}</h3>
@@ -337,7 +337,8 @@ export default function Docs() {
                   SavePoint does not rely on algorithmic discovery alone. Every game in our core
                   directory is manually reviewed against a vetting checklist before being added.
                 </p>
-                <div className="rounded-xl border border-border/40 bg-card p-6 shadow-[0_0_20px_rgba(204, 255, 0, 0.04)]">
+                <div className="relative overflow-hidden rounded-xl border border-white/[0.12] bg-[#0a0a0a] p-6 shadow-[0_0_20px_rgba(204,255,0,0.04)]">
+                  <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-lime/50 to-transparent" />
                   <ul className="space-y-4">
                     {[
                       "Real playable product, demo, or beta",
@@ -347,7 +348,7 @@ export default function Docs() {
                       "No honeypot or obvious rug signals",
                     ].map((item) => (
                       <li key={item} className="flex items-start gap-3 text-sm text-foreground/70">
-                        <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-positive" />
+                        <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-lime" />
                         {item}
                       </li>
                     ))}
@@ -387,9 +388,10 @@ export default function Docs() {
                   ].map((item) => (
                     <div
                       key={item.title}
-                      className="rounded-xl border border-border/40 bg-card p-5 transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-[0_0_20px_rgba(204, 255, 0, 0.06)]"
+                      className="group relative overflow-hidden rounded-xl border border-white/[0.12] bg-[#0a0a0a] p-5 transition-all hover:-translate-y-0.5 hover:border-lime/30 hover:shadow-[0_0_20px_rgba(204,255,0,0.06)]"
                     >
-                      <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-lime/50 to-transparent" />
+                      <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-lime/10 text-lime transition-colors group-hover:bg-lime group-hover:text-black">
                         <item.icon size={20} />
                       </div>
                       <h3 className="font-bold text-foreground">{item.title}</h3>
@@ -398,12 +400,13 @@ export default function Docs() {
                   ))}
                 </div>
 
-                <div className="mt-6 rounded-xl border border-border/40 bg-[#0a0a0a] p-4 font-mono text-xs text-foreground/70">
+                <div className="relative mt-6 overflow-hidden rounded-xl border border-white/[0.12] bg-black p-4 font-mono text-xs text-foreground/70">
+                  <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-lime/50 to-transparent" />
                   <div className="mb-2 flex items-center gap-2 text-[10px] uppercase tracking-wider text-foreground/40">
                     <Terminal size={12} />
                     Submit endpoint
                   </div>
-                  <p className="text-primary">POST /api/submissions</p>
+                  <p className="text-lime">POST /api/submissions</p>
                   <p className="mt-1 text-foreground/50">{`{ "dex_url": "https://dexscreener.com/solana/..." }`}</p>
                 </div>
               </section>
@@ -419,12 +422,13 @@ export default function Docs() {
                   ].map((item) => (
                     <div
                       key={item.step}
-                      className="relative rounded-xl border border-border/40 bg-card p-6 transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-[0_0_20px_rgba(204, 255, 0, 0.06)]"
+                      className="group relative overflow-hidden rounded-xl border border-white/[0.12] bg-[#0a0a0a] p-6 transition-all hover:-translate-y-0.5 hover:border-lime/30 hover:shadow-[0_0_20px_rgba(204,255,0,0.06)]"
                     >
+                      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-lime/50 to-transparent" />
                       <span className="absolute right-4 top-4 font-mono text-2xl font-bold text-foreground/10">
                         {item.step}
                       </span>
-                      <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                      <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-lime/10 text-lime transition-colors group-hover:bg-lime group-hover:text-black">
                         <item.icon size={22} />
                       </div>
                       <h3 className="font-bold text-foreground">{item.title}</h3>
@@ -437,52 +441,7 @@ export default function Docs() {
               {/* Roadmap */}
               <section id="roadmap" className="scroll-mt-28">
                 <SectionHeader icon={Rocket} title="Roadmap" />
-                <div className="space-y-4">
-                  {roadmap.map((phase, index) => (
-                    <motion.div
-                      key={phase.phase}
-                      initial={{ opacity: 0, y: 20 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.5, delay: index * 0.1 }}
-                      className={`relative overflow-hidden rounded-2xl border p-5 ${
-                        phase.status === "completed"
-                          ? "border-emerald-500/30 bg-emerald-950/10"
-                          : phase.status === "in-progress"
-                          ? "border-primary/30 bg-primary/10"
-                          : "border-border/40 bg-white/[0.02]"
-                      }`}
-                    >
-                      <div className="mb-3 flex flex-wrap items-start justify-between gap-3">
-                        <div>
-                          <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                            {phase.phase}
-                          </p>
-                          <h3 className="text-xl font-bold text-foreground">{phase.title}</h3>
-                        </div>
-                        <span
-                          className={`rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wider ${
-                            phase.status === "completed"
-                              ? "bg-emerald-500/10 text-emerald-400"
-                              : phase.status === "in-progress"
-                              ? "bg-primary/10 text-primary"
-                              : "bg-secondary text-muted-foreground"
-                          }`}
-                        >
-                          {phase.status}
-                        </span>
-                      </div>
-                      <div className="grid gap-2 sm:grid-cols-2">
-                        {phase.items.map((item) => (
-                          <div key={item} className="flex items-center gap-2 text-sm text-foreground/70">
-                            <ChevronRight size={14} className="text-muted-foreground" />
-                            {item}
-                          </div>
-                        ))}
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
+                <RoadmapPhases revealedCount={1} />
               </section>
 
               {/* FAQ */}
@@ -496,8 +455,9 @@ export default function Docs() {
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }}
                       transition={{ duration: 0.3, delay: index * 0.05 }}
-                      className="rounded-xl border border-border/40 bg-card p-5 transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-[0_0_20px_rgba(204, 255, 0, 0.06)]"
+                      className="group relative overflow-hidden rounded-xl border border-white/[0.12] bg-[#0a0a0a] p-5 transition-all hover:-translate-y-0.5 hover:border-lime/30 hover:shadow-[0_0_20px_rgba(204,255,0,0.06)]"
                     >
+                      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-lime/50 to-transparent" />
                       <h3 className="font-bold text-foreground">{faq.q}</h3>
                       <p className="mt-2 text-sm leading-relaxed text-foreground/60">{faq.a}</p>
                     </motion.div>
@@ -506,10 +466,11 @@ export default function Docs() {
               </section>
 
               {/* Disclaimer */}
-              <section className="rounded-2xl border border-yellow-500/20 bg-[#1a1505] p-6">
+              <section className="relative overflow-hidden rounded-2xl border border-lime/20 bg-[#0a0a0a] p-6">
+                <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-lime/50 to-transparent" />
                 <div className="flex items-start gap-4">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-yellow-500/10">
-                    <AlertTriangle size={20} className="text-yellow-400" />
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-lime/10">
+                    <AlertTriangle size={20} className="text-lime" />
                   </div>
                   <div>
                     <h3 className="font-bold text-foreground">Disclaimer</h3>
@@ -525,7 +486,8 @@ export default function Docs() {
               </section>
 
               {/* CTA */}
-              <section className="rounded-2xl border border-border/40 bg-card p-8 text-center shadow-[0_0_40px_rgba(204, 255, 0, 0.06)]">
+              <section className="relative overflow-hidden rounded-2xl border border-white/[0.12] bg-[#0a0a0a] p-8 text-center shadow-[0_0_40px_rgba(204,255,0,0.06)]">
+                <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-lime/50 to-transparent" />
                 <h2 className="text-2xl font-bold text-foreground">Ready to explore?</h2>
                 <p className="mx-auto mt-2 max-w-md text-sm text-foreground/60">
                   Start browsing curated Solana games with real safety scores and live market data.
@@ -533,14 +495,14 @@ export default function Docs() {
                 <div className="mt-5 flex flex-col items-center justify-center gap-3 sm:flex-row">
                   <Link
                     href="/"
-                    className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-2.5 text-sm font-bold text-primary-foreground transition-all hover:scale-105 hover:shadow-[0_0_24px_rgba(204, 255, 0, 0.4)]"
+                    className="inline-flex items-center gap-2 rounded-full bg-lime px-6 py-2.5 text-sm font-bold text-black transition-all hover:scale-105 hover:shadow-[0_0_24px_rgba(204,255,0,0.4)]"
                   >
                     Launch SavePoint
                     <ChevronRight size={16} />
                   </Link>
                   <Link
                     href="/submit"
-                    className="inline-flex items-center gap-2 rounded-full border border-primary bg-card px-6 py-2.5 text-sm font-bold text-primary transition-all hover:scale-105 hover:bg-primary hover:text-primary-foreground"
+                    className="inline-flex items-center gap-2 rounded-full border border-lime bg-[#0a0a0a] px-6 py-2.5 text-sm font-bold text-lime transition-all hover:scale-105 hover:bg-lime hover:text-black"
                   >
                     Submit a Game
                     <Plus size={16} />
@@ -559,8 +521,8 @@ export default function Docs() {
 
 function SectionHeader({ icon: Icon, title }: { icon: React.ElementType; title: string }) {
   return (
-    <div className="mb-6 flex items-center gap-3 border-b border-border/40 pb-4">
-      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+    <div className="mb-6 flex items-center gap-3 border-b border-white/[0.08] pb-4">
+      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-lime/10 text-lime">
         <Icon size={20} />
       </div>
       <h2 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">{title}</h2>
