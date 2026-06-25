@@ -105,24 +105,26 @@ export function SubmissionForm({ onSuccess }: SubmissionFormProps) {
         </div>
       )}
 
-      <Button
-        type="submit"
-        disabled={isLoading}
-        className="group w-full gap-2 rounded-full border border-primary bg-card px-5 text-primary transition-all duration-300 hover:scale-[1.02] hover:bg-primary hover:text-primary-foreground hover:shadow-[0_0_24px_rgba(255,42,140,0.45)] disabled:opacity-70"
-      >
-        {isLoading ? (
-          <Loader2 size={16} className="animate-spin" />
-        ) : (
-          <>
-            <Send size={16} />
-            Submit project
-            <ArrowRight
-              size={14}
-              className="transition-transform duration-300 group-hover:translate-x-0.5"
-            />
-          </>
-        )}
-      </Button>
+      <div className="flex justify-center pt-2">
+        <Button
+          type="submit"
+          disabled={isLoading}
+          className="group w-full gap-2 rounded-full border border-primary bg-card px-5 text-primary transition-all duration-300 hover:scale-[1.02] hover:bg-primary hover:text-primary-foreground hover:shadow-[0_0_24px_rgba(255,42,140,0.45)] disabled:opacity-70 sm:w-auto sm:px-8"
+        >
+          {isLoading ? (
+            <Loader2 size={16} className="animate-spin" />
+          ) : (
+            <>
+              <Send size={16} />
+              Submit project
+              <ArrowRight
+                size={14}
+                className="transition-transform duration-300 group-hover:translate-x-0.5"
+              />
+            </>
+          )}
+        </Button>
+      </div>
     </form>
   );
 }
