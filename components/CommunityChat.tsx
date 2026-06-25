@@ -5,6 +5,7 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { Send, MessageSquare, Loader2, RefreshCw, User } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useChat } from "@/hooks/useChat";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { cn } from "@/lib/utils";
 import type { ChatMessage } from "@/types/chat";
 
@@ -104,14 +105,7 @@ export function CommunityChat({ className }: CommunityChatProps) {
   const { publicKey, connected } = useWallet();
   const walletAddress = publicKey?.toBase58();
 
-  const [guestName, setGuestName] = useState(() => {
-    if (typeof window === "undefined") return "";
-    try {
-      return localStorage.getItem(GUEST_NAME_KEY) || "";
-    } catch {
-      return "";
-    }
-  });
+  const [guestName, setGuestName] = useLocalStorage(GUEST_NAME_KEY);
   const [input, setInput] = useState("");
   const [showNameInput, setShowNameInput] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -144,17 +138,15 @@ export function CommunityChat({ className }: CommunityChatProps) {
     [input, sending, connected, walletAddress, guestName, sendMessage]
   );
 
-  const handleNameSave = useCallback((name: string) => {
-    const trimmed = name.trim();
-    setGuestName(trimmed || "Anonymous");
-    setShowNameInput(false);
-    try {
-      if (trimmed) localStorage.setItem(GUEST_NAME_KEY, trimmed);
-    } catch {
-      // ignore
-    }
-    inputRef.current?.focus();
-  }, []);
+  const handleNameSave = useCallback(
+    (name: string) => {
+      const trimmed = name.trim();
+      setGuestName(trimmed || "Anonymous");
+      setShowNameInput(false);
+      inputRef.current?.focus();
+    },
+    [setGuestName]
+  );
 
   return (
     <div
