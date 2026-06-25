@@ -11,7 +11,7 @@ import { LeftSidebar } from "@/components/LeftSidebar";
 import { SubmissionCard, Submission } from "@/components/SubmissionCard";
 import { WalletModal } from "@/components/WalletModal";
 import { CommandPalette } from "@/components/CommandPalette";
-import { Plus, RefreshCw, Loader2 } from "lucide-react";
+import { Plus, ArrowRight, RefreshCw, Loader2 } from "lucide-react";
 
 export default function CommunityPage() {
   const [submissions, setSubmissions] = useState<Submission[]>([]);
@@ -100,10 +100,14 @@ export default function CommunityPage() {
 
                   <Link
                     href="/submit"
-                    className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full border border-primary bg-card px-4 py-2 text-sm font-medium text-primary transition-all hover:scale-105 hover:bg-primary hover:text-primary-foreground"
+                    className="group inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full border border-primary bg-card px-4 py-2 text-sm font-medium text-primary transition-all duration-300 hover:scale-105 hover:bg-primary hover:text-primary-foreground hover:shadow-[0_0_24px_rgba(255,42,140,0.45)]"
                   >
                     <Plus size={16} />
                     Submit a project
+                    <ArrowRight
+                      size={14}
+                      className="transition-transform duration-300 group-hover:translate-x-0.5"
+                    />
                   </Link>
                 </div>
 
