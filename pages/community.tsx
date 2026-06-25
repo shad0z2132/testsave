@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -11,12 +11,15 @@ import { LeftSidebar } from "@/components/LeftSidebar";
 import { SubmissionCard, Submission } from "@/components/SubmissionCard";
 import { WalletModal } from "@/components/WalletModal";
 import { CommandPalette } from "@/components/CommandPalette";
-import { Plus, ArrowRight, RefreshCw, Loader2 } from "lucide-react";
+import { Plus, ArrowRight, RefreshCw, Loader2, Trophy, Clock, BarChart3, Inbox } from "lucide-react";
+
+type SortMode = "top" | "newest";
 
 export default function CommunityPage() {
   const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [sortBy, setSortBy] = useState<SortMode>("top");
   const [walletOpen, setWalletOpen] = useState(false);
   const [commandOpen, setCommandOpen] = useState(false);
 
@@ -45,6 +48,24 @@ export default function CommunityPage() {
     // Refresh list to keep counts in sync across sessions.
     fetchSubmissions();
   }, [fetchSubmissions]);
+
+  const sortedSubmissions = useMemo(() => {
+    const sorted = [...submissions];
+    if (sortBy === "top") {
+      sorted.sort((a, b) => b.votes_count - a.votes_count);
+    } else {
+      sorted.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+    }
+    return sorted;
+  }, [submissions, sortBy]);
+
+  const stats = useMemo(() => {
+    return {
+      total: submissions.length,
+      pending: submissions.filter((s) => s.status === "pending").length,
+      votes: submissions.reduce((acc, s) => acc + s.votes_count, 0),
+    };
+  }, [submissions]);
 
   return (
     <>
@@ -88,27 +109,81 @@ export default function CommunityPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3 }}
               >
-                <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                  <div>
-                    <h1 className="text-2xl font-bold tracking-tight text-foreground">
-                      Community submissions
-                    </h1>
-                    <p className="mt-1 text-sm text-foreground/60">
-                      Vote on projects the community wants to see listed. Top-voted submissions are reviewed by the SavePoint team.
-                    </p>
+                <div className="mb-6 rounded-2xl border border-border/40 bg-card p-5 shadow-[0_0_40px_rgba(255,42,140,0.05)] sm:p-6">
+                  <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                    <div>
+                      <h1 className="text-2xl font-bold tracking-tight text-foreground">
+                        Community submissions
+                      </h1>
+                      <p className="mt-1 max-w-xl text-sm text-foreground/60">
+                        Vote on projects the community wants to see listed. Top-voted submissions are reviewed by the SavePoint team.
+                      </p>
+                    </div>
+
+                    <Link
+                      href="/submit"
+                      className="group inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full border border-primary bg-card px-4 py-2 text-sm font-medium text-primary transition-all duration-300 hover:scale-105 hover:bg-primary hover:text-primary-foreground hover:shadow-[0_0_24px_rgba(255,42,140,0.45)]"
+                    >
+                      <Plus size={16} />
+                      Submit a project
+                      <ArrowRight
+                        size={14}
+                        className="transition-transform duration-300 group-hover:translate-x-0.5"
+                      />
+                    </Link>
                   </div>
 
-                  <Link
-                    href="/submit"
-                    className="group inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full border border-primary bg-card px-4 py-2 text-sm font-medium text-primary transition-all duration-300 hover:scale-105 hover:bg-primary hover:text-primary-foreground hover:shadow-[0_0_24px_rgba(255,42,140,0.45)]"
-                  >
-                    <Plus size={16} />
-                    Submit a project
-                    <ArrowRight
-                      size={14}
-                      className="transition-transform duration-300 group-hover:translate-x-0.5"
-                    />
-                  </Link>
+                  <div className="mt-5 grid grid-cols-3 gap-3 border-t border-border/40 pt-5">
+                    <div className="rounded-xl border border-border/40 bg-white/[0.03] p-3">
+                      <div className="flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-wider text-foreground/50">
+                        <Inbox size={12} /> Submissions
+                      </div>
+                      <p className="mt-1 font-mono text-lg font-bold text-foreground">{stats.total}</p>
+                    </div>
+                    <div className="rounded-xl border border-border/40 bg-white/[0.03] p-3">
+                      <div className="flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-wider text-foreground/50">
+                        <Clock size={12} /> Pending
+                      </div>
+                      <p className="mt-1 font-mono text-lg font-bold text-foreground">{stats.pending}</p>
+                    </div>
+                    <div className="rounded-xl border border-border/40 bg-white/[0.03] p-3">
+                      <div className="flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-wider text-foreground/50">
+                        <BarChart3 size={12} /> Total votes
+                      </div>
+                      <p className="mt-1 font-mono text-lg font-bold text-foreground">{stats.votes.toLocaleString()}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mb-4 flex items-center justify-between">
+                  <div className="inline-flex rounded-full border border-border/40 bg-card p-1">
+                    <button
+                      onClick={() => setSortBy("top")}
+                      className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-all ${
+                        sortBy === "top"
+                          ? "bg-primary text-primary-foreground"
+                          : "text-foreground/60 hover:text-foreground"
+                      }`}
+                    >
+                      <Trophy size={12} />
+                      Top voted
+                    </button>
+                    <button
+                      onClick={() => setSortBy("newest")}
+                      className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-all ${
+                        sortBy === "newest"
+                          ? "bg-primary text-primary-foreground"
+                          : "text-foreground/60 hover:text-foreground"
+                      }`}
+                    >
+                      <Clock size={12} />
+                      Newest
+                    </button>
+                  </div>
+
+                  <span className="text-xs text-foreground/40">
+                    {sortedSubmissions.length} project{sortedSubmissions.length !== 1 ? "s" : ""}
+                  </span>
                 </div>
 
                 {loading ? (
@@ -127,23 +202,27 @@ export default function CommunityPage() {
                       Try again
                     </button>
                   </div>
-                ) : submissions.length === 0 ? (
-                  <div className="rounded-2xl border border-border/40 bg-card/40 p-12 text-center">
-                    <p className="text-foreground/60">No pending submissions yet.</p>
+                ) : sortedSubmissions.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center rounded-2xl border border-border/40 bg-card p-12 text-center">
+                    <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/10">
+                      <Inbox size={28} className="text-primary" />
+                    </div>
+                    <p className="mt-4 text-foreground/60">No submissions yet.</p>
                     <Link
                       href="/submit"
-                      className="mt-4 inline-block text-sm text-primary hover:underline"
+                      className="mt-3 inline-flex items-center gap-1 text-sm text-primary hover:underline"
                     >
-                      Be the first to submit a project
+                      Be the first to submit a project <ArrowRight size={12} />
                     </Link>
                   </div>
                 ) : (
                   <div className="space-y-4">
-                    {submissions.map((submission, index) => (
+                    {sortedSubmissions.map((submission, index) => (
                       <SubmissionCard
                         key={submission.id}
                         submission={submission}
                         index={index}
+                        rank={sortBy === "top" ? index + 1 : undefined}
                         onVote={handleVote}
                       />
                     ))}

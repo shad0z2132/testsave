@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { VoteButton } from "./VoteButton";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, Trophy } from "lucide-react";
 
 export interface Submission {
   id: string;
@@ -22,10 +22,17 @@ export interface Submission {
 interface SubmissionCardProps {
   submission: Submission;
   index?: number;
+  rank?: number;
   onVote?: (id: string) => void;
 }
 
-export function SubmissionCard({ submission, index = 0, onVote }: SubmissionCardProps) {
+const rankStyles: Record<number, string> = {
+  1: "bg-yellow-400/15 text-yellow-400 border-yellow-400/30",
+  2: "bg-slate-300/15 text-slate-300 border-slate-300/30",
+  3: "bg-amber-600/15 text-amber-500 border-amber-500/30",
+};
+
+export function SubmissionCard({ submission, index = 0, rank, onVote }: SubmissionCardProps) {
   const displayUrl = submission.dex_url || submission.website || "#";
 
   return (
@@ -33,30 +40,41 @@ export function SubmissionCard({ submission, index = 0, onVote }: SubmissionCard
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, delay: index * 0.05 }}
-      className="group relative overflow-hidden rounded-xl border border-border/40 bg-card/40 backdrop-blur-sm transition-all hover:border-primary/30 hover:bg-card/60"
+      className="group relative overflow-hidden rounded-xl border border-border/40 bg-card transition-all hover:border-primary/30 hover:shadow-[0_0_24px_rgba(255,42,140,0.08)]"
     >
+      {rank && rank <= 3 && (
+        <div
+          className={`absolute left-0 top-0 flex h-5 items-center gap-0.5 rounded-br-lg border px-1.5 text-[10px] font-bold uppercase tracking-wider ${rankStyles[rank]}`}
+        >
+          <Trophy size={10} />
+          #{rank}
+        </div>
+      )}
+
       <div className="p-4">
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-3">
               {submission.image_url ? (
-                <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full border border-border/40 bg-black">
+                <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-full border border-border/40 bg-black ring-2 ring-transparent transition-all group-hover:ring-primary/20">
                   <Image
                     src={submission.image_url}
                     alt={submission.symbol}
                     fill
-                    sizes="40px"
+                    sizes="44px"
                     className="object-cover"
                   />
                 </div>
               ) : (
-                <div className="flex h-10 w-10 items-center justify-center rounded-full border border-border/40 bg-primary/10 text-xs font-bold text-primary">
+                <div className="flex h-11 w-11 items-center justify-center rounded-full border border-border/40 bg-primary/10 text-xs font-bold text-primary ring-2 ring-transparent transition-all group-hover:ring-primary/20">
                   {submission.symbol.slice(0, 2).toUpperCase()}
                 </div>
               )}
 
               <div>
-                <h3 className="text-base font-semibold text-foreground">{submission.name}</h3>
+                <h3 className="text-base font-semibold text-foreground transition-colors group-hover:text-white">
+                  {submission.name}
+                </h3>
                 <p className="text-xs text-foreground/50">{submission.symbol}</p>
               </div>
             </div>
@@ -72,7 +90,7 @@ export function SubmissionCard({ submission, index = 0, onVote }: SubmissionCard
                 href={displayUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 text-primary transition-colors hover:underline"
+                className="inline-flex items-center gap-1 rounded-md border border-border/60 bg-white/[0.03] px-2 py-1 text-primary transition-colors hover:bg-primary/10"
               >
                 DexScreener <ExternalLink size={10} />
               </a>
