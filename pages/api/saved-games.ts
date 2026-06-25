@@ -21,8 +21,9 @@ export default async function handler(
       if (error) throw error;
       return res.status(200).json((data ?? []).map((row) => row.game_id));
     } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
       console.error("[/api/saved-games] GET error:", err);
-      return res.status(500).json({ error: "Failed to load saved games" });
+      return res.status(500).json({ error: "Failed to load saved games", details: message });
     }
   }
 
@@ -40,8 +41,9 @@ export default async function handler(
       if (error) throw error;
       return res.status(200).json({ success: true });
     } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
       console.error("[/api/saved-games] POST error:", err);
-      return res.status(500).json({ error: "Failed to save game" });
+      return res.status(500).json({ error: "Failed to save game", details: message });
     }
   }
 
@@ -61,8 +63,9 @@ export default async function handler(
       if (error) throw error;
       return res.status(200).json({ success: true });
     } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
       console.error("[/api/saved-games] DELETE error:", err);
-      return res.status(500).json({ error: "Failed to remove saved game" });
+      return res.status(500).json({ error: "Failed to remove saved game", details: message });
     }
   }
 

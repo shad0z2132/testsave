@@ -50,7 +50,10 @@ export function useSavedGames() {
       setLoading(true);
       try {
         const res = await fetch(`/api/saved-games?wallet=${encodeURIComponent(address)}`);
-        if (!res.ok) throw new Error("Failed to sync saves");
+        if (!res.ok) {
+          const body = await res.json().catch(() => ({}));
+          throw new Error(body.details || body.error || `Failed to sync saves (${res.status})`);
+        }
         const cloudIds: string[] = await res.json();
         const localIds = loadLocalSaves();
 
@@ -62,13 +65,17 @@ export function useSavedGames() {
         // Push any local-only saves to cloud.
         const localOnly = localIds.filter((id) => !cloudIds.includes(id));
         await Promise.all(
-          localOnly.map((game_id) =>
-            fetch("/api/saved-games", {
+          localOnly.map(async (game_id) => {
+            const postRes = await fetch("/api/saved-games", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({ wallet: address, game_id }),
-            })
-          )
+            });
+            if (!postRes.ok) {
+              const body = await postRes.json().catch(() => ({}));
+              console.warn("[useSavedGames] failed to push save:", body.details || body.error);
+            }
+          })
         );
 
         setSyncedWallet(address);
@@ -92,13 +99,17 @@ export function useSavedGames() {
 
       if (connected && wallet) {
         try {
-          await fetch("/api/saved-games", {
+          const res = await fetch("/api/saved-games", {
             method: isSaving ? "POST" : "DELETE",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ wallet, game_id: gameId }),
           });
+          if (!res.ok) {
+            const body = await res.json().catch(() => ({}));
+            console.error("[useSavedGames] toggle error:", body.details || body.error || res.status);
+          }
         } catch (err) {
-          console.error("[useSavedGames] toggle error:", err);
+          console.error("[useSavedGames] toggle network error:", err);
         }
       }
 
