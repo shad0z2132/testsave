@@ -66,7 +66,9 @@ export function GameCard({ game, onSelect, index = 0 }: GameCardProps) {
       <div className="absolute -inset-0.5 rounded-xl bg-gradient-to-b from-primary/25 to-transparent opacity-0 blur-md transition-opacity duration-300 group-hover:opacity-100" />
 
       {/* Card */}
-      <div className="relative overflow-hidden rounded-xl border border-white/[0.08] bg-[#161618] transition-all duration-300 group-hover:border-primary/30 group-hover:shadow-[0_0_24px_rgba(204, 255, 0, 0.1)]">
+      <div className="relative overflow-hidden rounded-xl border border-white/[0.12] bg-[#0a0a0a] transition-all duration-300 group-hover:border-lime/40 group-hover:shadow-[0_0_24px_rgba(204,255,0,0.15)]">
+        {/* Lime top accent line */}
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-lime/50 to-transparent" />
         {/* Image container */}
         <div className="relative aspect-square w-full overflow-hidden rounded-t-xl">
           <Image

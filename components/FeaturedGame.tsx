@@ -56,7 +56,7 @@ function PriceSparkline({ positive }: { positive: boolean }) {
           />
           <stop
             offset="100%"
-            stopColor={positive ? "#00f0ff" : "#ff4444"}
+            stopColor="#0a0a0a"
             stopOpacity="0"
           />
         </linearGradient>
@@ -79,7 +79,7 @@ function SafetyRing({ score }: { score: number }) {
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (score / 100) * circumference;
   const color =
-    score >= 80 ? "#34d399" : score >= 60 ? "#facc15" : "#f87171";
+    score >= 80 ? "#ccff00" : score >= 60 ? "#00f0ff" : "#ff4444";
 
   return (
     <div className="relative flex h-11 w-11 items-center justify-center">
@@ -133,8 +133,8 @@ export function FeaturedGame({
       {/* Section header */}
       <div className="mb-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <div className="flex h-6 w-6 items-center justify-center rounded-md bg-yellow-400/10">
-            <Trophy size={14} className="text-yellow-400" />
+          <div className="flex h-6 w-6 items-center justify-center rounded-md bg-lime/10">
+            <Trophy size={14} className="text-lime" />
           </div>
           <span className="text-xs font-bold uppercase tracking-wider text-foreground">
             Featured #1
@@ -150,10 +150,10 @@ export function FeaturedGame({
       {/* Main card */}
       <div
         onClick={() => onSelect(game)}
-        className="group relative cursor-pointer overflow-hidden rounded-2xl border border-border/40 bg-card transition-all duration-500 hover:border-primary/40 hover:shadow-[0_0_60px_rgba(204, 255, 0, 0.12)]"
+        className="group relative cursor-pointer overflow-hidden rounded-2xl border border-white/[0.12] bg-[#0a0a0a] transition-all duration-500 hover:border-lime/40 hover:shadow-[0_0_60px_rgba(204,255,0,0.15)]"
       >
         {/* Top gradient line */}
-        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-lime/50 to-transparent" />
 
         {/* Banner */}
         <div className="relative aspect-[21/9] w-full overflow-hidden">
@@ -166,14 +166,14 @@ export function FeaturedGame({
             priority
             loading="eager"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-card via-card/80 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/80 to-transparent" />
           <PriceSparkline positive={isPositive} />
 
           {/* Fade sparkline into content */}
-          <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-card via-card/60 to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/60 to-transparent" />
 
           {/* Rank badge */}
-          <div className="absolute left-4 top-4 flex h-11 w-11 items-center justify-center rounded-full bg-yellow-400 text-base font-black text-black shadow-[0_0_24px_rgba(255,211,0,0.4)] ring-4 ring-yellow-400/20">
+          <div className="absolute left-4 top-4 flex h-11 w-11 items-center justify-center rounded-full bg-lime text-base font-black text-black shadow-[0_0_24px_rgba(204,255,0,0.4)] ring-4 ring-lime/20">
             1
           </div>
         </div>
@@ -181,7 +181,7 @@ export function FeaturedGame({
         {/* Content */}
         <div className="relative -mt-12 p-5 sm:-mt-14">
           {/* Token logo */}
-          <div className="absolute -top-9 left-5 z-10 h-16 w-16 overflow-hidden rounded-2xl border-2 border-card bg-card shadow-[0_0_24px_rgba(0,0,0,0.4)] sm:-top-11 sm:h-20 sm:w-20">
+          <div className="absolute -top-9 left-5 z-10 h-16 w-16 overflow-hidden rounded-2xl border-2 border-[#0a0a0a] bg-[#0a0a0a] shadow-[0_0_24px_rgba(0,0,0,0.4)] sm:-top-11 sm:h-20 sm:w-20">
             <Image
               src={game.thumbnail}
               alt={game.tokenSymbol}
@@ -224,7 +224,7 @@ export function FeaturedGame({
             </div>
 
             {/* Price block */}
-            <div className="flex items-center gap-4 rounded-xl border border-border/60 bg-black/20 p-3 transition-colors group-hover:border-primary/20 group-hover:bg-white/[0.02]">
+            <div className="flex items-center gap-4 rounded-xl border border-white/[0.12] bg-black p-3 transition-colors group-hover:border-lime/20 group-hover:bg-white/[0.02]">
               <Tooltip
                 content={
                   <div className="space-y-1.5">
@@ -235,7 +235,7 @@ export function FeaturedGame({
                           <div
                             key={item.label}
                             className={`flex items-center justify-between gap-2 ${
-                              item.passed ? "text-emerald-400" : "text-foreground/40"
+                              item.passed ? "text-lime" : "text-foreground/40"
                             }`}
                           >
                             <span className="flex items-center gap-1.5">
@@ -279,7 +279,7 @@ export function FeaturedGame({
                 e.stopPropagation();
                 onSelect(game);
               }}
-              className="bg-primary text-primary-foreground shadow-[0_0_0_0_rgba(204, 255, 0, 0)] transition-all hover:bg-primary/90 hover:shadow-[0_0_24px_rgba(204, 255, 0, 0.35)] active:scale-[0.98]"
+              className="bg-lime text-black shadow-[0_0_0_0_rgba(204,255,0,0)] transition-all hover:bg-lime/90 hover:shadow-[0_0_24px_rgba(204,255,0,0.35)] active:scale-[0.98]"
             >
               <Gamepad2 size={16} className="mr-1.5" />
               View Game
@@ -288,18 +288,18 @@ export function FeaturedGame({
               variant="outline"
               size="icon"
               onClick={handleToggleSave}
-              className={`border-border transition-all hover:border-primary hover:scale-105 active:scale-95 ${
-                isSaved(game.id) ? "text-primary" : "text-muted-foreground hover:text-primary"
+              className={`border-white/[0.12] bg-[#0a0a0a] transition-all hover:border-lime hover:scale-105 active:scale-95 ${
+                isSaved(game.id) ? "text-lime" : "text-muted-foreground hover:text-lime"
               }`}
             >
-              <Save size={16} className={isSaved(game.id) ? "fill-primary" : ""} />
+              <Save size={16} className={isSaved(game.id) ? "fill-lime" : ""} />
             </Button>
             <a
               href={game.website}
               target="_blank"
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
-              className="inline-flex size-9 items-center justify-center rounded-lg border border-border text-muted-foreground transition-all hover:border-primary hover:text-primary hover:scale-105 active:scale-95"
+              className="inline-flex size-9 items-center justify-center rounded-lg border border-white/[0.12] bg-[#0a0a0a] text-muted-foreground transition-all hover:border-lime hover:text-lime hover:scale-105 active:scale-95"
             >
               <ExternalLink size={16} />
             </a>
@@ -307,7 +307,7 @@ export function FeaturedGame({
         </div>
 
         {/* Stats strip */}
-        <div className="grid grid-cols-2 gap-px border-t border-border/40 bg-border/30 sm:grid-cols-4">
+        <div className="grid grid-cols-2 gap-px border-t border-white/[0.08] bg-white/[0.03] sm:grid-cols-4">
           {[
             { label: "Market Cap", value: formatUsd(game.marketCap), icon: BarChart3 },
             { label: "24h Volume", value: formatUsd(game.volume24h), icon: BarChart3 },
@@ -318,15 +318,15 @@ export function FeaturedGame({
               icon: Trophy,
               color:
                 game.safetyScore >= 80
-                  ? "text-emerald-400"
+                  ? "text-lime"
                   : game.safetyScore >= 60
-                  ? "text-yellow-400"
+                  ? "text-cyan-400"
                   : "text-red-400",
             },
           ].map((stat) => (
             <div
               key={stat.label}
-              className="group/stat flex items-center justify-between bg-black/20 px-4 py-3 transition-colors hover:bg-white/[0.03]"
+              className="group/stat flex items-center justify-between bg-[#0a0a0a] px-4 py-3 transition-colors hover:bg-white/[0.03]"
             >
               <div>
                 <p className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">

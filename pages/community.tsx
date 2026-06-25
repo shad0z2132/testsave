@@ -111,7 +111,8 @@ export default function CommunityPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3 }}
               >
-                <div className="mb-6 rounded-2xl border border-border/40 bg-card p-5 shadow-[0_0_40px_rgba(204,255,0,0.05)] sm:p-6">
+                <div className="relative mb-6 overflow-hidden rounded-2xl border border-white/[0.12] bg-[#0a0a0a] p-5 shadow-[0_0_40px_rgba(204,255,0,0.05)] sm:p-6">
+                  <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-lime/50 to-transparent" />
                   <div>
                     <h1 className="text-2xl font-bold tracking-tight text-foreground">
                       Community submissions
@@ -121,20 +122,20 @@ export default function CommunityPage() {
                     </p>
                   </div>
 
-                  <div className="mt-5 grid grid-cols-3 gap-3 border-t border-border/40 pt-5">
-                    <div className="rounded-xl border border-border/40 bg-white/[0.03] p-3">
+                  <div className="mt-5 grid grid-cols-3 gap-3 border-t border-white/[0.08] pt-5">
+                    <div className="rounded-xl border border-white/[0.12] bg-black p-3">
                       <div className="flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-wider text-foreground/50">
                         <Inbox size={12} /> Submissions
                       </div>
                       <p className="mt-1 font-mono text-lg font-bold text-foreground">{stats.total}</p>
                     </div>
-                    <div className="rounded-xl border border-border/40 bg-white/[0.03] p-3">
+                    <div className="rounded-xl border border-white/[0.12] bg-black p-3">
                       <div className="flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-wider text-foreground/50">
                         <Clock size={12} /> Pending
                       </div>
                       <p className="mt-1 font-mono text-lg font-bold text-foreground">{stats.pending}</p>
                     </div>
-                    <div className="rounded-xl border border-border/40 bg-white/[0.03] p-3">
+                    <div className="rounded-xl border border-white/[0.12] bg-black p-3">
                       <div className="flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-wider text-foreground/50">
                         <BarChart3 size={12} /> Total votes
                       </div>
@@ -144,7 +145,8 @@ export default function CommunityPage() {
                 </div>
 
                 {/* Inline submission form */}
-                <div className="mb-6 rounded-2xl border border-border/40 bg-card p-5 shadow-[0_0_40px_rgba(204,255,0,0.05)] sm:p-6">
+                <div className="relative mb-6 overflow-hidden rounded-2xl border border-white/[0.12] bg-[#0a0a0a] p-5 shadow-[0_0_40px_rgba(204,255,0,0.05)] sm:p-6">
+                  <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-lime/50 to-transparent" />
                   <div className="mb-4">
                     <h2 className="text-lg font-bold tracking-tight text-foreground">
                       Submit a project
@@ -157,7 +159,7 @@ export default function CommunityPage() {
                 </div>
 
                 <div className="mb-4 flex items-center justify-between">
-                  <div className="inline-flex rounded-full border border-border/40 bg-card p-1">
+                  <div className="inline-flex rounded-full border border-white/[0.12] bg-[#0a0a0a] p-1">
                     <button
                       onClick={() => setSortBy("top")}
                       className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-all ${
@@ -204,9 +206,10 @@ export default function CommunityPage() {
                     </button>
                   </div>
                 ) : sortedSubmissions.length === 0 ? (
-                  <div className="flex flex-col items-center justify-center rounded-2xl border border-border/40 bg-card p-12 text-center">
-                    <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/10">
-                      <Inbox size={28} className="text-primary" />
+                  <div className="relative flex flex-col items-center justify-center overflow-hidden rounded-2xl border border-white/[0.12] bg-[#0a0a0a] p-12 text-center">
+                    <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-lime/50 to-transparent" />
+                    <div className="flex h-14 w-14 items-center justify-center rounded-full bg-lime/10">
+                      <Inbox size={28} className="text-lime" />
                     </div>
                     <p className="mt-4 text-foreground/60">No submissions yet.</p>
                     <Link

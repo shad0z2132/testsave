@@ -12,8 +12,6 @@ import {
   TrendingUp,
   Users,
   X,
-  Mail,
-  Globe,
   ArrowRight,
   Sparkles,
 } from "lucide-react";
@@ -54,9 +52,7 @@ export function Footer({ games = staticGames }: FooterProps) {
   };
 
   const socials = [
-    { icon: X, href: "https://x.com/savepoint", label: "X" },
-    { icon: Globe, href: "https://savepoint.gg", label: "Website" },
-    { icon: Mail, href: "mailto:hello@savepoint.gg", label: "Email" },
+    { icon: X, href: "https://x.com/savepointsol", label: "X" },
   ];
 
   const scrollToTop = () => {

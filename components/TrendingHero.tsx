@@ -15,21 +15,21 @@ interface TrendingHeroProps {
 const rankStyles = [
   {
     // #1
-    badge: "bg-yellow-400 text-black",
-    glow: "shadow-[0_0_40px_rgba(255,211,0,0.18)]",
-    ring: "ring-yellow-400/30",
+    badge: "bg-lime text-black",
+    glow: "shadow-[0_0_40px_rgba(204,255,0,0.18)]",
+    ring: "ring-lime/30",
   },
   {
     // #2
-    badge: "bg-slate-300 text-black",
-    glow: "shadow-[0_0_30px_rgba(203,213,225,0.12)]",
-    ring: "ring-slate-300/30",
+    badge: "bg-cyan-400 text-black",
+    glow: "shadow-[0_0_30px_rgba(34,211,238,0.12)]",
+    ring: "ring-cyan-400/30",
   },
   {
     // #3
-    badge: "bg-amber-600 text-white",
-    glow: "shadow-[0_0_30px_rgba(217,119,6,0.12)]",
-    ring: "ring-amber-600/30",
+    badge: "bg-lime/80 text-black",
+    glow: "shadow-[0_0_30px_rgba(204,255,0,0.12)]",
+    ring: "ring-lime/30",
   },
 ];
 
@@ -50,10 +50,12 @@ function PodiumCard({
   return (
     <div
       onClick={() => onSelect(game)}
-      className={`group relative cursor-pointer overflow-hidden rounded-xl border border-white/[0.08] bg-[#161618] transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-[0_0_32px_rgba(204, 255, 0, 0.12)] ${style.glow} ${
+      className={`group relative cursor-pointer overflow-hidden rounded-xl border border-white/[0.12] bg-[#0a0a0a] transition-all duration-300 hover:-translate-y-1 hover:border-lime/40 hover:shadow-[0_0_32px_rgba(204,255,0,0.15)] ${style.glow} ${
         featured ? "col-span-2 row-span-2" : ""
       }`}
     >
+      {/* Lime top accent line */}
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-lime/50 to-transparent" />
       {/* Rank badge */}
       <div
         className={`absolute left-3 top-3 z-20 flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold ${style.badge} ${style.ring} ring-2`}
@@ -144,9 +146,10 @@ export function TrendingHero({ games, onSelectGame }: TrendingHeroProps) {
 
   if (topThree.length === 0) {
     return (
-      <div className="rounded-2xl border border-border/40 bg-card p-8 text-center">
-        <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 mx-auto">
-          <BarChart3 size={28} className="text-primary" />
+      <div className="relative overflow-hidden rounded-2xl border border-white/[0.12] bg-[#0a0a0a] p-8 text-center">
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-lime/50 to-transparent" />
+        <div className="flex h-14 w-14 items-center justify-center rounded-full bg-lime/10 mx-auto">
+          <BarChart3 size={28} className="text-lime" />
         </div>
         <h3 className="mt-4 text-lg font-semibold text-foreground">No trending projects</h3>
         <p className="mt-1 max-w-md mx-auto text-sm text-foreground/60">

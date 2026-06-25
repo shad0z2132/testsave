@@ -17,9 +17,9 @@ interface GameListRowProps {
 }
 
 const rankStyles: Record<number, string> = {
-  1: "bg-yellow-400/20 text-yellow-400",
-  2: "bg-slate-300/20 text-slate-300",
-  3: "bg-amber-600/20 text-amber-500",
+  1: "bg-lime/20 text-lime",
+  2: "bg-cyan-400/20 text-cyan-400",
+  3: "bg-lime/15 text-lime/80",
 };
 
 export function GameListRow({ game, rank, onSelect, index = 0 }: GameListRowProps) {
@@ -38,7 +38,7 @@ export function GameListRow({ game, rank, onSelect, index = 0 }: GameListRowProp
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.25, delay: index * 0.02 }}
       onClick={() => onSelect(game)}
-      className="group flex cursor-pointer items-center gap-3 rounded-lg border border-transparent px-3 py-2 transition-all hover:border-primary/30 hover:bg-white/[0.03]"
+      className="group flex cursor-pointer items-center gap-3 rounded-lg border border-white/[0.06] px-3 py-2 transition-all hover:border-lime/30 hover:bg-white/[0.03]"
     >
       {/* Rank */}
       <span
@@ -116,7 +116,7 @@ export function GameListRow({ game, rank, onSelect, index = 0 }: GameListRowProp
       {/* Save */}
       <button
         onClick={handleToggleSave}
-        className="ml-2 flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-foreground/50 transition-all hover:bg-white/[0.05] hover:text-primary active:scale-95"
+        className="ml-2 flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-foreground/50 transition-all hover:bg-white/[0.05] hover:text-lime active:scale-95"
       >
         <Save size={14} className={isSaved(game.id) ? "fill-primary text-primary" : ""} />
       </button>

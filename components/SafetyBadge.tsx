@@ -16,9 +16,9 @@ export function SafetyBadge({ score, breakdown, size = "md" }: SafetyBadgeProps)
   const isMedium = score >= 60;
 
   const colorClasses = isHigh
-    ? "border-emerald-500/30 bg-emerald-950/30 text-emerald-400"
+    ? "border-lime/30 bg-lime/10 text-lime"
     : isMedium
-    ? "border-yellow-500/30 bg-yellow-950/30 text-yellow-400"
+    ? "border-cyan-400/30 bg-cyan-950/30 text-cyan-400"
     : "border-red-500/30 bg-red-950/30 text-red-400";
 
   return (
@@ -32,7 +32,7 @@ export function SafetyBadge({ score, breakdown, size = "md" }: SafetyBadgeProps)
                 <div
                   key={item.label}
                   className={`flex items-center justify-between gap-2 ${
-                    item.passed ? "text-emerald-400" : "text-foreground/40"
+                    item.passed ? "text-lime" : "text-foreground/40"
                   }`}
                 >
                   <span className="flex items-center gap-1.5">

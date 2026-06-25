@@ -27,11 +27,6 @@ import {
   Sunrise,
   Radio,
   BarChart3,
-  Gamepad2,
-  Swords,
-  Car,
-  Puzzle,
-  Sprout,
   Clock,
   Rocket,
   CircleDot,
@@ -72,15 +67,6 @@ const statuses = [
   { id: "Live", label: "Live", icon: CircleDot, color: "text-emerald-400" },
   { id: "Beta", label: "Beta", icon: Rocket, color: "text-primary" },
   { id: "Upcoming", label: "Upcoming", icon: Clock, color: "text-positive" },
-];
-
-const genres = [
-  { id: "RPG", label: "RPG", icon: Gamepad2 },
-  { id: "Strategy", label: "Strategy", icon: Swords },
-  { id: "Action", label: "Action", icon: Zap },
-  { id: "Arcade", label: "Arcade", icon: Car },
-  { id: "Simulation", label: "Simulation", icon: Puzzle },
-  { id: "Idle", label: "Idle", icon: Sprout },
 ];
 
 const roadmap = [
@@ -367,21 +353,6 @@ function SidebarContent({
               label={status.label}
               count={getCount(status.id)}
               iconColor={status.color}
-            />
-          ))}
-        </SidebarSection>
-
-        <div className="my-2 h-px bg-border/40" />
-
-        <SidebarSection title="Genres" defaultOpen>
-          {genres.map((genre) => (
-            <SidebarItem
-              key={genre.id}
-              active={activeFilter === genre.id}
-              onClick={() => handleFilterClick(genre.id)}
-              icon={genre.icon}
-              label={genre.label}
-              count={getCount(genre.id)}
             />
           ))}
         </SidebarSection>

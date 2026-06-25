@@ -18,9 +18,9 @@ interface TrendingShelfProps {
 }
 
 const rankBadgeStyles: Record<number, string> = {
-  1: "bg-yellow-400 text-black ring-2 ring-yellow-400/40 shadow-[0_0_16px_rgba(255,211,0,0.45)]",
-  2: "bg-slate-200 text-black ring-2 ring-slate-200/40 shadow-[0_0_12px_rgba(226,232,240,0.25)]",
-  3: "bg-amber-500 text-white ring-2 ring-amber-500/40 shadow-[0_0_12px_rgba(245,158,11,0.3)]",
+  1: "bg-lime text-black ring-2 ring-lime/40 shadow-[0_0_16px_rgba(204,255,0,0.45)]",
+  2: "bg-cyan-400 text-black ring-2 ring-cyan-400/40 shadow-[0_0_12px_rgba(34,211,238,0.3)]",
+  3: "bg-lime/80 text-black ring-2 ring-lime/30 shadow-[0_0_12px_rgba(204,255,0,0.3)]",
 };
 
 function MiniSparkline({ positive }: { positive: boolean }) {

@@ -40,10 +40,10 @@ export function SubmissionCard({ submission, index = 0, rank, onVote }: Submissi
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, delay: index * 0.05 }}
-      className="group relative overflow-hidden rounded-xl border border-border/40 bg-card transition-all hover:border-lime/30 hover:shadow-[0_0_24px_rgba(204,255,0,0.12)]"
+      className="group relative overflow-hidden rounded-xl border border-white/[0.12] bg-[#0a0a0a] transition-all hover:border-lime/40 hover:shadow-[0_0_24px_rgba(204,255,0,0.15)]"
     >
       {/* Lime top accent line */}
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-lime/30 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-lime/50 to-transparent" />
       {rank && rank <= 3 && (
         <div
           className={`absolute left-0 top-0 flex h-5 items-center gap-0.5 rounded-br-lg border px-1.5 text-[10px] font-bold uppercase tracking-wider ${rankStyles[rank]}`}
