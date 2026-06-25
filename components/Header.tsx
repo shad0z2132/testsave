@@ -19,7 +19,7 @@ export function Header({ onSearchClick, onMenuClick }: HeaderProps) {
           <div className="flex items-center gap-2 lg:hidden">
             <button
               onClick={onMenuClick}
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-border/60 bg-white/[0.03] text-muted-foreground transition-all hover:scale-105 hover:border-primary hover:text-primary hover:shadow-[0_0_16px_rgba(255,42,140,0.2)]"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-border/60 bg-white/[0.03] text-muted-foreground transition-all hover:scale-105 hover:border-primary hover:text-primary hover:shadow-[0_0_16px_rgba(204, 255, 0, 0.2)]"
               aria-label="Open menu"
             >
               <Menu size={18} />
@@ -29,7 +29,7 @@ export function Header({ onSearchClick, onMenuClick }: HeaderProps) {
             <Link href="/" className="flex items-center gap-2.5">
               <div className="relative">
                 <Logo size={28} />
-                <span className="absolute -bottom-0.5 -right-0.5 flex h-2 w-2 rounded-full bg-primary shadow-[0_0_8px_rgba(255,42,140,0.8)]" />
+                <span className="absolute -bottom-0.5 -right-0.5 flex h-2 w-2 rounded-full bg-primary shadow-[0_0_8px_rgba(204, 255, 0, 0.8)]" />
               </div>
               <span className="text-lg font-bold tracking-tight">SavePoint</span>
             </Link>
@@ -64,7 +64,7 @@ export function Header({ onSearchClick, onMenuClick }: HeaderProps) {
             </Link>
             <button
               onClick={onSearchClick}
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-border/60 bg-white/[0.03] text-muted-foreground transition-all hover:scale-105 hover:border-primary hover:text-primary hover:shadow-[0_0_16px_rgba(255,42,140,0.2)] lg:hidden"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-border/60 bg-white/[0.03] text-muted-foreground transition-all hover:scale-105 hover:border-primary hover:text-primary hover:shadow-[0_0_16px_rgba(204, 255, 0, 0.2)] lg:hidden"
               aria-label="Search"
             >
               <Search size={16} />

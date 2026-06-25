@@ -99,7 +99,7 @@ export function VoteButton({ submissionId, votes, onVote }: VoteButtonProps) {
         className={`flex h-11 w-11 flex-col items-center justify-center rounded-xl border bg-card transition-all ${
           cooldown > 0
             ? "cursor-not-allowed border-border/40 bg-card text-foreground/40"
-            : "border-primary/40 text-primary hover:scale-105 hover:border-primary hover:bg-primary hover:text-primary-foreground hover:shadow-[0_0_20px_rgba(255,42,140,0.35)]"
+            : "border-primary/40 text-primary hover:scale-105 hover:border-primary hover:bg-primary hover:text-primary-foreground hover:shadow-[0_0_20px_rgba(204, 255, 0, 0.35)]"
         }`}
         aria-label="Upvote"
       >

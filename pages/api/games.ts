@@ -263,8 +263,8 @@ function tokenPlaceholder(symbol: string): string {
   const svg = `
     <svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
       <rect width="256" height="256" fill="#161618" />
-      <rect x="16" y="16" width="224" height="224" rx="48" fill="none" stroke="#ff2a8c" stroke-width="6" />
-      <text x="128" y="148" font-family="ui-sans-serif, system-ui, sans-serif" font-size="72" font-weight="700" fill="#ff2a8c" text-anchor="middle">${clean}</text>
+      <rect x="16" y="16" width="224" height="224" rx="48" fill="none" stroke="#ccff00" stroke-width="6" />
+      <text x="128" y="148" font-family="ui-sans-serif, system-ui, sans-serif" font-size="72" font-weight="700" fill="#ccff00" text-anchor="middle">${clean}</text>
     </svg>
   `.trim();
   return `data:image/svg+xml;base64,${Buffer.from(svg).toString("base64")}`;

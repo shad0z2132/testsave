@@ -50,7 +50,7 @@ function PodiumCard({
   return (
     <div
       onClick={() => onSelect(game)}
-      className={`group relative cursor-pointer overflow-hidden rounded-xl border border-white/[0.08] bg-[#161618] transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-[0_0_32px_rgba(255,42,140,0.12)] ${style.glow} ${
+      className={`group relative cursor-pointer overflow-hidden rounded-xl border border-white/[0.08] bg-[#161618] transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-[0_0_32px_rgba(204, 255, 0, 0.12)] ${style.glow} ${
         featured ? "col-span-2 row-span-2" : ""
       }`}
     >

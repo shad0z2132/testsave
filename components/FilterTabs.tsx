@@ -30,7 +30,7 @@ export function FilterTabs({ activeFilter, onFilterChange }: FilterTabsProps) {
               className={cn(
                 "relative shrink-0 rounded-full px-3.5 py-1.5 text-xs font-medium transition-all",
                 activeFilter === filter
-                  ? "bg-primary text-primary-foreground shadow-[0_0_16px_rgba(255,42,140,0.35)]"
+                  ? "bg-primary text-primary-foreground shadow-[0_0_16px_rgba(204, 255, 0, 0.35)]"
                   : "border border-border/60 bg-white/[0.03] text-muted-foreground hover:border-primary/50 hover:text-foreground hover:bg-white/[0.06]"
               )}
             >

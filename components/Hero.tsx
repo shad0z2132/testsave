@@ -50,7 +50,7 @@ export function Hero({ onExplore }: HeroProps) {
         <div className="glass mb-5 flex items-center gap-2 rounded-full px-3 py-1.5">
           <Logo size={20} />
           <span className="text-xs font-medium text-muted-foreground">SavePoint</span>
-          <span className="flex h-2 w-2 rounded-full bg-primary shadow-[0_0_8px_rgba(255,42,140,0.8)] animate-pulse-live" />
+          <span className="flex h-2 w-2 rounded-full bg-primary shadow-[0_0_8px_rgba(204, 255, 0, 0.8)] animate-pulse-live" />
         </div>
 
         {/* Headline */}
@@ -68,7 +68,7 @@ export function Hero({ onExplore }: HeroProps) {
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
           <Button
             onClick={onExplore}
-            className="h-11 gap-2 bg-primary px-6 text-base font-semibold text-primary-foreground shadow-[0_0_0_0_rgba(255,42,140,0)] transition-all hover:bg-primary/90 hover:shadow-[0_0_28px_rgba(255,42,140,0.35)] active:scale-[0.98]"
+            className="h-11 gap-2 bg-primary px-6 text-base font-semibold text-primary-foreground shadow-[0_0_0_0_rgba(204, 255, 0, 0)] transition-all hover:bg-primary/90 hover:shadow-[0_0_28px_rgba(204, 255, 0, 0.35)] active:scale-[0.98]"
           >
             <Sparkles size={16} />
             Explore games

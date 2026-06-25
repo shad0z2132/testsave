@@ -131,7 +131,7 @@ export function CommandPalette({
       onClick={() => onOpenChange(false)}
     >
       <div
-        className="w-full max-w-2xl overflow-hidden rounded-2xl border border-border/60 bg-[#0f0f11]/95 shadow-[0_0_60px_rgba(255,42,140,0.15)] animate-in zoom-in-95 slide-in-from-top-4 duration-200"
+        className="w-full max-w-2xl overflow-hidden rounded-2xl border border-border/60 bg-[#0f0f11]/95 shadow-[0_0_60px_rgba(204, 255, 0, 0.15)] animate-in zoom-in-95 slide-in-from-top-4 duration-200"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Search input */}
@@ -175,7 +175,7 @@ export function CommandPalette({
                     onClick={() => handleSelect(allItems[actualIndex])}
                     className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left transition-colors ${
                       selectedIndex === actualIndex
-                        ? "bg-primary/15 text-foreground shadow-[inset_0_0_0_1px_rgba(255,42,140,0.2)]"
+                        ? "bg-primary/15 text-foreground shadow-[inset_0_0_0_1px_rgba(204, 255, 0, 0.2)]"
                         : "text-muted-foreground hover:bg-white/[0.03] hover:text-foreground"
                     }`}
                   >
@@ -204,7 +204,7 @@ export function CommandPalette({
                     onClick={() => handleSelect(allItems[actualIndex])}
                     className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left transition-colors ${
                       selectedIndex === actualIndex
-                        ? "bg-primary/15 text-foreground shadow-[inset_0_0_0_1px_rgba(255,42,140,0.2)]"
+                        ? "bg-primary/15 text-foreground shadow-[inset_0_0_0_1px_rgba(204, 255, 0, 0.2)]"
                         : "text-muted-foreground hover:bg-white/[0.03] hover:text-foreground"
                     }`}
                   >

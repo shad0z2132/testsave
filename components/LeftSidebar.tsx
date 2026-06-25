@@ -268,7 +268,7 @@ function SidebarContent({
           >
             <div className="relative flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 ring-1 ring-primary/20">
               <Logo size={22} />
-              <span className="absolute -right-0.5 -top-0.5 flex h-2 w-2 rounded-full bg-primary shadow-[0_0_8px_rgba(255,42,140,0.9)]" />
+              <span className="absolute -right-0.5 -top-0.5 flex h-2 w-2 rounded-full bg-primary shadow-[0_0_8px_rgba(204, 255, 0, 0.9)]" />
             </div>
             <div className="flex flex-col">
               <span className="text-base font-bold tracking-tight leading-none">SavePoint</span>

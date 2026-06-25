@@ -69,7 +69,7 @@ function TrendingShelfCard({
       onClick={() => onSelect(game)}
       className="group relative w-[190px] shrink-0 cursor-pointer snap-start sm:w-[240px]"
     >
-      <div className="relative overflow-hidden rounded-xl border border-white/[0.08] bg-[#161618] shadow-[0_0_0_0_rgba(255,42,140,0)] transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 hover:shadow-[0_0_32px_rgba(255,42,140,0.18)]">
+      <div className="relative overflow-hidden rounded-xl border border-white/[0.08] bg-[#161618] shadow-[0_0_0_0_rgba(204, 255, 0, 0)] transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 hover:shadow-[0_0_32px_rgba(204, 255, 0, 0.18)]">
         {/* Top gradient line */}
         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
 

@@ -40,7 +40,7 @@ export function SubmissionCard({ submission, index = 0, rank, onVote }: Submissi
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, delay: index * 0.05 }}
-      className="group relative overflow-hidden rounded-xl border border-border/40 bg-card transition-all hover:border-primary/30 hover:shadow-[0_0_24px_rgba(255,42,140,0.08)]"
+      className="group relative overflow-hidden rounded-xl border border-border/40 bg-card transition-all hover:border-primary/30 hover:shadow-[0_0_24px_rgba(204, 255, 0, 0.08)]"
     >
       {rank && rank <= 3 && (
         <div

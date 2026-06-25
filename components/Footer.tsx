@@ -71,7 +71,7 @@ export function Footer({ games = staticGames }: FooterProps) {
 
       <div className="relative mx-auto max-w-6xl px-4 py-12">
         {/* Newsletter / CTA */}
-        <div className="mb-10 rounded-2xl border border-border/40 bg-gradient-to-br from-primary/10 via-card/50 to-card/50 p-5 shadow-[0_0_40px_rgba(255,42,140,0.06)] sm:p-6">
+        <div className="mb-10 rounded-2xl border border-border/40 bg-gradient-to-br from-primary/10 via-card/50 to-card/50 p-5 shadow-[0_0_40px_rgba(204, 255, 0, 0.06)] sm:p-6">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <div className="mb-1 inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary">
@@ -97,7 +97,7 @@ export function Footer({ games = staticGames }: FooterProps) {
               <Button
                 type="submit"
                 size="sm"
-                className="h-10 gap-1 rounded-lg bg-primary px-4 text-xs font-bold text-primary-foreground shadow-[0_0_16px_rgba(255,42,140,0.25)] transition-all hover:shadow-[0_0_24px_rgba(255,42,140,0.4)] hover:bg-primary/90"
+                className="h-10 gap-1 rounded-lg bg-primary px-4 text-xs font-bold text-primary-foreground shadow-[0_0_16px_rgba(204, 255, 0, 0.25)] transition-all hover:shadow-[0_0_24px_rgba(204, 255, 0, 0.4)] hover:bg-primary/90"
               >
                 Subscribe
                 <ArrowRight size={12} />
@@ -113,7 +113,7 @@ export function Footer({ games = staticGames }: FooterProps) {
             <div className="flex items-center gap-2.5">
               <div className="relative flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 ring-1 ring-primary/20">
                 <Logo size={22} />
-                <span className="absolute -right-0.5 -top-0.5 flex h-2 w-2 rounded-full bg-primary shadow-[0_0_8px_rgba(255,42,140,0.9)]" />
+                <span className="absolute -right-0.5 -top-0.5 flex h-2 w-2 rounded-full bg-primary shadow-[0_0_8px_rgba(204, 255, 0, 0.9)]" />
               </div>
               <span className="text-lg font-bold tracking-tight">SavePoint</span>
             </div>
@@ -130,7 +130,7 @@ export function Footer({ games = staticGames }: FooterProps) {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={social.label}
-                  className="flex h-9 w-9 items-center justify-center rounded-lg border border-border/60 bg-white/[0.03] text-foreground/60 transition-all hover:scale-105 hover:border-primary hover:bg-primary/10 hover:text-primary hover:shadow-[0_0_16px_rgba(255,42,140,0.2)]"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg border border-border/60 bg-white/[0.03] text-foreground/60 transition-all hover:scale-105 hover:border-primary hover:bg-primary/10 hover:text-primary hover:shadow-[0_0_16px_rgba(204, 255, 0, 0.2)]"
                 >
                   <social.icon size={15} />
                 </a>
@@ -179,7 +179,7 @@ export function Footer({ games = staticGames }: FooterProps) {
           {stats.map((stat) => (
             <div
               key={stat.label}
-              className="group relative overflow-hidden rounded-xl border border-border/40 bg-card p-3 transition-all hover:border-primary/30 hover:shadow-[0_0_20px_rgba(255,42,140,0.08)]"
+              className="group relative overflow-hidden rounded-xl border border-border/40 bg-card p-3 transition-all hover:border-primary/30 hover:shadow-[0_0_20px_rgba(204, 255, 0, 0.08)]"
             >
               <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
               <div className="flex items-center gap-3">
@@ -226,7 +226,7 @@ export function Footer({ games = staticGames }: FooterProps) {
             onClick={scrollToTop}
             variant="outline"
             size="sm"
-            className="h-9 gap-1.5 rounded-full border-border/60 bg-white/[0.03] px-4 text-xs text-foreground/70 transition-all hover:scale-105 hover:border-primary hover:bg-primary/10 hover:text-primary hover:shadow-[0_0_16px_rgba(255,42,140,0.2)]"
+            className="h-9 gap-1.5 rounded-full border-border/60 bg-white/[0.03] px-4 text-xs text-foreground/70 transition-all hover:scale-105 hover:border-primary hover:bg-primary/10 hover:text-primary hover:shadow-[0_0_16px_rgba(204, 255, 0, 0.2)]"
           >
             <ArrowUp size={12} />
             Back to top

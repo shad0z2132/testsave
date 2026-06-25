@@ -145,7 +145,7 @@ export default function Docs() {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4 }}
-              className="rounded-2xl border border-border/40 bg-card p-8 text-center shadow-[0_0_60px_rgba(255,42,140,0.06)] sm:p-12"
+              className="rounded-2xl border border-border/40 bg-card p-8 text-center shadow-[0_0_60px_rgba(204, 255, 0, 0.06)] sm:p-12"
             >
               <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-medium uppercase tracking-wider text-primary">
                 <Sparkles size={12} />
@@ -190,7 +190,7 @@ export default function Docs() {
                   initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.4, delay: index * 0.05 }}
-                  className="group rounded-xl border border-border/40 bg-card p-5 transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-[0_0_24px_rgba(255,42,140,0.08)]"
+                  className="group rounded-xl border border-border/40 bg-card p-5 transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-[0_0_24px_rgba(204, 255, 0, 0.08)]"
                 >
                   <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
                     <link.icon size={20} />
@@ -249,7 +249,7 @@ export default function Docs() {
             {/* Sidebar TOC */}
             <aside className="hidden lg:block">
               <div className="sticky top-24 space-y-6">
-                <div className="rounded-xl border border-border/40 bg-card p-4 shadow-[0_0_24px_rgba(255,42,140,0.04)]">
+                <div className="rounded-xl border border-border/40 bg-card p-4 shadow-[0_0_24px_rgba(204, 255, 0, 0.04)]">
                   <p className="mb-3 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-muted-foreground">
                     <span className="h-1 w-1 rounded-full bg-primary/70" />
                     On this page
@@ -318,7 +318,7 @@ export default function Docs() {
                   {safetyChecks.map((check) => (
                     <div
                       key={check.label}
-                      className="rounded-xl border border-border/40 bg-card p-5 transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-[0_0_20px_rgba(255,42,140,0.06)]"
+                      className="rounded-xl border border-border/40 bg-card p-5 transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-[0_0_20px_rgba(204, 255, 0, 0.06)]"
                     >
                       <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
                         <check.icon size={20} />
@@ -337,7 +337,7 @@ export default function Docs() {
                   SavePoint does not rely on algorithmic discovery alone. Every game in our core
                   directory is manually reviewed against a vetting checklist before being added.
                 </p>
-                <div className="rounded-xl border border-border/40 bg-card p-6 shadow-[0_0_20px_rgba(255,42,140,0.04)]">
+                <div className="rounded-xl border border-border/40 bg-card p-6 shadow-[0_0_20px_rgba(204, 255, 0, 0.04)]">
                   <ul className="space-y-4">
                     {[
                       "Real playable product, demo, or beta",
@@ -387,7 +387,7 @@ export default function Docs() {
                   ].map((item) => (
                     <div
                       key={item.title}
-                      className="rounded-xl border border-border/40 bg-card p-5 transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-[0_0_20px_rgba(255,42,140,0.06)]"
+                      className="rounded-xl border border-border/40 bg-card p-5 transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-[0_0_20px_rgba(204, 255, 0, 0.06)]"
                     >
                       <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
                         <item.icon size={20} />
@@ -419,7 +419,7 @@ export default function Docs() {
                   ].map((item) => (
                     <div
                       key={item.step}
-                      className="relative rounded-xl border border-border/40 bg-card p-6 transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-[0_0_20px_rgba(255,42,140,0.06)]"
+                      className="relative rounded-xl border border-border/40 bg-card p-6 transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-[0_0_20px_rgba(204, 255, 0, 0.06)]"
                     >
                       <span className="absolute right-4 top-4 font-mono text-2xl font-bold text-foreground/10">
                         {item.step}
@@ -496,7 +496,7 @@ export default function Docs() {
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }}
                       transition={{ duration: 0.3, delay: index * 0.05 }}
-                      className="rounded-xl border border-border/40 bg-card p-5 transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-[0_0_20px_rgba(255,42,140,0.06)]"
+                      className="rounded-xl border border-border/40 bg-card p-5 transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-[0_0_20px_rgba(204, 255, 0, 0.06)]"
                     >
                       <h3 className="font-bold text-foreground">{faq.q}</h3>
                       <p className="mt-2 text-sm leading-relaxed text-foreground/60">{faq.a}</p>
@@ -525,7 +525,7 @@ export default function Docs() {
               </section>
 
               {/* CTA */}
-              <section className="rounded-2xl border border-border/40 bg-card p-8 text-center shadow-[0_0_40px_rgba(255,42,140,0.06)]">
+              <section className="rounded-2xl border border-border/40 bg-card p-8 text-center shadow-[0_0_40px_rgba(204, 255, 0, 0.06)]">
                 <h2 className="text-2xl font-bold text-foreground">Ready to explore?</h2>
                 <p className="mx-auto mt-2 max-w-md text-sm text-foreground/60">
                   Start browsing curated Solana games with real safety scores and live market data.
@@ -533,7 +533,7 @@ export default function Docs() {
                 <div className="mt-5 flex flex-col items-center justify-center gap-3 sm:flex-row">
                   <Link
                     href="/"
-                    className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-2.5 text-sm font-bold text-primary-foreground transition-all hover:scale-105 hover:shadow-[0_0_24px_rgba(255,42,140,0.4)]"
+                    className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-2.5 text-sm font-bold text-primary-foreground transition-all hover:scale-105 hover:shadow-[0_0_24px_rgba(204, 255, 0, 0.4)]"
                   >
                     Launch SavePoint
                     <ChevronRight size={16} />

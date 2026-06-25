@@ -139,7 +139,7 @@ export function FeaturedGame({
           <span className="text-xs font-bold uppercase tracking-wider text-foreground">
             Featured #1
           </span>
-          <span className="flex h-2 w-2 rounded-full bg-primary shadow-[0_0_8px_rgba(255,42,140,0.8)] animate-pulse-live" />
+          <span className="flex h-2 w-2 rounded-full bg-primary shadow-[0_0_8px_rgba(204, 255, 0, 0.8)] animate-pulse-live" />
         </div>
         <div className="flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-2.5 py-1 text-xs font-semibold text-primary">
           <Flame size={12} className="animate-pulse" />
@@ -150,7 +150,7 @@ export function FeaturedGame({
       {/* Main card */}
       <div
         onClick={() => onSelect(game)}
-        className="group relative cursor-pointer overflow-hidden rounded-2xl border border-border/40 bg-card transition-all duration-500 hover:border-primary/40 hover:shadow-[0_0_60px_rgba(255,42,140,0.12)]"
+        className="group relative cursor-pointer overflow-hidden rounded-2xl border border-border/40 bg-card transition-all duration-500 hover:border-primary/40 hover:shadow-[0_0_60px_rgba(204, 255, 0, 0.12)]"
       >
         {/* Top gradient line */}
         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
@@ -279,7 +279,7 @@ export function FeaturedGame({
                 e.stopPropagation();
                 onSelect(game);
               }}
-              className="bg-primary text-primary-foreground shadow-[0_0_0_0_rgba(255,42,140,0)] transition-all hover:bg-primary/90 hover:shadow-[0_0_24px_rgba(255,42,140,0.35)] active:scale-[0.98]"
+              className="bg-primary text-primary-foreground shadow-[0_0_0_0_rgba(204, 255, 0, 0)] transition-all hover:bg-primary/90 hover:shadow-[0_0_24px_rgba(204, 255, 0, 0.35)] active:scale-[0.98]"
             >
               <Gamepad2 size={16} className="mr-1.5" />
               View Game

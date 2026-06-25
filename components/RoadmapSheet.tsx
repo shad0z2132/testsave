@@ -89,8 +89,8 @@ const statusConfig = {
   },
   "in-progress": {
     border: "border-primary/30",
-    glow: "shadow-[0_0_24px_rgba(255,42,140,0.08)]",
-    dot: "bg-primary shadow-[0_0_12px_rgba(255,42,140,0.6)]",
+    glow: "shadow-[0_0_24px_rgba(204, 255, 0, 0.08)]",
+    dot: "bg-primary shadow-[0_0_12px_rgba(204, 255, 0, 0.6)]",
     badgeBg: "bg-primary/10",
     badgeText: "text-primary",
     badgeIcon: Flame,
@@ -190,7 +190,7 @@ export function RoadmapSheet({ open, onOpenChange }: RoadmapSheetProps) {
 
                   {!isRevealed && (
                     <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-2 bg-black/10 backdrop-blur-[1px]">
-                      <HelpCircle size={32} className="text-primary drop-shadow-[0_0_12px_rgba(255,42,140,0.5)]" />
+                      <HelpCircle size={32} className="text-primary drop-shadow-[0_0_12px_rgba(204, 255, 0, 0.5)]" />
                       <span className="text-[10px] font-bold uppercase tracking-widest text-foreground/80">
                         Coming soon
                       </span>

@@ -56,7 +56,7 @@ export function SubmissionForm({ onSuccess }: SubmissionFormProps) {
 
   if (submitted) {
     return (
-      <div className="flex flex-col items-center justify-center rounded-2xl border border-primary/20 bg-card p-8 text-center shadow-[0_0_40px_rgba(255,42,140,0.08)]">
+      <div className="flex flex-col items-center justify-center rounded-2xl border border-primary/20 bg-card p-8 text-center shadow-[0_0_40px_rgba(204, 255, 0, 0.08)]">
         <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
           <CheckCircle size={32} className="text-primary" />
         </div>
@@ -69,7 +69,7 @@ export function SubmissionForm({ onSuccess }: SubmissionFormProps) {
             setSubmitted(false);
             setDexUrl("");
           }}
-          className="mt-6 gap-2 rounded-full border border-primary bg-card px-5 text-primary transition-all duration-300 hover:scale-105 hover:bg-primary hover:text-primary-foreground hover:shadow-[0_0_24px_rgba(255,42,140,0.45)]"
+          className="mt-6 gap-2 rounded-full border border-primary bg-card px-5 text-primary transition-all duration-300 hover:scale-105 hover:bg-primary hover:text-primary-foreground hover:shadow-[0_0_24px_rgba(204, 255, 0, 0.45)]"
         >
           Submit another
           <ArrowRight size={14} />
@@ -109,7 +109,7 @@ export function SubmissionForm({ onSuccess }: SubmissionFormProps) {
         <Button
           type="submit"
           disabled={isLoading}
-          className="group w-full gap-2 rounded-full border border-primary bg-card px-5 text-primary transition-all duration-300 hover:scale-[1.02] hover:bg-primary hover:text-primary-foreground hover:shadow-[0_0_24px_rgba(255,42,140,0.45)] disabled:opacity-70 sm:w-auto sm:px-8"
+          className="group w-full gap-2 rounded-full border border-primary bg-card px-5 text-primary transition-all duration-300 hover:scale-[1.02] hover:bg-primary hover:text-primary-foreground hover:shadow-[0_0_24px_rgba(204, 255, 0, 0.45)] disabled:opacity-70 sm:w-auto sm:px-8"
         >
           {isLoading ? (
             <Loader2 size={16} className="animate-spin" />

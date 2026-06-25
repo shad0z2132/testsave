@@ -17,7 +17,7 @@
   --secondary-foreground: #ffffff;
   --muted: #171717;
   --muted-foreground: #b4b4b4;
-  --accent: #ff2a8c;
+  --accent: #ccff00;
   --accent-foreground: #000000;
   --destructive: #ff4444;
   --border: #262626;
@@ -114,16 +114,16 @@ body::-webkit-scrollbar-thumb:hover {
 /* Custom utilities */
 @layer utilities {
   .text-glow {
-    text-shadow: 0 0 20px rgba(255, 42, 140, 0.4);
+    text-shadow: 0 0 20px rgba(204, 255, 0, 0.4);
   }
   .text-gradient {
-    background: linear-gradient(135deg, #ff2a8c 0%, #00f0ff 100%);
+    background: linear-gradient(135deg, #ccff00 0%, #00f0ff 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
   .glow-pink {
-    box-shadow: 0 0 20px rgba(255, 42, 140, 0.25);
+    box-shadow: 0 0 20px rgba(204, 255, 0, 0.25);
   }
   .glow-cyan {
     box-shadow: 0 0 20px rgba(0, 240, 255, 0.2);
