@@ -92,7 +92,7 @@ const roadmap = [
 
 const roadmapStatus = {
   completed: { color: "text-positive", bg: "bg-positive/10", border: "border-positive/30", dot: "bg-positive" },
-  "in-progress": { color: "text-primary", bg: "bg-primary/10", border: "border-primary/30", dot: "bg-primary" },
+  "in-progress": { color: "text-lime", bg: "bg-lime/10", border: "border-lime/30", dot: "bg-lime" },
   upcoming: { color: "text-foreground/50", bg: "bg-white/[0.03]", border: "border-border/40", dot: "bg-foreground/30" },
 };
 
@@ -116,13 +116,13 @@ function SidebarItem({
   const content = (
     <>
       {active && (
-        <span className="absolute left-0 top-1/2 h-5 w-1 -translate-y-1/2 rounded-full bg-primary shadow-[0_0_12px_rgba(255,42,140,0.9)]" />
+        <span className="absolute left-0 top-1/2 h-5 w-1 -translate-y-1/2 rounded-full bg-lime shadow-[0_0_12px_rgba(204,255,0,0.9)]" />
       )}
       <Icon
         size={16}
         className={cn(
           "transition-colors",
-          active ? "text-primary" : iconColor || "text-muted-foreground group-hover:text-foreground"
+          active ? "text-lime" : iconColor || "text-muted-foreground group-hover:text-foreground"
         )}
       />
       <span className="relative z-10 flex-1">{label}</span>
@@ -130,7 +130,7 @@ function SidebarItem({
         <span
           className={cn(
             "font-mono text-[11px] tabular-nums",
-            active ? "text-primary/90" : "text-foreground/50"
+            active ? "text-lime/90" : "text-foreground/50"
           )}
         >
           {count}
@@ -142,7 +142,7 @@ function SidebarItem({
   const className = cn(
     "group relative flex w-full items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-left text-[14px] transition-all duration-200",
     active
-      ? "bg-primary/15 font-medium text-foreground shadow-[0_0_16px_rgba(255,42,140,0.12)]"
+      ? "bg-lime/10 font-medium text-foreground shadow-[0_0_16px_rgba(204,255,0,0.12)]"
       : "text-foreground/70 hover:bg-white/[0.05] hover:text-foreground"
   );
 
@@ -303,10 +303,10 @@ function SidebarContent({
           >
             <button
               onClick={() => handleTabClick("discover")}
-              className="flex w-full items-center justify-between rounded-md border border-primary/20 bg-primary/10 px-2.5 py-1.5 text-left text-xs font-medium text-primary transition-all hover:border-primary/30 hover:bg-primary/15"
+              className="flex w-full items-center justify-between rounded-md border border-lime/20 bg-lime/10 px-2.5 py-1.5 text-left text-xs font-medium text-lime transition-all hover:border-lime/30 hover:bg-lime/15"
             >
               <span className="flex items-center gap-2">
-                <span className="h-1.5 w-1.5 rounded-full bg-primary shadow-[0_0_6px_rgba(255,42,140,0.8)]" />
+                <span className="h-1.5 w-1.5 rounded-full bg-lime shadow-[0_0_6px_rgba(204,255,0,0.8)]" />
                 {activeSection}
               </span>
               <X size={10} />
@@ -419,7 +419,7 @@ function SidebarContent({
       {/* Roadmap */}
       <button
         onClick={() => setRoadmapOpen(true)}
-        className="group mx-2 mb-2 w-[calc(100%-1rem)] rounded-xl border border-border/40 bg-gradient-to-b from-white/[0.04] to-white/[0.02] p-2.5 text-left transition-all hover:border-primary/30 hover:shadow-[0_0_20px_rgba(255,42,140,0.1)]"
+        className="group mx-2 mb-2 w-[calc(100%-1rem)] rounded-xl border border-border/40 bg-gradient-to-b from-white/[0.04] to-white/[0.02] p-2.5 text-left transition-all hover:border-lime/30 hover:shadow-[0_0_20px_rgba(204,255,0,0.1)]"
       >
         <div className="mb-2 flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -466,7 +466,7 @@ function SidebarContent({
           <Plus size={15} />
           <span>Submit Game</span>
         </Link>
-        <SolanaConnectButton className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-border/60 bg-white/[0.03] py-2 text-xs font-medium text-foreground transition-all hover:!border-primary hover:!bg-white/[0.06] hover:!text-primary active:scale-[0.98] wallet-adapter-button-trigger" />
+        <SolanaConnectButton className="flex w-full rounded-lg py-2 text-xs active:scale-[0.98]" />
       </div>
     </>
   );
@@ -478,10 +478,10 @@ export function LeftSidebar(props: LeftSidebarProps) {
   return (
     <>
       {/* Desktop sidebar */}
-      <aside className="fixed bottom-0 left-0 top-0 z-50 hidden w-56 flex-col border-r border-border/40 bg-[#050505]/95 backdrop-blur-xl lg:flex">
+      <aside className="fixed bottom-0 left-0 top-0 z-50 hidden w-56 flex-col border-r border-lime/20 bg-[#080a00]/95 backdrop-blur-xl lg:flex">
         {/* Top accent line */}
-        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-primary/60 via-primary/20 to-transparent" />
-        <div className="absolute inset-y-0 right-0 w-px bg-gradient-to-b from-primary/20 via-border/30 to-transparent" />
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-lime/60 via-lime/20 to-transparent" />
+        <div className="absolute inset-y-0 right-0 w-px bg-gradient-to-b from-lime/20 via-border/30 to-transparent" />
         <SidebarContent {...props} />
       </aside>
 
@@ -490,13 +490,13 @@ export function LeftSidebar(props: LeftSidebarProps) {
         <SheetContent
           side="left"
           showCloseButton={false}
-          className="w-[280px] border-r border-border/40 bg-[#050505] p-0 sm:w-[300px]"
+          className="w-[280px] border-r border-lime/20 bg-[#080a00] p-0 sm:w-[300px]"
         >
           <SheetHeader className="border-b border-border/40 px-3 py-3">
             <SheetTitle className="flex items-center gap-2.5">
-              <div className="relative flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 ring-1 ring-primary/20">
+              <div className="relative flex h-8 w-8 items-center justify-center rounded-lg bg-lime/10 ring-1 ring-lime/20">
                 <Logo size={20} />
-                <span className="absolute -right-0.5 -top-0.5 flex h-1.5 w-1.5 rounded-full bg-primary shadow-[0_0_8px_rgba(255,42,140,0.9)]" />
+                <span className="absolute -right-0.5 -top-0.5 flex h-1.5 w-1.5 rounded-full bg-lime shadow-[0_0_8px_rgba(204,255,0,0.9)]" />
               </div>
               <div className="flex flex-col">
                 <span className="text-base font-bold tracking-tight leading-none">SavePoint</span>

@@ -74,7 +74,7 @@
     @apply font-heading;
   }
 
-  /* Pink scrollbars globally */
+  /* Lime scrollbars globally */
   ::-webkit-scrollbar {
     width: 8px;
     height: 8px;
@@ -83,11 +83,11 @@
     background: #0a0a0a;
   }
   ::-webkit-scrollbar-thumb {
-    background: #ff2a8c;
+    background: #ccff00;
     border-radius: 4px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #ff4d9e;
+    background: #e0ff4d;
   }
   ::-webkit-scrollbar-corner {
     background: #0a0a0a;
@@ -96,7 +96,7 @@
   /* Firefox */
   html {
     scrollbar-width: thin;
-    scrollbar-color: #ff2a8c #0a0a0a;
+    scrollbar-color: #ccff00 #0a0a0a;
   }
 }
 

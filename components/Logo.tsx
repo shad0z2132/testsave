@@ -13,7 +13,7 @@ export function Logo({ className, size = 32 }: LogoProps) {
       style={{ width: size, height: size }}
     >
       <Image
-        src="/savepointlogonobg.png"
+        src="/savepointlogolime.png"
         alt="SavePoint"
         fill
         sizes={`${size}px`}
