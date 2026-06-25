@@ -1,6 +1,7 @@
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import { Inter, Roboto, JetBrains_Mono } from "next/font/google";
+import { CursorTrail } from "@/components/CursorTrail";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -25,6 +26,7 @@ const jetbrains = JetBrains_Mono({
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <div className={`${inter.variable} ${roboto.variable} ${jetbrains.variable}`}>
+      <CursorTrail />
       <Component {...pageProps} />
     </div>
   );
