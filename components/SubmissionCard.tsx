@@ -40,8 +40,10 @@ export function SubmissionCard({ submission, index = 0, rank, onVote }: Submissi
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, delay: index * 0.05 }}
-      className="group relative overflow-hidden rounded-xl border border-border/40 bg-card transition-all hover:border-primary/30 hover:shadow-[0_0_24px_rgba(204, 255, 0, 0.08)]"
+      className="group relative overflow-hidden rounded-xl border border-border/40 bg-card transition-all hover:border-lime/30 hover:shadow-[0_0_24px_rgba(204,255,0,0.12)]"
     >
+      {/* Lime top accent line */}
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-lime/30 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
       {rank && rank <= 3 && (
         <div
           className={`absolute left-0 top-0 flex h-5 items-center gap-0.5 rounded-br-lg border px-1.5 text-[10px] font-bold uppercase tracking-wider ${rankStyles[rank]}`}
@@ -56,7 +58,7 @@ export function SubmissionCard({ submission, index = 0, rank, onVote }: Submissi
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-3">
               {submission.image_url ? (
-                <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-full border border-border/40 bg-black ring-2 ring-transparent transition-all group-hover:ring-primary/20">
+                <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-full border border-border/40 bg-black ring-2 ring-transparent transition-all group-hover:ring-lime/20">
                   <Image
                     src={submission.image_url}
                     alt={submission.symbol}
@@ -66,7 +68,7 @@ export function SubmissionCard({ submission, index = 0, rank, onVote }: Submissi
                   />
                 </div>
               ) : (
-                <div className="flex h-11 w-11 items-center justify-center rounded-full border border-border/40 bg-primary/10 text-xs font-bold text-primary ring-2 ring-transparent transition-all group-hover:ring-primary/20">
+                <div className="flex h-11 w-11 items-center justify-center rounded-full border border-border/40 bg-lime/10 text-xs font-bold text-lime ring-2 ring-transparent transition-all group-hover:ring-lime/20">
                   {submission.symbol.slice(0, 2).toUpperCase()}
                 </div>
               )}
@@ -90,7 +92,7 @@ export function SubmissionCard({ submission, index = 0, rank, onVote }: Submissi
                 href={displayUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 rounded-md border border-border/60 bg-white/[0.03] px-2 py-1 text-primary transition-colors hover:bg-primary/10"
+                className="inline-flex items-center gap-1 rounded-md border border-border/60 bg-white/[0.03] px-2 py-1 text-lime transition-colors hover:bg-lime/10"
               >
                 DexScreener <ExternalLink size={10} />
               </a>
