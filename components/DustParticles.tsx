@@ -22,11 +22,11 @@ export function DustParticles() {
         const c = pickColor(i * 3);
         return {
           id: i,
-          left: `${seededRandom(i * 3 + 1) * 100}%`,
-          size: seededRandom(i * 3 + 2) * 2.5 + 0.5, // 0.5-3px
-          duration: seededRandom(i * 3 + 3) * 12 + 12, // 12-24s
-          delay: seededRandom(i * 3 + 4) * -25, // Start at random positions
-          opacity: seededRandom(i * 3 + 5) * 0.6 + 0.25, // 0.25-0.85
+          left: `${(seededRandom(i * 3 + 1) * 100).toFixed(4)}%`,
+          size: Number((seededRandom(i * 3 + 2) * 2.5 + 0.5).toFixed(4)), // 0.5-3px
+          duration: Number((seededRandom(i * 3 + 3) * 12 + 12).toFixed(4)), // 12-24s
+          delay: Number((seededRandom(i * 3 + 4) * -25).toFixed(4)), // Start at random positions
+          opacity: Number((seededRandom(i * 3 + 5) * 0.6 + 0.25).toFixed(4)), // 0.25-0.85
           color: `rgba(${c.r}, ${c.g}, ${c.b}`,
         };
       }),
@@ -41,11 +41,11 @@ export function DustParticles() {
         const c = pickColor(seedBase);
         return {
           id: `glow-${i}`,
-          left: `${seededRandom(seedBase + 1) * 100}%`,
-          size: seededRandom(seedBase + 2) * 3 + 2, // 2-5px
-          duration: seededRandom(seedBase + 3) * 15 + 18, // 18-33s
-          delay: seededRandom(seedBase + 4) * -30,
-          opacity: seededRandom(seedBase + 5) * 0.3 + 0.15,
+          left: `${(seededRandom(seedBase + 1) * 100).toFixed(4)}%`,
+          size: Number((seededRandom(seedBase + 2) * 3 + 2).toFixed(4)), // 2-5px
+          duration: Number((seededRandom(seedBase + 3) * 15 + 18).toFixed(4)), // 18-33s
+          delay: Number((seededRandom(seedBase + 4) * -30).toFixed(4)),
+          opacity: Number((seededRandom(seedBase + 5) * 0.3 + 0.15).toFixed(4)),
           color: `rgba(${c.r}, ${c.g}, ${c.b}`,
         };
       }),
@@ -60,11 +60,11 @@ export function DustParticles() {
         const c = pickColor(seedBase);
         return {
           id: `streak-${i}`,
-          left: `${seededRandom(seedBase + 1) * 100}%`,
-          size: seededRandom(seedBase + 2) * 1.5 + 1,
-          duration: seededRandom(seedBase + 3) * 8 + 10,
-          delay: seededRandom(seedBase + 4) * -20,
-          opacity: seededRandom(seedBase + 5) * 0.5 + 0.4,
+          left: `${(seededRandom(seedBase + 1) * 100).toFixed(4)}%`,
+          size: Number((seededRandom(seedBase + 2) * 1.5 + 1).toFixed(4)),
+          duration: Number((seededRandom(seedBase + 3) * 8 + 10).toFixed(4)),
+          delay: Number((seededRandom(seedBase + 4) * -20).toFixed(4)),
+          opacity: Number((seededRandom(seedBase + 5) * 0.5 + 0.4).toFixed(4)),
           color: `rgba(${c.r}, ${c.g}, ${c.b}`,
         };
       }),

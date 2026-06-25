@@ -15,7 +15,7 @@ import { games } from "@/data/games";
 import { Game } from "@/types/game";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
-import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
+import { SolanaConnectButton } from "./SolanaConnectButton";
 import { useSavedGames } from "@/hooks/useSavedGames";
 import {
   Compass,
@@ -466,7 +466,7 @@ function SidebarContent({
           <Plus size={15} />
           <span>Submit Game</span>
         </Link>
-        <WalletMultiButton className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-border/60 bg-white/[0.03] py-2 text-xs font-medium text-foreground transition-all hover:!border-primary hover:!bg-white/[0.06] hover:!text-primary active:scale-[0.98] wallet-adapter-button-trigger" />
+        <SolanaConnectButton className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-border/60 bg-white/[0.03] py-2 text-xs font-medium text-foreground transition-all hover:!border-primary hover:!bg-white/[0.06] hover:!text-primary active:scale-[0.98] wallet-adapter-button-trigger" />
       </div>
     </>
   );
