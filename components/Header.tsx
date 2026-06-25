@@ -69,7 +69,7 @@ export function Header({ onSearchClick, onMenuClick }: HeaderProps) {
             >
               <Search size={16} />
             </button>
-            <SolanaConnectButton className="hidden rounded-full border border-primary bg-primary/10 !px-4 !py-0 !text-primary !font-medium !text-xs !h-8 hover:!scale-105 hover:!bg-primary hover:!text-primary-foreground hover:shadow-[0_0_24px_rgba(255,42,140,0.35)] sm:flex wallet-adapter-button-trigger" />
+            <SolanaConnectButton className="hidden !h-8 sm:flex" />
           </div>
         </div>
       </div>

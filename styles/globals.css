@@ -11,7 +11,7 @@
   --card-foreground: #ffffff;
   --popover: #161618;
   --popover-foreground: #ffffff;
-  --primary: #ff2a8c;
+  --primary: #ccff00;
   --primary-foreground: #000000;
   --secondary: #171717;
   --secondary-foreground: #ffffff;
@@ -22,9 +22,11 @@
   --destructive: #ff4444;
   --border: #262626;
   --input: #262626;
-  --ring: #ff2a8c;
+  --ring: #ccff00;
   --positive: #34d399;
   --negative: #ff4444;
+  --lime: #ccff00;
+  --lime-glow: rgba(204, 255, 0, 0.35);
   --radius: 0.75rem;
 }
 
@@ -49,6 +51,8 @@
   --color-ring: var(--ring);
   --color-positive: var(--positive);
   --color-negative: var(--negative);
+  --color-lime: var(--lime);
+  --color-lime-glow: var(--lime-glow);
   --radius-sm: calc(var(--radius) * 0.5);
   --radius-md: calc(var(--radius) * 0.75);
   --radius-lg: var(--radius);
@@ -245,7 +249,7 @@
   animation: marquee 25s linear infinite;
 }
 
-/* Solana wallet adapter — SavePoint neon pink theme override (no purple) */
+/* Solana wallet adapter — SavePoint neon lime theme override (no purple) */
 .wallet-adapter-modal-wrapper {
   background: rgba(0, 0, 0, 0.85) !important;
   backdrop-filter: blur(12px);
@@ -253,9 +257,9 @@
 
 .wallet-adapter-modal {
   background: #0a0a0a !important;
-  border: 1px solid rgba(255, 42, 140, 0.25) !important;
+  border: 1px solid rgba(204, 255, 0, 0.25) !important;
   border-radius: 1rem !important;
-  box-shadow: 0 0 40px rgba(255, 42, 140, 0.15), 0 0 80px rgba(255, 42, 140, 0.05) !important;
+  box-shadow: 0 0 40px rgba(204, 255, 0, 0.12), 0 0 80px rgba(204, 255, 0, 0.04) !important;
 }
 
 .wallet-adapter-modal-title {
@@ -269,45 +273,45 @@
 }
 
 .wallet-adapter-button {
-  background: rgba(255, 42, 140, 0.08) !important;
-  border: 1px solid rgba(255, 42, 140, 0.2) !important;
+  background: rgba(204, 255, 0, 0.08) !important;
+  border: 1px solid rgba(204, 255, 0, 0.2) !important;
   color: #ffffff !important;
   border-radius: 0.75rem !important;
   transition: all 0.2s ease !important;
 }
 
 .wallet-adapter-button:not([disabled]):hover {
-  background: rgba(255, 42, 140, 0.2) !important;
-  border-color: rgba(255, 42, 140, 0.5) !important;
-  box-shadow: 0 0 20px rgba(255, 42, 140, 0.2) !important;
+  background: rgba(204, 255, 0, 0.18) !important;
+  border-color: rgba(204, 255, 0, 0.5) !important;
+  box-shadow: 0 0 20px rgba(204, 255, 0, 0.18) !important;
   transform: translateY(-1px) !important;
 }
 
 .wallet-adapter-modal-list-more {
   background: transparent !important;
-  color: #ff2a8c !important;
-  border: 1px solid rgba(255, 42, 140, 0.3) !important;
+  color: #ccff00 !important;
+  border: 1px solid rgba(204, 255, 0, 0.3) !important;
   border-radius: 0.75rem !important;
 }
 
 .wallet-adapter-modal-list-more:hover {
-  background: rgba(255, 42, 140, 0.12) !important;
+  background: rgba(204, 255, 0, 0.12) !important;
 }
 
 .wallet-adapter-modal-button-close {
-  background: rgba(255, 42, 140, 0.1) !important;
-  color: #ff2a8c !important;
-  border: 1px solid rgba(255, 42, 140, 0.25) !important;
+  background: rgba(204, 255, 0, 0.1) !important;
+  color: #ccff00 !important;
+  border: 1px solid rgba(204, 255, 0, 0.25) !important;
 }
 
 .wallet-adapter-modal-button-close:hover {
-  background: rgba(255, 42, 140, 0.2) !important;
+  background: rgba(204, 255, 0, 0.2) !important;
 }
 
 .wallet-adapter-modal-content-loading {
-  color: #ff2a8c !important;
+  color: #ccff00 !important;
 }
 
 .wallet-adapter-ripple {
-  background: rgba(255, 42, 140, 0.3) !important;
+  background: rgba(204, 255, 0, 0.3) !important;
 }

@@ -34,10 +34,10 @@ function WalletButtonContent({ className }: WalletButtonContentProps) {
       onClick={handleClick}
       disabled={isBusy}
       className={cn(
-        "group relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-full border font-medium transition-all active:scale-[0.98] disabled:opacity-70 disabled:active:scale-100",
+        "group relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-full border font-semibold tracking-wide transition-all active:scale-[0.98] disabled:opacity-70 disabled:active:scale-100",
         connected
-          ? "border-primary/40 bg-primary/10 px-3 py-0 text-primary hover:border-primary hover:bg-primary hover:text-primary-foreground hover:shadow-[0_0_24px_rgba(255,42,140,0.35)]"
-          : "border-primary bg-primary/10 px-4 py-0 text-primary hover:scale-105 hover:bg-primary hover:text-primary-foreground hover:shadow-[0_0_24px_rgba(255,42,140,0.35)]",
+          ? "border-lime/30 bg-lime/10 px-3 py-0 text-lime hover:border-lime hover:bg-lime hover:text-black hover:shadow-lime-glow"
+          : "border-lime bg-lime/15 px-4 py-0 text-lime hover:scale-105 hover:bg-lime hover:text-black hover:shadow-[0_0_28px_rgba(204,255,0,0.45)]",
         className
       )}
     >

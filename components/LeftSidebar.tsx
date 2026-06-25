@@ -461,7 +461,7 @@ function SidebarContent({
         <Link
           href="/submit"
           onClick={onNavigate}
-          className="group relative mb-2 flex w-full items-center justify-center gap-1.5 overflow-hidden rounded-lg bg-primary py-2.5 text-xs font-bold text-primary-foreground shadow-[0_0_16px_rgba(255,42,140,0.25)] transition-all hover:shadow-[0_0_24px_rgba(255,42,140,0.4)] hover:bg-primary/90 active:scale-[0.98]"
+          className="group relative mb-2 flex w-full items-center justify-center gap-1.5 overflow-hidden rounded-lg bg-primary py-2.5 text-xs font-bold text-primary-foreground shadow-[0_0_16px_rgba(204,255,0,0.25)] transition-all hover:shadow-[0_0_24px_rgba(204,255,0,0.4)] hover:bg-primary/90 active:scale-[0.98]"
         >
           <Plus size={15} />
           <span>Submit Game</span>
