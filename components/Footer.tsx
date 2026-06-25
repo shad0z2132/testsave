@@ -214,7 +214,7 @@ export function Footer({ games = staticGames }: FooterProps) {
               © {new Date().getFullYear()} SavePoint. All rights reserved.
             </p>
             <p className="text-[10px] text-foreground/30">
-              Built for the Solana gaming community.
+              Built with {"<3"} for the Solana community.
             </p>
           </div>
 
