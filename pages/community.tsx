@@ -9,8 +9,9 @@ import { Footer } from "@/components/Footer";
 import { DustParticles } from "@/components/DustParticles";
 import { LeftSidebar } from "@/components/LeftSidebar";
 import { SubmissionCard, Submission } from "@/components/SubmissionCard";
+import { SubmissionForm } from "@/components/SubmissionForm";
 import { CommandPalette } from "@/components/CommandPalette";
-import { Plus, ArrowRight, RefreshCw, Loader2, Trophy, Clock, BarChart3, Inbox } from "lucide-react";
+import { ArrowRight, RefreshCw, Loader2, Trophy, Clock, BarChart3, Inbox } from "lucide-react";
 
 type SortMode = "top" | "newest";
 
@@ -110,28 +111,14 @@ export default function CommunityPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3 }}
               >
-                <div className="mb-6 rounded-2xl border border-border/40 bg-card p-5 shadow-[0_0_40px_rgba(255,42,140,0.05)] sm:p-6">
-                  <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-                    <div>
-                      <h1 className="text-2xl font-bold tracking-tight text-foreground">
-                        Community submissions
-                      </h1>
-                      <p className="mt-1 max-w-xl text-sm text-foreground/60">
-                        Vote on projects the community wants to see listed. Top-voted submissions are reviewed by the SavePoint team.
-                      </p>
-                    </div>
-
-                    <Link
-                      href="/submit"
-                      className="group inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full border border-primary bg-card px-4 py-2 text-sm font-medium text-primary transition-all duration-300 hover:scale-105 hover:bg-primary hover:text-primary-foreground hover:shadow-[0_0_24px_rgba(255,42,140,0.45)]"
-                    >
-                      <Plus size={16} />
-                      Submit a project
-                      <ArrowRight
-                        size={14}
-                        className="transition-transform duration-300 group-hover:translate-x-0.5"
-                      />
-                    </Link>
+                <div className="mb-6 rounded-2xl border border-border/40 bg-card p-5 shadow-[0_0_40px_rgba(204,255,0,0.05)] sm:p-6">
+                  <div>
+                    <h1 className="text-2xl font-bold tracking-tight text-foreground">
+                      Community submissions
+                    </h1>
+                    <p className="mt-1 max-w-xl text-sm text-foreground/60">
+                      Vote on projects the community wants to see listed. Top-voted submissions are reviewed by the SavePoint team.
+                    </p>
                   </div>
 
                   <div className="mt-5 grid grid-cols-3 gap-3 border-t border-border/40 pt-5">
@@ -154,6 +141,19 @@ export default function CommunityPage() {
                       <p className="mt-1 font-mono text-lg font-bold text-foreground">{stats.votes.toLocaleString()}</p>
                     </div>
                   </div>
+                </div>
+
+                {/* Inline submission form */}
+                <div className="mb-6 rounded-2xl border border-border/40 bg-card p-5 shadow-[0_0_40px_rgba(204,255,0,0.05)] sm:p-6">
+                  <div className="mb-4">
+                    <h2 className="text-lg font-bold tracking-tight text-foreground">
+                      Submit a project
+                    </h2>
+                    <p className="text-sm text-foreground/60">
+                      Paste a Solana DexScreener link and the community will vote on it.
+                    </p>
+                  </div>
+                  <SubmissionForm onSuccess={fetchSubmissions} />
                 </div>
 
                 <div className="mb-4 flex items-center justify-between">
