@@ -1,9 +1,10 @@
 "use client";
 
+import { useState, useMemo } from "react";
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
 import { Footer } from "@/components/Footer";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft,
   BookOpen,
@@ -22,12 +23,18 @@ import {
   Sparkles,
   Save,
   MousePointerClick,
+  Menu,
+  Calendar,
+  Terminal,
+  Vote,
+  Plus,
 } from "lucide-react";
 
 const sections = [
   { id: "overview", title: "Overview", icon: BookOpen },
   { id: "safety", title: "Safety Score", icon: Shield },
   { id: "curation", title: "Curation", icon: Filter },
+  { id: "community", title: "Community", icon: Users },
   { id: "how-to", title: "How to Use", icon: MousePointerClick },
   { id: "roadmap", title: "Roadmap", icon: Rocket },
   { id: "faq", title: "FAQ", icon: HelpCircle },
@@ -36,7 +43,7 @@ const sections = [
 const quickLinks = [
   { id: "safety", title: "Safety Score", desc: "How we score project safety", icon: Shield },
   { id: "curation", title: "Curation", desc: "How games are reviewed", icon: Filter },
-  { id: "how-to", title: "How to Use", desc: "Browse, inspect, and save games", icon: MousePointerClick },
+  { id: "community", title: "Community", desc: "Submit and vote on games", icon: Users },
   { id: "faq", title: "FAQ", desc: "Common questions", icon: HelpCircle },
 ];
 
@@ -56,6 +63,16 @@ const roadmap = [
   { phase: "Phase 4", title: "Community", status: "in-progress", items: ["Game submissions", "Community voting", "Rewards"] },
 ];
 
+const sectionContent: Record<string, string> = {
+  overview: "curated discovery platform solana web3 games manual review safety score",
+  safety: "safety score 0 to 100 mint freeze authority holder distribution liquidity website socials",
+  curation: "manual review vetting checklist playable product website social presence solana token liquidity",
+  community: "submit dexscreener link vote hourly admin review pending submissions",
+  "how-to": "browse inspect save games genre status trending watchlist search filter",
+  roadmap: "launchpad discovery trading community wallet portfolio alerts rewards",
+  faq: "list safety score financial advice submit game price data dexscreener helius birdeye solscan",
+};
+
 const faqs = [
   {
     q: "How does SavePoint decide which games to list?",
@@ -73,9 +90,30 @@ const faqs = [
     q: "Where does the price data come from?",
     a: "Price, volume, and market cap data come from DexScreener. On-chain metadata comes from Helius, Birdeye, and Solscan.",
   },
+  {
+    q: "How often can I vote on community submissions?",
+    a: "You can vote once per hour per submission. This cooldown keeps voting fair and prevents botting.",
+  },
 ];
 
 export default function Docs() {
+  const [search, setSearch] = useState("");
+  const [mobileTocOpen, setMobileTocOpen] = useState(false);
+
+  const filteredSections = useMemo(() => {
+    const query = search.toLowerCase().trim();
+    if (!query) return sections.map((s) => s.id);
+    return sections
+      .filter(
+        (s) =>
+          s.title.toLowerCase().includes(query) ||
+          sectionContent[s.id]?.toLowerCase().includes(query)
+      )
+      .map((s) => s.id);
+  }, [search]);
+
+  const lastUpdated = "June 25, 2026";
+
   return (
     <div className="relative min-h-screen bg-background bg-grid">
       <div className="relative z-10 flex min-h-screen flex-col">
@@ -102,11 +140,12 @@ export default function Docs() {
 
         <div className="mx-auto w-full max-w-7xl flex-1 px-4 py-12 lg:py-16">
           {/* Hero */}
-          <section className="mb-16 text-center">
+          <section className="mb-16">
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4 }}
+              className="rounded-2xl border border-border/40 bg-card p-8 text-center shadow-[0_0_60px_rgba(255,42,140,0.06)] sm:p-12"
             >
               <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-medium uppercase tracking-wider text-primary">
                 <Sparkles size={12} />
@@ -119,6 +158,25 @@ export default function Docs() {
                 Learn how SavePoint curates, scores, and surfaces safe web3 gaming tokens — so you
                 can play and invest with confidence.
               </p>
+
+              {/* Docs search */}
+              <div className="mx-auto mt-8 max-w-lg">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+                  <input
+                    type="text"
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    placeholder="Search docs..."
+                    className="h-11 w-full rounded-xl border border-border/60 bg-white/[0.03] pl-10 pr-4 text-sm text-foreground placeholder:text-muted-foreground outline-none transition-colors focus:border-primary/50 focus:bg-white/[0.04]"
+                  />
+                </div>
+              </div>
+
+              <div className="mt-4 inline-flex items-center gap-1.5 text-xs text-foreground/40">
+                <Calendar size={12} />
+                Last updated {lastUpdated}
+              </div>
             </motion.div>
           </section>
 
@@ -132,7 +190,7 @@ export default function Docs() {
                   initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.4, delay: index * 0.05 }}
-                  className="group rounded-xl border border-border/40 bg-card/30 p-5 transition-all hover:border-primary/40 hover:bg-card/50"
+                  className="group rounded-xl border border-border/40 bg-card p-5 transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-[0_0_24px_rgba(255,42,140,0.08)]"
                 >
                   <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
                     <link.icon size={20} />
@@ -145,25 +203,87 @@ export default function Docs() {
           </section>
 
           <div className="lg:grid lg:grid-cols-[260px_1fr] lg:gap-12">
+            {/* Mobile TOC dropdown */}
+            <div className="mb-6 lg:hidden">
+              <button
+                onClick={() => setMobileTocOpen(!mobileTocOpen)}
+                className="flex w-full items-center justify-between rounded-xl border border-border/40 bg-card p-3 text-sm font-medium text-foreground transition-colors hover:border-primary/40"
+              >
+                <span className="flex items-center gap-2">
+                  <Menu size={16} className="text-muted-foreground" />
+                  On this page
+                </span>
+                <ChevronRight
+                  size={14}
+                  className={`text-muted-foreground transition-transform ${mobileTocOpen ? "rotate-90" : ""}`}
+                />
+              </button>
+              <AnimatePresence>
+                {mobileTocOpen && (
+                  <motion.nav
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    className="overflow-hidden"
+                  >
+                    <div className="mt-2 rounded-xl border border-border/40 bg-card p-2">
+                      {sections
+                        .filter((s) => filteredSections.includes(s.id))
+                        .map((section) => (
+                          <a
+                            key={section.id}
+                            href={`#${section.id}`}
+                            onClick={() => setMobileTocOpen(false)}
+                            className="group flex items-center gap-3 rounded-md px-3 py-2 text-sm text-foreground/60 transition-colors hover:bg-white/[0.03] hover:text-foreground"
+                          >
+                            <section.icon size={16} className="text-muted-foreground group-hover:text-primary" />
+                            {section.title}
+                          </a>
+                        ))}
+                    </div>
+                  </motion.nav>
+                )}
+              </AnimatePresence>
+            </div>
+
             {/* Sidebar TOC */}
             <aside className="hidden lg:block">
               <div className="sticky top-24 space-y-6">
-                <div className="rounded-xl border border-border/40 bg-card/30 p-4">
-                  <p className="mb-3 text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                <div className="rounded-xl border border-border/40 bg-card p-4 shadow-[0_0_24px_rgba(255,42,140,0.04)]">
+                  <p className="mb-3 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                    <span className="h-1 w-1 rounded-full bg-primary/70" />
                     On this page
                   </p>
                   <nav className="space-y-1">
-                    {sections.map((section) => (
-                      <a
-                        key={section.id}
-                        href={`#${section.id}`}
-                        className="group flex items-center gap-3 rounded-md px-3 py-2 text-sm text-foreground/60 transition-colors hover:bg-white/[0.03] hover:text-foreground"
-                      >
-                        <section.icon size={16} className="text-muted-foreground group-hover:text-primary" />
-                        {section.title}
-                      </a>
-                    ))}
+                    {sections
+                      .filter((s) => filteredSections.includes(s.id))
+                      .map((section) => (
+                        <a
+                          key={section.id}
+                          href={`#${section.id}`}
+                          className="group flex items-center gap-3 rounded-md px-3 py-2 text-sm text-foreground/60 transition-colors hover:bg-white/[0.03] hover:text-foreground"
+                        >
+                          <section.icon size={16} className="text-muted-foreground group-hover:text-primary" />
+                          {section.title}
+                        </a>
+                      ))}
                   </nav>
+                </div>
+
+                <div className="rounded-xl border border-border/40 bg-card p-4">
+                  <p className="mb-3 text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                    Useful links
+                  </p>
+                  <div className="space-y-1">
+                    <Link href="/community" className="group flex items-center gap-2 rounded-md px-3 py-2 text-sm text-foreground/60 transition-colors hover:bg-white/[0.03] hover:text-primary">
+                      <Vote size={14} />
+                      Community voting
+                    </Link>
+                    <Link href="/submit" className="group flex items-center gap-2 rounded-md px-3 py-2 text-sm text-foreground/60 transition-colors hover:bg-white/[0.03] hover:text-primary">
+                      <Plus size={14} />
+                      Submit a game
+                    </Link>
+                  </div>
                 </div>
               </div>
             </aside>
@@ -198,7 +318,7 @@ export default function Docs() {
                   {safetyChecks.map((check) => (
                     <div
                       key={check.label}
-                      className="rounded-xl border border-border/40 bg-card/30 p-5 transition-all hover:border-primary/30 hover:bg-card/50"
+                      className="rounded-xl border border-border/40 bg-card p-5 transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-[0_0_20px_rgba(255,42,140,0.06)]"
                     >
                       <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
                         <check.icon size={20} />
@@ -217,7 +337,7 @@ export default function Docs() {
                   SavePoint does not rely on algorithmic discovery alone. Every game in our core
                   directory is manually reviewed against a vetting checklist before being added.
                 </p>
-                <div className="rounded-xl border border-border/40 bg-card/30 p-6">
+                <div className="rounded-xl border border-border/40 bg-card p-6 shadow-[0_0_20px_rgba(255,42,140,0.04)]">
                   <ul className="space-y-4">
                     {[
                       "Real playable product, demo, or beta",
@@ -235,6 +355,59 @@ export default function Docs() {
                 </div>
               </section>
 
+              {/* Community */}
+              <section id="community" className="scroll-mt-28">
+                <SectionHeader icon={Users} title="Community Submissions" />
+                <p className="mb-6 max-w-3xl text-sm leading-7 text-foreground/70">
+                  Anyone can submit a Solana game token and vote on which projects deserve a listing.
+                  Submissions with the most community support are reviewed by the SavePoint team.
+                </p>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  {[
+                    {
+                      title: "Submit a game",
+                      desc: "Paste a DexScreener link. We pull the token name, symbol, and metadata automatically.",
+                      icon: Plus,
+                    },
+                    {
+                      title: "Vote hourly",
+                      desc: "Cast one vote per submission every hour. Help the best projects rise to the top.",
+                      icon: Vote,
+                    },
+                    {
+                      title: "Admin review",
+                      desc: "Top-voted submissions enter a review queue before being added to the curated directory.",
+                      icon: Shield,
+                    },
+                    {
+                      title: "Earn rewards",
+                      desc: "Future contributor rewards will recognize accurate voters and successful submitters.",
+                      icon: Sparkles,
+                    },
+                  ].map((item) => (
+                    <div
+                      key={item.title}
+                      className="rounded-xl border border-border/40 bg-card p-5 transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-[0_0_20px_rgba(255,42,140,0.06)]"
+                    >
+                      <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                        <item.icon size={20} />
+                      </div>
+                      <h3 className="font-bold text-foreground">{item.title}</h3>
+                      <p className="mt-1 text-sm leading-relaxed text-foreground/60">{item.desc}</p>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-6 rounded-xl border border-border/40 bg-[#0a0a0a] p-4 font-mono text-xs text-foreground/70">
+                  <div className="mb-2 flex items-center gap-2 text-[10px] uppercase tracking-wider text-foreground/40">
+                    <Terminal size={12} />
+                    Submit endpoint
+                  </div>
+                  <p className="text-primary">POST /api/submissions</p>
+                  <p className="mt-1 text-foreground/50">{`{ "dex_url": "https://dexscreener.com/solana/..." }`}</p>
+                </div>
+              </section>
+
               {/* How to use */}
               <section id="how-to" className="scroll-mt-28">
                 <SectionHeader icon={MousePointerClick} title="How to Use SavePoint" />
@@ -246,7 +419,7 @@ export default function Docs() {
                   ].map((item) => (
                     <div
                       key={item.step}
-                      className="relative rounded-xl border border-border/40 bg-card/30 p-6"
+                      className="relative rounded-xl border border-border/40 bg-card p-6 transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-[0_0_20px_rgba(255,42,140,0.06)]"
                     >
                       <span className="absolute right-4 top-4 font-mono text-2xl font-bold text-foreground/10">
                         {item.step}
@@ -323,7 +496,7 @@ export default function Docs() {
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }}
                       transition={{ duration: 0.3, delay: index * 0.05 }}
-                      className="rounded-xl border border-border/40 bg-card/30 p-5 transition-all hover:border-primary/20"
+                      className="rounded-xl border border-border/40 bg-card p-5 transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-[0_0_20px_rgba(255,42,140,0.06)]"
                     >
                       <h3 className="font-bold text-foreground">{faq.q}</h3>
                       <p className="mt-2 text-sm leading-relaxed text-foreground/60">{faq.a}</p>
@@ -333,7 +506,7 @@ export default function Docs() {
               </section>
 
               {/* Disclaimer */}
-              <section className="rounded-2xl border border-yellow-500/20 bg-yellow-950/10 p-6">
+              <section className="rounded-2xl border border-yellow-500/20 bg-[#1a1505] p-6">
                 <div className="flex items-start gap-4">
                   <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-yellow-500/10">
                     <AlertTriangle size={20} className="text-yellow-400" />
@@ -352,18 +525,27 @@ export default function Docs() {
               </section>
 
               {/* CTA */}
-              <section className="rounded-2xl border border-border/40 bg-card/30 p-8 text-center">
+              <section className="rounded-2xl border border-border/40 bg-card p-8 text-center shadow-[0_0_40px_rgba(255,42,140,0.06)]">
                 <h2 className="text-2xl font-bold text-foreground">Ready to explore?</h2>
                 <p className="mx-auto mt-2 max-w-md text-sm text-foreground/60">
                   Start browsing curated Solana games with real safety scores and live market data.
                 </p>
-                <Link
-                  href="/"
-                  className="mt-5 inline-flex items-center gap-2 rounded-full bg-primary px-6 py-2.5 text-sm font-bold text-primary-foreground transition-all hover:scale-105 hover:shadow-[0_0_24px_rgba(255,42,140,0.35)]"
-                >
-                  Launch SavePoint
-                  <ChevronRight size={16} />
-                </Link>
+                <div className="mt-5 flex flex-col items-center justify-center gap-3 sm:flex-row">
+                  <Link
+                    href="/"
+                    className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-2.5 text-sm font-bold text-primary-foreground transition-all hover:scale-105 hover:shadow-[0_0_24px_rgba(255,42,140,0.4)]"
+                  >
+                    Launch SavePoint
+                    <ChevronRight size={16} />
+                  </Link>
+                  <Link
+                    href="/submit"
+                    className="inline-flex items-center gap-2 rounded-full border border-primary bg-card px-6 py-2.5 text-sm font-bold text-primary transition-all hover:scale-105 hover:bg-primary hover:text-primary-foreground"
+                  >
+                    Submit a Game
+                    <Plus size={16} />
+                  </Link>
+                </div>
               </section>
             </main>
           </div>
