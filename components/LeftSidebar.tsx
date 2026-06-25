@@ -6,6 +6,13 @@ import { useRouter } from "next/router";
 import { Logo } from "./Logo";
 import { RoadmapSheet } from "./RoadmapSheet";
 import { Tooltip } from "@/components/ui/tooltip";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { games } from "@/data/games";
 import { Game } from "@/types/game";
 import { cn } from "@/lib/utils";
@@ -35,6 +42,7 @@ import {
   Check,
   BookOpen,
   Users,
+  LayoutGrid,
 } from "lucide-react";
 
 interface LeftSidebarProps {
@@ -44,6 +52,8 @@ interface LeftSidebarProps {
   onFilterChange: (filter: string) => void;
   onConnect: () => void;
   allGames?: Game[];
+  mobileOpen?: boolean;
+  onMobileOpenChange?: (open: boolean) => void;
 }
 
 const navItems = [
@@ -109,7 +119,7 @@ function SidebarItem({
   const content = (
     <>
       {active && (
-        <span className="absolute left-0 top-1/2 h-4 w-0.5 -translate-y-1/2 rounded-full bg-primary shadow-[0_0_10px_rgba(255,42,140,0.8)]" />
+        <span className="absolute left-0 top-1/2 h-5 w-1 -translate-y-1/2 rounded-full bg-primary shadow-[0_0_12px_rgba(255,42,140,0.9)]" />
       )}
       <Icon
         size={16}
@@ -133,10 +143,10 @@ function SidebarItem({
   );
 
   const className = cn(
-    "group relative flex w-full items-center gap-2.5 rounded-md px-2.5 py-1.5 text-left text-[14px] transition-all duration-200",
+    "group relative flex w-full items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-left text-[14px] transition-all duration-200",
     active
-      ? "bg-primary/15 font-medium text-foreground"
-      : "text-foreground/70 hover:bg-white/[0.04] hover:text-foreground"
+      ? "bg-primary/15 font-medium text-foreground shadow-[0_0_16px_rgba(255,42,140,0.12)]"
+      : "text-foreground/70 hover:bg-white/[0.05] hover:text-foreground"
   );
 
   if (href) {
@@ -169,9 +179,10 @@ function SidebarSection({
     <div className="flex flex-col">
       <button
         onClick={() => setOpen(!open)}
-        className="flex items-center justify-between rounded-md px-2.5 py-1.5 text-left transition-colors hover:bg-white/[0.03] hover:text-foreground"
+        className="group flex items-center justify-between rounded-md px-2.5 py-1.5 text-left transition-colors hover:bg-white/[0.03]"
       >
-        <h3 className="font-mono text-[11px] font-bold uppercase tracking-widest text-foreground/70">
+        <h3 className="flex items-center gap-1.5 font-mono text-[10px] font-bold uppercase tracking-widest text-foreground/60">
+          <span className="h-1 w-1 rounded-full bg-primary/70 group-hover:bg-primary" />
           {title}
         </h3>
         <ChevronDown
@@ -199,17 +210,31 @@ function SidebarSection({
   );
 }
 
-export function LeftSidebar({
+interface SidebarContentProps {
+  activeTab: string;
+  activeFilter: string;
+  onTabChange: (tab: string) => void;
+  onFilterChange: (filter: string) => void;
+  onConnect: () => void;
+  allGames?: Game[];
+  isMobile?: boolean;
+  onNavigate?: () => void;
+}
+
+function SidebarContent({
   activeTab,
   activeFilter,
   onTabChange,
   onFilterChange,
   onConnect,
   allGames = games,
-}: LeftSidebarProps) {
+  isMobile,
+  onNavigate,
+}: SidebarContentProps) {
   const router = useRouter();
   const isHome = router.pathname === "/";
   const [roadmapOpen, setRoadmapOpen] = useState(false);
+
   const getCount = (filter: string) => {
     if (filter === "All") return allGames.length;
     const lower = filter.toLowerCase();
@@ -224,36 +249,51 @@ export function LeftSidebar({
   const activeSection =
     activeFilter !== "All" ? activeFilter : activeTab !== "discover" ? activeTab : null;
 
+  const handleTabClick = (tab: string) => {
+    onTabChange(tab);
+    onFilterChange("All");
+    onNavigate?.();
+  };
+
+  const handleFilterClick = (filter: string) => {
+    onFilterChange(filter);
+    onNavigate?.();
+  };
+
   return (
-    <aside className="fixed bottom-0 left-0 top-0 z-50 hidden w-56 flex-col border-r border-border/40 bg-background/80 backdrop-blur-xl lg:flex">
-      <div className="absolute inset-y-0 right-0 w-px bg-gradient-to-b from-transparent via-border/30 to-transparent" />
+    <>
+      {!isMobile && (
+        <>
+          {/* Logo */}
+          <Link
+            href="/"
+            className="flex h-14 items-center gap-2.5 border-b border-border/40 px-3 transition-colors hover:opacity-90"
+          >
+            <div className="relative flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 ring-1 ring-primary/20">
+              <Logo size={22} />
+              <span className="absolute -right-0.5 -top-0.5 flex h-2 w-2 rounded-full bg-primary shadow-[0_0_8px_rgba(255,42,140,0.9)]" />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-base font-bold tracking-tight leading-none">SavePoint</span>
+              <span className="text-[9px] font-mono uppercase tracking-wider text-foreground/50">
+                Solana Games
+              </span>
+            </div>
+          </Link>
 
-      {/* Logo */}
-      <Link
-        href="/"
-        className="flex h-12 items-center gap-2 border-b border-border/40 px-3 transition-colors hover:opacity-90"
-      >
-        <div className="relative">
-          <Logo size={24} />
-          <span className="absolute -bottom-0.5 -right-0.5 flex h-1.5 w-1.5 rounded-full bg-primary shadow-[0_0_6px_rgba(255,42,140,0.8)]" />
-        </div>
-        <div className="flex flex-col">
-          <span className="text-base font-bold tracking-tight leading-none">SavePoint</span>
-          <span className="text-[9px] font-mono uppercase tracking-wider text-foreground/50">
-            Solana Games
-          </span>
-        </div>
-      </Link>
-
-      {/* Project tagline */}
-      <div className="px-3 py-2.5">
-        <p className="text-[11px] font-medium leading-relaxed text-foreground">
-          Your checkpoint for safe Solana games.
-        </p>
-        <p className="mt-0.5 text-[10px] leading-relaxed text-primary/80">
-          Play safe on Solana.
-        </p>
-      </div>
+          {/* Project tagline */}
+          <div className="px-3 py-3">
+            <div className="rounded-lg border border-border/40 bg-white/[0.03] p-2.5">
+              <p className="text-[11px] font-medium leading-relaxed text-foreground">
+                Your checkpoint for safe Solana games.
+              </p>
+              <p className="mt-0.5 text-[10px] leading-relaxed text-primary/80">
+                Play safe on Solana.
+              </p>
+            </div>
+          </div>
+        </>
+      )}
 
       {/* Active filter chip */}
       <AnimatePresence>
@@ -265,10 +305,7 @@ export function LeftSidebar({
             className="mx-2 mt-2"
           >
             <button
-              onClick={() => {
-                onTabChange("discover");
-                onFilterChange("All");
-              }}
+              onClick={() => handleTabClick("discover")}
               className="flex w-full items-center justify-between rounded-md border border-primary/20 bg-primary/10 px-2.5 py-1.5 text-left text-xs font-medium text-primary transition-all hover:border-primary/30 hover:bg-primary/15"
             >
               <span className="flex items-center gap-2">
@@ -290,10 +327,7 @@ export function LeftSidebar({
               active={isHome && activeTab === item.id && activeFilter === "All"}
               onClick={
                 isHome
-                  ? () => {
-                      onTabChange(item.id);
-                      onFilterChange("All");
-                    }
+                  ? () => handleTabClick(item.id)
                   : undefined
               }
               href={
@@ -316,7 +350,7 @@ export function LeftSidebar({
             <SidebarItem
               key={cat.id}
               active={activeFilter === cat.id}
-              onClick={() => onFilterChange(cat.id)}
+              onClick={() => handleFilterClick(cat.id)}
               icon={cat.icon}
               label={cat.label}
               count={getCount(cat.id)}
@@ -331,7 +365,7 @@ export function LeftSidebar({
             <SidebarItem
               key={status.id}
               active={activeFilter === status.id}
-              onClick={() => onFilterChange(status.id)}
+              onClick={() => handleFilterClick(status.id)}
               icon={status.icon}
               label={status.label}
               count={getCount(status.id)}
@@ -347,7 +381,7 @@ export function LeftSidebar({
             <SidebarItem
               key={genre.id}
               active={activeFilter === genre.id}
-              onClick={() => onFilterChange(genre.id)}
+              onClick={() => handleFilterClick(genre.id)}
               icon={genre.icon}
               label={genre.label}
               count={getCount(genre.id)}
@@ -360,6 +394,7 @@ export function LeftSidebar({
         <SidebarSection title="Resources" defaultOpen>
           <Link
             href="/docs"
+            onClick={onNavigate}
             className="group relative flex w-full items-center gap-2.5 rounded-md px-2.5 py-1.5 text-left text-[14px] text-foreground/70 transition-all duration-200 hover:bg-white/[0.04] hover:text-foreground"
           >
             <BookOpen size={16} className="text-muted-foreground transition-colors group-hover:text-foreground" />
@@ -367,6 +402,7 @@ export function LeftSidebar({
           </Link>
           <Link
             href="/community"
+            onClick={onNavigate}
             className="group relative flex w-full items-center gap-2.5 rounded-md px-2.5 py-1.5 text-left text-[14px] text-foreground/70 transition-all duration-200 hover:bg-white/[0.04] hover:text-foreground"
           >
             <Users size={16} className="text-muted-foreground transition-colors group-hover:text-foreground" />
@@ -374,6 +410,7 @@ export function LeftSidebar({
           </Link>
           <Link
             href="/submit"
+            onClick={onNavigate}
             className="group relative flex w-full items-center gap-2.5 rounded-md px-2.5 py-1.5 text-left text-[14px] text-foreground/70 transition-all duration-200 hover:bg-white/[0.04] hover:text-foreground"
           >
             <Plus size={16} className="text-muted-foreground transition-colors group-hover:text-foreground" />
@@ -385,16 +422,20 @@ export function LeftSidebar({
       {/* Roadmap */}
       <button
         onClick={() => setRoadmapOpen(true)}
-        className="mx-2 mb-2 w-[calc(100%-1rem)] rounded-lg border border-border/40 bg-white/[0.02] p-2.5 text-left transition-all hover:border-primary/30 hover:bg-white/[0.04]"
+        className="group mx-2 mb-2 w-[calc(100%-1rem)] rounded-xl border border-border/40 bg-gradient-to-b from-white/[0.04] to-white/[0.02] p-2.5 text-left transition-all hover:border-primary/30 hover:shadow-[0_0_20px_rgba(255,42,140,0.1)]"
       >
         <div className="mb-2 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Rocket size={14} className="text-primary" />
-            <span className="text-[11px] font-bold uppercase tracking-wider text-foreground/80">
+            <div className="flex h-6 w-6 items-center justify-center rounded-md bg-primary/10 text-primary">
+              <Rocket size={13} />
+            </div>
+            <span className="text-[11px] font-bold uppercase tracking-wider text-foreground/90">
               Roadmap
             </span>
           </div>
-          <span className="text-[9px] text-primary">View all</span>
+          <span className="text-[9px] font-medium text-primary transition-colors group-hover:text-primary-foreground">
+            View all
+          </span>
         </div>
         <div className="space-y-1.5">
           {roadmap.map((item) => {
@@ -419,18 +460,19 @@ export function LeftSidebar({
       <RoadmapSheet open={roadmapOpen} onOpenChange={setRoadmapOpen} />
 
       {/* Bottom actions */}
-      <div className="relative border-t border-border/40 bg-white/[0.02] p-2">
+      <div className="relative border-t border-border/40 bg-white/[0.02] p-2.5">
         <Link
           href="/submit"
-          className="group relative mb-1.5 flex w-full items-center justify-center gap-1.5 overflow-hidden rounded-md bg-primary py-2 text-xs font-semibold text-primary-foreground transition-all hover:bg-primary/90 active:scale-[0.98]"
+          onClick={onNavigate}
+          className="group relative mb-2 flex w-full items-center justify-center gap-1.5 overflow-hidden rounded-lg bg-primary py-2.5 text-xs font-bold text-primary-foreground shadow-[0_0_16px_rgba(255,42,140,0.25)] transition-all hover:shadow-[0_0_24px_rgba(255,42,140,0.4)] hover:bg-primary/90 active:scale-[0.98]"
         >
-          <Plus size={14} />
+          <Plus size={15} />
           <span>Submit Game</span>
         </Link>
         <Tooltip content="Wallet connection is coming soon (Phase 3)." side="right">
           <button
             onClick={onConnect}
-            className="flex w-full items-center justify-center gap-1.5 rounded-md border border-border/60 bg-white/[0.03] py-1.5 text-xs font-medium text-foreground transition-all hover:border-primary hover:bg-white/[0.06] hover:text-primary active:scale-[0.98]"
+            className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-border/60 bg-white/[0.03] py-2 text-xs font-medium text-foreground transition-all hover:border-primary hover:bg-white/[0.06] hover:text-primary active:scale-[0.98]"
           >
             <Wallet size={14} />
             <span>Connect Wallet</span>
@@ -440,6 +482,53 @@ export function LeftSidebar({
           </button>
         </Tooltip>
       </div>
-    </aside>
+    </>
+  );
+}
+
+export function LeftSidebar(props: LeftSidebarProps) {
+  const { mobileOpen, onMobileOpenChange } = props;
+
+  return (
+    <>
+      {/* Desktop sidebar */}
+      <aside className="fixed bottom-0 left-0 top-0 z-50 hidden w-56 flex-col border-r border-border/40 bg-[#050505]/95 backdrop-blur-xl lg:flex">
+        {/* Top accent line */}
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-primary/60 via-primary/20 to-transparent" />
+        <div className="absolute inset-y-0 right-0 w-px bg-gradient-to-b from-primary/20 via-border/30 to-transparent" />
+        <SidebarContent {...props} />
+      </aside>
+
+      {/* Mobile sidebar */}
+      <Sheet open={mobileOpen} onOpenChange={onMobileOpenChange}>
+        <SheetContent
+          side="left"
+          showCloseButton={false}
+          className="w-[280px] border-r border-border/40 bg-[#050505] p-0 sm:w-[300px]"
+        >
+          <SheetHeader className="border-b border-border/40 px-3 py-3">
+            <SheetTitle className="flex items-center gap-2.5">
+              <div className="relative flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 ring-1 ring-primary/20">
+                <Logo size={20} />
+                <span className="absolute -right-0.5 -top-0.5 flex h-1.5 w-1.5 rounded-full bg-primary shadow-[0_0_8px_rgba(255,42,140,0.9)]" />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-base font-bold tracking-tight leading-none">SavePoint</span>
+                <span className="text-[9px] font-mono uppercase tracking-wider text-foreground/50">
+                  Solana Games
+                </span>
+              </div>
+            </SheetTitle>
+          </SheetHeader>
+          <div className="flex h-[calc(100%-4rem)] flex-col overflow-hidden">
+            <SidebarContent
+              {...props}
+              isMobile
+              onNavigate={() => onMobileOpenChange?.(false)}
+            />
+          </div>
+        </SheetContent>
+      </Sheet>
+    </>
   );
 }

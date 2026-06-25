@@ -16,6 +16,7 @@ import { useState } from "react";
 export default function SubmitPage() {
   const [walletOpen, setWalletOpen] = useState(false);
   const [commandOpen, setCommandOpen] = useState(false);
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
   return (
     <>
@@ -48,10 +49,16 @@ export default function SubmitPage() {
             onTabChange={() => {}}
             onFilterChange={() => {}}
             onConnect={() => setWalletOpen(true)}
+            mobileOpen={mobileSidebarOpen}
+            onMobileOpenChange={setMobileSidebarOpen}
           />
 
           <div className="flex min-h-screen flex-col lg:ml-56">
-            <Header onConnect={() => setWalletOpen(true)} onSearchClick={() => setCommandOpen(true)} />
+            <Header
+              onConnect={() => setWalletOpen(true)}
+              onSearchClick={() => setCommandOpen(true)}
+              onMenuClick={() => setMobileSidebarOpen(true)}
+            />
 
             <main className="mx-auto w-full max-w-2xl flex-1 px-4 pb-20 pt-6">
               <motion.div

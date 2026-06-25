@@ -1,15 +1,16 @@
 import Link from "next/link";
 import { Logo } from "./Logo";
 import { Tooltip } from "@/components/ui/tooltip";
-import { Search, Wallet, Command } from "lucide-react";
+import { Search, Wallet, Command, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface HeaderProps {
   onConnect: () => void;
   onSearchClick: () => void;
+  onMenuClick?: () => void;
 }
 
-export function Header({ onConnect, onSearchClick }: HeaderProps) {
+export function Header({ onConnect, onSearchClick, onMenuClick }: HeaderProps) {
   return (
     <header className="group/header sticky top-0 z-40 w-full">
       {/* Animated gradient border */}
@@ -17,17 +18,24 @@ export function Header({ onConnect, onSearchClick }: HeaderProps) {
 
       <div className="relative border-b border-border/40 bg-background/60 backdrop-blur-xl transition-colors duration-300 hover:bg-background/75">
         <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">
-          {/* Logo - only on mobile where sidebar is hidden */}
-          <Link
-            href="/"
-            className="flex items-center gap-2.5 lg:hidden"
-          >
-            <div className="relative">
-              <Logo size={28} />
-              <span className="absolute -bottom-0.5 -right-0.5 flex h-2 w-2 rounded-full bg-primary shadow-[0_0_8px_rgba(255,42,140,0.8)]" />
-            </div>
-            <span className="text-lg font-bold tracking-tight">SavePoint</span>
-          </Link>
+          <div className="flex items-center gap-2 lg:hidden">
+            <button
+              onClick={onMenuClick}
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-border/60 bg-white/[0.03] text-muted-foreground transition-all hover:scale-105 hover:border-primary hover:text-primary hover:shadow-[0_0_16px_rgba(255,42,140,0.2)]"
+              aria-label="Open menu"
+            >
+              <Menu size={18} />
+            </button>
+
+            {/* Logo - only on mobile where sidebar is hidden */}
+            <Link href="/" className="flex items-center gap-2.5">
+              <div className="relative">
+                <Logo size={28} />
+                <span className="absolute -bottom-0.5 -right-0.5 flex h-2 w-2 rounded-full bg-primary shadow-[0_0_8px_rgba(255,42,140,0.8)]" />
+              </div>
+              <span className="text-lg font-bold tracking-tight">SavePoint</span>
+            </Link>
+          </div>
 
           {/* Desktop search trigger */}
           <button

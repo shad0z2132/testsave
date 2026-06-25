@@ -28,6 +28,7 @@ export default function Home() {
   const [detailOpen, setDetailOpen] = useState(false);
   const [walletOpen, setWalletOpen] = useState(false);
   const [commandOpen, setCommandOpen] = useState(false);
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [savedGames, setSavedGames] = useState<string[]>(() => {
     if (typeof window === "undefined") return [];
     const saved = localStorage.getItem("savepoint-saved-games");
@@ -177,12 +178,15 @@ export default function Home() {
           onFilterChange={setActiveFilter}
           onConnect={() => setWalletOpen(true)}
           allGames={allGames}
+          mobileOpen={mobileSidebarOpen}
+          onMobileOpenChange={setMobileSidebarOpen}
         />
 
         <div className="flex min-h-screen flex-col lg:ml-56">
           <Header
             onConnect={() => setWalletOpen(true)}
             onSearchClick={() => setCommandOpen(true)}
+            onMenuClick={() => setMobileSidebarOpen(true)}
           />
           <StatsTicker games={allGames} />
 
