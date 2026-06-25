@@ -279,6 +279,30 @@ export const games: Game[] = [
     tags: ["MMO", "Open World", "Adventure"],
     trending: false,
   },
+  {
+    id: "gable-guardians",
+    name: "Gable Guardians",
+    slug: "gable-guardians",
+    tagline: "Guardian-themed action game on Solana",
+    description:
+      "Gable Guardians is an action game on Solana where players command guardians, battle enemies, and earn rewards.",
+    genre: "Action",
+    status: "live",
+    tokenSymbol: "$GABLE",
+    tokenMint: "9uTekAxmx4rqBcR3iGkKmaBwVWMmi7TXEU41frBdBAGS",
+    price: 0,
+    priceChange24h: 0,
+    marketCap: 0,
+    volume24h: 0,
+    holders: 0,
+    safetyScore: 0,
+    thumbnail: "https://cdn.dexscreener.com/cms/images/bf9075c48b4ceae5f85ebc233fcb9509f0bf6158bc3fed77ff9bef9035da2fec?width=256&height=256&quality=95&format=auto",
+    website: "https://gableguardians.xyz/",
+    xUrl: "https://x.com/i/communities/2018142066442674438",
+    playUrl: "https://gableguardians.xyz/",
+    tags: ["Action", "Guardian", "PvE"],
+    trending: false,
+  },
 ];
 
 export function getTrendingGames(): Game[] {
