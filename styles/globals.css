@@ -142,8 +142,8 @@ body::-webkit-scrollbar-thumb:hover {
   }
   .bg-grid {
     background-image:
-      linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+      linear-gradient(rgba(204, 255, 0, 0.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(204, 255, 0, 0.08) 1px, transparent 1px);
     background-size: 40px 40px;
   }
   .bg-noise {
@@ -153,9 +153,9 @@ body::-webkit-scrollbar-thumb:hover {
   .bg-mesh {
     background-color: #111113;
     background-image:
-      radial-gradient(at 15% 15%, rgba(255, 42, 140, 0.18) 0px, transparent 45%),
+      radial-gradient(at 15% 15%, rgba(204, 255, 0, 0.16) 0px, transparent 45%),
       radial-gradient(at 85% 20%, rgba(0, 240, 255, 0.10) 0px, transparent 45%),
-      radial-gradient(at 75% 85%, rgba(255, 42, 140, 0.12) 0px, transparent 45%),
+      radial-gradient(at 75% 85%, rgba(204, 255, 0, 0.10) 0px, transparent 45%),
       radial-gradient(at 20% 80%, rgba(0, 240, 255, 0.06) 0px, transparent 45%);
     background-size: 150% 150%;
     animation: mesh-move 18s ease-in-out infinite;

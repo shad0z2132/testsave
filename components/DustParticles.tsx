@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 
-const PARTICLE_COLORS = [{ r: 255, g: 42, b: 140 }]; // pink only
+const PARTICLE_COLORS = [{ r: 204, g: 255, b: 0 }]; // lime only
 
 // Deterministic pseudo-random so SSR and CSR produce identical particles.
 function seededRandom(seed: number) {
