@@ -76,7 +76,19 @@ export default function Home() {
   }, [dexGames, scoreGame]);
 
   const allGames = useMemo(() => sortedGames, [sortedGames]);
-  const trendingGames = useMemo(() => sortedGames, [sortedGames]);
+
+  // Trending section should only surface projects with real 24h volume and momentum.
+  const TRENDING_MIN_VOLUME = 500;
+  const trendingGames = useMemo(() => {
+    const withVolume = sortedGames.filter((g) => g.volume24h >= TRENDING_MIN_VOLUME);
+    // Sort by a simple momentum score: volume * (1 + max(priceChange, 0)/100).
+    return [...withVolume].sort(
+      (a, b) =>
+        b.volume24h * (1 + Math.max(b.priceChange24h, 0) / 100) -
+        a.volume24h * (1 + Math.max(a.priceChange24h, 0) / 100)
+    );
+  }, [sortedGames]);
+
   const featuredGame = sortedGames[0] || null;
 
   const filteredGames = useMemo(() => {

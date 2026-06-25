@@ -3,9 +3,9 @@ import { Game } from "@/types/game";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Logo } from "./Logo";
-import { formatPercent, formatPrice, formatNumber } from "@/lib/format";
+import { formatPercent, formatPrice, formatUsd, formatNumber } from "@/lib/format";
 import { SafetyBadge } from "./SafetyBadge";
-import { Flame, TrendingUp, ExternalLink, Gamepad2 } from "lucide-react";
+import { Flame, TrendingUp, ExternalLink, Gamepad2, BarChart3 } from "lucide-react";
 
 interface TrendingHeroProps {
   games: Game[];
@@ -50,7 +50,7 @@ function PodiumCard({
   return (
     <div
       onClick={() => onSelect(game)}
-      className={`glass group relative cursor-pointer overflow-hidden rounded-xl transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:bg-white/[0.04] ${style.glow} ${
+      className={`group relative cursor-pointer overflow-hidden rounded-xl border border-white/[0.08] bg-[#161618] transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-[0_0_32px_rgba(255,42,140,0.12)] ${style.glow} ${
         featured ? "col-span-2 row-span-2" : ""
       }`}
     >
@@ -87,7 +87,7 @@ function PodiumCard({
         </h3>
         <p className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">{game.tokenSymbol}</p>
 
-        <div className={`mt-3 grid ${featured ? "grid-cols-3 gap-3" : "grid-cols-2 gap-2"}`}>
+        <div className={`mt-3 grid ${featured ? "grid-cols-2 gap-3 sm:grid-cols-4" : "grid-cols-2 gap-2"}`}>
           <div>
             <p className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">Price</p>
             <p className="font-mono text-sm font-medium">{formatPrice(game.price)}</p>
@@ -97,6 +97,10 @@ function PodiumCard({
             <p className={`font-mono text-sm font-medium ${isPositive ? "text-positive" : "text-negative"}`}>
               {formatPercent(game.priceChange24h)}
             </p>
+          </div>
+          <div>
+            <p className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">Vol 24h</p>
+            <p className="font-mono text-sm font-medium">{formatUsd(game.volume24h)}</p>
           </div>
           {featured && (
             <div>
@@ -140,8 +144,14 @@ export function TrendingHero({ games, onSelectGame }: TrendingHeroProps) {
 
   if (topThree.length === 0) {
     return (
-      <div className="py-16 text-center">
-        <p className="text-muted-foreground">No trending games right now.</p>
+      <div className="rounded-2xl border border-border/40 bg-card p-8 text-center">
+        <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 mx-auto">
+          <BarChart3 size={28} className="text-primary" />
+        </div>
+        <h3 className="mt-4 text-lg font-semibold text-foreground">No trending projects</h3>
+        <p className="mt-1 max-w-md mx-auto text-sm text-foreground/60">
+          None of the listed games have meaningful 24h trading volume right now. Check back later or browse the full directory.
+        </p>
       </div>
     );
   }
@@ -166,7 +176,7 @@ export function TrendingHero({ games, onSelectGame }: TrendingHeroProps) {
               <Flame size={16} className="text-primary" />
             </h2>
             <p className="text-xs text-muted-foreground">
-              The hottest Solana games by momentum this week.
+              The hottest Solana games by 24h volume and momentum.
             </p>
           </div>
         </div>

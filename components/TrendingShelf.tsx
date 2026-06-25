@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Logo } from "./Logo";
 import { SafetyBadge } from "./SafetyBadge";
 import { formatPrice, formatPercent, formatUsd } from "@/lib/format";
-import { Flame, ChevronRight, ChevronLeft, TrendingUp, TrendingDown } from "lucide-react";
+import { Flame, ChevronRight, ChevronLeft, TrendingUp, TrendingDown, BarChart3 } from "lucide-react";
 
 interface TrendingShelfProps {
   games: Game[];
@@ -69,7 +69,7 @@ function TrendingShelfCard({
       onClick={() => onSelect(game)}
       className="group relative w-[190px] shrink-0 cursor-pointer snap-start sm:w-[240px]"
     >
-      <div className="relative overflow-hidden rounded-xl border border-primary/20 bg-gradient-to-b from-primary/10 to-card shadow-[0_0_0_0_rgba(255,42,140,0)] transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 hover:shadow-[0_0_32px_rgba(255,42,140,0.18)]">
+      <div className="relative overflow-hidden rounded-xl border border-white/[0.08] bg-[#161618] shadow-[0_0_0_0_rgba(255,42,140,0)] transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 hover:shadow-[0_0_32px_rgba(255,42,140,0.18)]">
         {/* Top gradient line */}
         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
 
@@ -144,9 +144,9 @@ function TrendingShelfCard({
             </div>
             <div className="text-right">
               <p className="font-mono text-[9px] uppercase tracking-wider text-muted-foreground">
-                VOL
+                VOL 24H
               </p>
-              <p className="font-mono text-[10px] font-semibold text-foreground">
+              <p className="font-mono text-[10px] font-semibold text-primary">
                 {formatUsd(game.volume24h)}
               </p>
             </div>
@@ -167,7 +167,31 @@ export function TrendingShelf({
   const visibleGames = games.slice(startIndex > 0 ? startIndex : 0);
 
   if (visibleGames.length === 0) {
-    return null;
+    return (
+      <section className="py-6">
+        <div className="mb-4 flex items-center gap-3">
+          <div className="relative">
+            <Logo size={24} />
+            <span className="absolute -right-0.5 -top-0.5 flex h-3 w-3 items-center justify-center rounded-full bg-primary text-[7px] font-bold text-primary-foreground">
+              <Flame size={6} fill="currentColor" />
+            </span>
+          </div>
+          <div>
+            <h2 className="flex items-center gap-1.5 text-base font-bold tracking-tight sm:text-lg">
+              Trending
+              <Flame size={14} className="text-primary" />
+            </h2>
+            <p className="text-xs text-muted-foreground">Games heating up by 24h volume.</p>
+          </div>
+        </div>
+        <div className="rounded-2xl border border-border/40 bg-card p-8 text-center">
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-primary/10">
+            <BarChart3 size={28} className="text-primary" />
+          </div>
+          <p className="mt-4 text-sm text-foreground/60">No trending projects with volume right now.</p>
+        </div>
+      </section>
+    );
   }
 
   const scroll = (direction: "left" | "right") => {
@@ -192,7 +216,7 @@ export function TrendingShelf({
               Trending
               <Flame size={14} className="text-primary" />
             </h2>
-            <p className="text-xs text-muted-foreground">Games heating up right now.</p>
+            <p className="text-xs text-muted-foreground">Games heating up by 24h volume.</p>
           </div>
         </div>
 
