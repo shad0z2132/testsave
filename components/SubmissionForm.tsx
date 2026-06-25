@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { isDexScreenerUrl, VALIDATION_LIMITS } from "@/lib/validation";
-import { Loader2, Send, CheckCircle } from "lucide-react";
+import { Loader2, Send, CheckCircle, ArrowRight } from "lucide-react";
 
 interface SubmissionFormProps {
   onSuccess?: () => void;
@@ -56,8 +56,10 @@ export function SubmissionForm({ onSuccess }: SubmissionFormProps) {
 
   if (submitted) {
     return (
-      <div className="flex flex-col items-center justify-center rounded-2xl border border-primary/20 bg-primary/5 p-8 text-center">
-        <CheckCircle size={40} className="text-primary" />
+      <div className="flex flex-col items-center justify-center rounded-2xl border border-primary/20 bg-card p-8 text-center shadow-[0_0_40px_rgba(255,42,140,0.08)]">
+        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
+          <CheckCircle size={32} className="text-primary" />
+        </div>
         <h3 className="mt-4 text-lg font-semibold text-foreground">Submission received</h3>
         <p className="mt-2 max-w-sm text-sm text-foreground/60">
           Thanks for submitting. The project is now pending community voting and admin review.
@@ -67,10 +69,10 @@ export function SubmissionForm({ onSuccess }: SubmissionFormProps) {
             setSubmitted(false);
             setDexUrl("");
           }}
-          variant="outline"
-          className="mt-6 border-primary/30 text-primary hover:bg-primary hover:text-primary-foreground"
+          className="mt-6 gap-2 rounded-full border border-primary bg-card px-5 text-primary transition-all duration-300 hover:scale-105 hover:bg-primary hover:text-primary-foreground hover:shadow-[0_0_24px_rgba(255,42,140,0.45)]"
         >
           Submit another
+          <ArrowRight size={14} />
         </Button>
       </div>
     );
@@ -106,14 +108,20 @@ export function SubmissionForm({ onSuccess }: SubmissionFormProps) {
       <Button
         type="submit"
         disabled={isLoading}
-        className="w-full rounded-full border border-primary bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground"
+        className="group w-full gap-2 rounded-full border border-primary bg-card px-5 text-primary transition-all duration-300 hover:scale-[1.02] hover:bg-primary hover:text-primary-foreground hover:shadow-[0_0_24px_rgba(255,42,140,0.45)] disabled:opacity-70"
       >
         {isLoading ? (
-          <Loader2 size={16} className="mr-2 animate-spin" />
+          <Loader2 size={16} className="animate-spin" />
         ) : (
-          <Send size={16} className="mr-2" />
+          <>
+            <Send size={16} />
+            Submit project
+            <ArrowRight
+              size={14}
+              className="transition-transform duration-300 group-hover:translate-x-0.5"
+            />
+          </>
         )}
-        Submit project
       </Button>
     </form>
   );

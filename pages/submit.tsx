@@ -76,7 +76,7 @@ export default function SubmitPage() {
                   </p>
                 </div>
 
-                <div className="rounded-2xl border border-border/40 bg-card/40 p-5 backdrop-blur-sm sm:p-6">
+                <div className="rounded-2xl border border-border/40 bg-card p-5 shadow-[0_0_40px_rgba(255,42,140,0.06)] sm:p-6">
                   <SubmissionForm />
                 </div>
 
