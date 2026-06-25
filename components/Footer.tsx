@@ -14,6 +14,7 @@ import {
   X,
   ArrowRight,
   Sparkles,
+  Heart,
 } from "lucide-react";
 
 interface FooterProps {
@@ -213,8 +214,8 @@ export function Footer({ games = staticGames }: FooterProps) {
             <p className="text-xs text-foreground/40">
               © {new Date().getFullYear()} SavePoint. All rights reserved.
             </p>
-            <p className="text-[10px] text-foreground/30">
-              Built with {"<3"} for the Solana community.
+            <p className="flex items-center gap-1 text-[10px] text-foreground/30">
+              Built with <Heart size={10} className="fill-lime text-lime" /> for the Solana community.
             </p>
           </div>
 
