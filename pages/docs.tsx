@@ -78,7 +78,7 @@ const faqs = [
 export default function Docs() {
   return (
     <div className="relative min-h-screen bg-background bg-grid">
-      <div className="relative z-10">
+      <div className="relative z-10 flex min-h-screen flex-col">
         {/* Header */}
         <header className="sticky top-0 z-40 w-full border-b border-border/40 bg-background/80 backdrop-blur-xl">
           <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-primary/50 via-primary/20 to-transparent" />
@@ -100,7 +100,7 @@ export default function Docs() {
           </div>
         </header>
 
-        <div className="mx-auto max-w-7xl px-4 py-12 lg:py-16">
+        <div className="mx-auto w-full max-w-7xl flex-1 px-4 py-12 lg:py-16">
           {/* Hero */}
           <section className="mb-16 text-center">
             <motion.div

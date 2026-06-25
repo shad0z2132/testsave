@@ -100,10 +100,10 @@ export default function CommunityPage() {
             onConnect={() => setWalletOpen(true)}
           />
 
-          <div className="lg:ml-56">
+          <div className="flex min-h-screen flex-col lg:ml-56">
             <Header onConnect={() => setWalletOpen(true)} onSearchClick={() => setCommandOpen(true)} />
 
-            <main className="mx-auto max-w-4xl px-4 pb-20 pt-6">
+            <main className="mx-auto w-full max-w-4xl flex-1 px-4 pb-20 pt-6">
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}

@@ -167,14 +167,14 @@ export default function Home() {
           allGames={allGames}
         />
 
-        <div className="lg:ml-56">
+        <div className="flex min-h-screen flex-col lg:ml-56">
           <Header
             onConnect={() => setWalletOpen(true)}
             onSearchClick={() => setCommandOpen(true)}
           />
           <StatsTicker games={allGames} />
 
-          <main className="mx-auto max-w-6xl px-4 pb-20">
+          <main className="mx-auto w-full max-w-6xl flex-1 px-4 pb-20">
             <AnimatePresence mode="wait">
               <motion.div
                 key={`${activeTab}-${activeFilter}-${searchQuery}`}
