@@ -61,7 +61,7 @@ export function GameCard({ game, onSelect, isSaved, onToggleSave, index = 0 }: G
       <div className="absolute -inset-0.5 rounded-xl bg-gradient-to-b from-primary/25 to-transparent opacity-0 blur-md transition-opacity duration-300 group-hover:opacity-100" />
 
       {/* Card */}
-      <div className="glass relative overflow-hidden rounded-xl border border-transparent transition-all duration-300 group-hover:border-primary/30 group-hover:bg-white/[0.04] group-hover:shadow-[0_0_24px_rgba(255,42,140,0.1)]">
+      <div className="relative overflow-hidden rounded-xl border border-white/[0.08] bg-[#161618] transition-all duration-300 group-hover:border-primary/30 group-hover:shadow-[0_0_24px_rgba(255,42,140,0.1)]">
         {/* Image container */}
         <div className="relative aspect-square w-full overflow-hidden rounded-t-xl">
           <Image
