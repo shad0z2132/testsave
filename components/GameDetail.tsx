@@ -114,18 +114,20 @@ export function GameDetail({ game, open, onOpenChange }: GameDetailProps) {
         side="right"
         className="w-full border-l border-lime/20 bg-[#050505] p-0 shadow-[0_0_60px_rgba(204,255,0,0.08)] sm:max-w-md"
       >
-        {/* Banner */}
-        <div className="relative aspect-[3/1] w-full overflow-hidden bg-black/40">
-          <Image
-            src={game.banner || game.thumbnail}
-            alt={game.name}
-            fill
-            sizes="(max-width: 768px) 100vw, 448px"
-            className="object-cover"
-            priority
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/60 to-transparent" />
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_100%,rgba(204,255,0,0.12),transparent_60%)]" />
+        {/* Banner + floating logo wrapper */}
+        <div className="relative">
+          <div className="relative aspect-[3/1] w-full overflow-hidden bg-black/40">
+            <Image
+              src={game.banner || game.thumbnail}
+              alt={game.name}
+              fill
+              sizes="(max-width: 768px) 100vw, 448px"
+              className="object-cover"
+              priority
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/60 to-transparent" />
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_100%,rgba(204,255,0,0.12),transparent_60%)]" />
+          </div>
 
           {/* Floating thumbnail */}
           <div className="absolute -bottom-8 left-5 h-20 w-20 overflow-hidden rounded-2xl border-2 border-lime/30 shadow-[0_0_30px_rgba(204,255,0,0.25)]">
@@ -139,7 +141,7 @@ export function GameDetail({ game, open, onOpenChange }: GameDetailProps) {
           </div>
         </div>
 
-        <div className="flex flex-col gap-5 px-5 pb-8 pt-10">
+        <div className="flex flex-col gap-5 px-5 pb-8 pt-12">
           <SheetHeader className="p-0">
             <div className="flex flex-wrap items-center gap-2">
               <Badge
