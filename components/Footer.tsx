@@ -127,9 +127,10 @@ export function Footer({ games = staticGames }: FooterProps) {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={social.label}
-                  className="flex h-9 w-9 items-center justify-center rounded-lg border border-border/60 bg-white/[0.03] text-foreground/60 transition-all hover:scale-105 hover:border-primary hover:bg-primary/10 hover:text-primary hover:shadow-[0_0_16px_rgba(204, 255, 0, 0.2)]"
+                  className="group flex h-10 items-center gap-2 rounded-full border border-lime/30 bg-lime/10 px-3 text-sm font-semibold text-lime transition-all hover:scale-105 hover:border-lime hover:bg-lime hover:text-black hover:shadow-[0_0_20px_rgba(204,255,0,0.3)]"
                 >
-                  <social.icon size={15} />
+                  <social.icon size={16} className="transition-transform group-hover:scale-110" />
+                  <span>Follow us on X</span>
                 </a>
               ))}
             </div>
