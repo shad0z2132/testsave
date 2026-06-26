@@ -365,6 +365,7 @@ function pairToGame(
     playUrl: pair.url,
     tags: curated?.tags || inferTags(`${description} ${name} ${symbol} ${website}`),
     trending: true,
+    addedAt: curated?.addedAt,
   };
 }
 

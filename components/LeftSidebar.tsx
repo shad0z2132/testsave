@@ -57,7 +57,6 @@ const navItems = [
 
 const trendingCategories = [
   { id: "Movers", label: "Movers", icon: TrendingUp },
-  { id: "Mayhem", label: "Mayhem", icon: Zap },
   { id: "New", label: "New", icon: Sunrise },
   { id: "Live", label: "Live", icon: Radio },
   { id: "Market Cap", label: "Market Cap", icon: BarChart3 },
@@ -232,11 +231,6 @@ function SidebarContent({
 
     if (lower === "movers") {
       return allGames.filter((g) => g.priceChange24h > 0).length;
-    }
-    if (lower === "mayhem") {
-      return allGames.filter(
-        (g) => g.volume24h >= 1000 && Math.abs(g.priceChange24h) >= 10
-      ).length;
     }
     if (lower === "new") {
       return allGames.filter(isRecentlyAdded).length;

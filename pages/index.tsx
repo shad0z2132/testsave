@@ -113,19 +113,11 @@ export default function Home() {
     // Genre/status filtering + special explore filters
     if (activeFilter !== "All") {
       const filter = activeFilter.toLowerCase();
-      if (filter === "movers") {
-        result = result
-          .filter((g) => g.priceChange24h > 0)
-          .sort((a, b) => b.priceChange24h - a.priceChange24h);
-      } else if (filter === "mayhem") {
-        result = result
-          .filter((g) => g.volume24h >= 1000 && Math.abs(g.priceChange24h) >= 10)
-          .sort(
-            (a, b) =>
-              b.volume24h * Math.abs(b.priceChange24h) -
-              a.volume24h * Math.abs(a.priceChange24h)
-          );
-      } else if (filter === "new") {
+    if (filter === "movers") {
+      result = result
+        .filter((g) => g.priceChange24h > 0)
+        .sort((a, b) => b.priceChange24h - a.priceChange24h);
+    } else if (filter === "new") {
         result = result
           .filter(isRecentlyAdded)
           .sort(
