@@ -115,7 +115,7 @@ export function GameDetail({ game, open, onOpenChange }: GameDetailProps) {
         className="w-full border-l border-lime/20 bg-[#050505] p-0 shadow-[0_0_60px_rgba(204,255,0,0.08)] sm:max-w-md"
       >
         {/* Banner */}
-        <div className="relative aspect-[16/9] w-full overflow-hidden bg-black/40">
+        <div className="relative aspect-[3/1] w-full overflow-hidden bg-black/40">
           <Image
             src={game.banner || game.thumbnail}
             alt={game.name}

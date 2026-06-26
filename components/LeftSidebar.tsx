@@ -23,7 +23,6 @@ import {
   Sparkles,
   Bookmark,
   TrendingUp,
-  Zap,
   Sunrise,
   Radio,
   BarChart3,

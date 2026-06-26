@@ -156,7 +156,7 @@ export function FeaturedGame({
         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-lime/50 to-transparent" />
 
         {/* Banner */}
-        <div className="relative aspect-[21/9] w-full overflow-hidden">
+        <div className="relative aspect-[3/1] w-full overflow-hidden">
           <Image
             src={game.banner || game.thumbnail}
             alt={game.name}

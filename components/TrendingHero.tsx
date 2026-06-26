@@ -64,7 +64,7 @@ function PodiumCard({
       </div>
 
       {/* Image */}
-      <div className={`relative w-full overflow-hidden ${featured ? "aspect-[16/10]" : "aspect-[16/9]"}`}>
+      <div className="relative aspect-[3/1] w-full overflow-hidden">
         <Image
           src={game.banner || game.thumbnail}
           alt={game.name}
