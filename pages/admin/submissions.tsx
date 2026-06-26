@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import Head from "next/head";
+import { SEO } from "@/components/SEO";
 import { motion } from "framer-motion";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -105,9 +105,12 @@ export default function AdminSubmissionsPage() {
   if (!authenticated) {
     return (
       <>
-        <Head>
-          <title>Admin · SavePoint</title>
-        </Head>
+        <SEO
+          title="Admin · SavePoint"
+          description="SavePoint admin login."
+          path="/admin/submissions/"
+          noIndex
+        />
         <div className="flex min-h-screen items-center justify-center bg-background px-4">
           <motion.div
             initial={{ opacity: 0, y: 12 }}
@@ -154,9 +157,12 @@ export default function AdminSubmissionsPage() {
 
   return (
     <>
-      <Head>
-        <title>Review Submissions · SavePoint Admin</title>
-      </Head>
+      <SEO
+        title="Review Submissions · SavePoint Admin"
+        description="Review and approve community submissions for the SavePoint directory."
+        path="/admin/submissions/"
+        noIndex
+      />
       <div className="min-h-screen bg-background px-4 py-8">
         <div className="mx-auto max-w-5xl">
           <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">

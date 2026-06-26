@@ -8,6 +8,7 @@ import { useSavedGames } from "@/hooks/useSavedGames";
 import { Header } from "@/components/Header";
 import { StatsTicker } from "@/components/StatsTicker";
 import { FilterTabs } from "@/components/FilterTabs";
+import { SEO } from "@/components/SEO";
 import { Footer } from "@/components/Footer";
 import { DustParticles } from "@/components/DustParticles";
 import { FeaturedGame } from "@/components/FeaturedGame";
@@ -133,9 +134,11 @@ export default function Home() {
   };
 
   return (
-    <div className="relative min-h-screen bg-background bg-grid">
-      {/* Background effects */}
-      <DustParticles />
+    <>
+      <SEO path="/" />
+      <div className="relative min-h-screen bg-background bg-grid">
+        {/* Background effects */}
+        <DustParticles />
 
       <div className="relative z-10">
         <CommandPalette
@@ -252,5 +255,6 @@ export default function Home() {
         onOpenChange={setDetailOpen}
       />
     </div>
+    </>
   );
 }

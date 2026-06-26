@@ -4,6 +4,14 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   devIndicators: false,
   trailingSlash: true,
+  async rewrites() {
+    return [
+      {
+        source: "/sitemap.xml",
+        destination: "/api/sitemap.xml",
+      },
+    ];
+  },
   images: {
     remotePatterns: [
       {

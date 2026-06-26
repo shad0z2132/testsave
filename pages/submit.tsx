@@ -1,6 +1,5 @@
 "use client";
 
-import Head from "next/head";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Header } from "@/components/Header";
@@ -9,6 +8,7 @@ import { DustParticles } from "@/components/DustParticles";
 import { LeftSidebar } from "@/components/LeftSidebar";
 import { SubmissionForm } from "@/components/SubmissionForm";
 import { CommandPalette } from "@/components/CommandPalette";
+import { SEO } from "@/components/SEO";
 import { ArrowLeft } from "lucide-react";
 import { useState } from "react";
 
@@ -18,13 +18,11 @@ export default function SubmitPage() {
 
   return (
     <>
-      <Head>
-        <title>Submit a Project · SavePoint</title>
-        <meta
-          name="description"
-          content="Submit a Solana game to be listed on SavePoint."
-        />
-      </Head>
+      <SEO
+        title="Submit a Project · SavePoint"
+        description="Submit a Solana game or token to be listed on SavePoint. Community-reviewed and curated for legitimacy."
+        path="/submit/"
+      />
 
       <div className="relative min-h-screen bg-background bg-grid">
         <DustParticles />

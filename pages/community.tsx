@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState, useCallback, useMemo } from "react";
-import Head from "next/head";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Header } from "@/components/Header";
@@ -12,6 +11,7 @@ import { SubmissionCard, Submission } from "@/components/SubmissionCard";
 import { SubmissionForm } from "@/components/SubmissionForm";
 import { CommandPalette } from "@/components/CommandPalette";
 import { CommunityChat } from "@/components/CommunityChat";
+import { SEO } from "@/components/SEO";
 import { ArrowRight, RefreshCw, Loader2, Trophy, Clock, BarChart3, Inbox } from "lucide-react";
 
 type SortMode = "top" | "newest";
@@ -70,13 +70,11 @@ export default function CommunityPage() {
 
   return (
     <>
-      <Head>
-        <title>Community · SavePoint</title>
-        <meta
-          name="description"
-          content="Vote on upcoming Solana game listings on SavePoint."
-        />
-      </Head>
+      <SEO
+        title="Community · SavePoint"
+        description="Vote on upcoming Solana game listings, submit projects, and chat with the SavePoint community."
+        path="/community/"
+      />
 
       <div className="relative min-h-screen bg-background bg-grid">
         <DustParticles />

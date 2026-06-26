@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Logo } from "@/components/Logo";
 import { Footer } from "@/components/Footer";
 import { RoadmapPhases } from "@/components/RoadmapPhases";
+import { SEO } from "@/components/SEO";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft,
@@ -109,8 +110,14 @@ export default function Docs() {
   const lastUpdated = "June 25, 2026";
 
   return (
-    <div className="relative min-h-screen bg-background bg-grid">
-      <div className="relative z-10 flex min-h-screen flex-col">
+    <>
+      <SEO
+        title="Docs · SavePoint"
+        description="Learn how SavePoint scores project safety, curates games, and builds the Solana gaming directory."
+        path="/docs/"
+      />
+      <div className="relative min-h-screen bg-background bg-grid">
+        <div className="relative z-10 flex min-h-screen flex-col">
         {/* Header */}
         <header className="sticky top-0 z-40 w-full border-b border-border/40 bg-background/80 backdrop-blur-xl">
           <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-primary/50 via-primary/20 to-transparent" />
@@ -516,6 +523,7 @@ export default function Docs() {
         <Footer />
       </div>
     </div>
+    </>
   );
 }
 
