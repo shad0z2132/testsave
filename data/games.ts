@@ -327,6 +327,7 @@ export const games: Game[] = [
     playUrl: "https://lootscape.xyz/",
     tags: ["RPG", "Loot", "Adventure"],
     trending: false,
+    addedAt: "2026-06-26",
   },
   {
     id: "valora",
@@ -355,6 +356,7 @@ export const games: Game[] = [
     playUrl: "https://valora.gg/",
     tags: ["RPG", "Arena", "Action"],
     trending: false,
+    addedAt: "2026-06-26",
   },
   {
     id: "orbryn",
@@ -382,6 +384,7 @@ export const games: Game[] = [
     playUrl: "https://play.google.com/store/apps/details?id=com.silnt.wagus&pcampaignid=web_share",
     tags: ["MMO", "Adventure", "Mobile"],
     trending: false,
+    addedAt: "2026-06-26",
   },
 ];
 

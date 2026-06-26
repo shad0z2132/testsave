@@ -78,6 +78,14 @@ export default function Home() {
 
   const featuredGame = sortedGames[0] || null;
 
+  const NEW_LISTING_DAYS = 30;
+
+  const isRecentlyAdded = useCallback((game: Game): boolean => {
+    if (!game.addedAt) return false;
+    const added = new Date(game.addedAt).getTime();
+    return Date.now() - added <= NEW_LISTING_DAYS * 24 * 60 * 60 * 1000;
+  }, []);
+
   const filteredGames = useMemo(() => {
     let result = [...allGames];
 
@@ -97,24 +105,47 @@ export default function Home() {
     if (activeTab === "trending") {
       result = result.filter((g) => g.trending);
     } else if (activeTab === "new") {
-      result = result.filter((g) => g.status === "alpha" || g.status === "beta");
+      result = result.filter(isRecentlyAdded);
     } else if (activeTab === "saved") {
       result = result.filter((g) => savedIds.includes(g.id));
     }
 
-    // Genre/status filtering
+    // Genre/status filtering + special explore filters
     if (activeFilter !== "All") {
       const filter = activeFilter.toLowerCase();
-      result = result.filter(
-        (g) =>
-          g.genre.toLowerCase() === filter ||
-          g.status.toLowerCase() === filter ||
-          g.tags.some((tag) => tag.toLowerCase() === filter)
-      );
+      if (filter === "movers") {
+        result = result
+          .filter((g) => g.priceChange24h > 0)
+          .sort((a, b) => b.priceChange24h - a.priceChange24h);
+      } else if (filter === "mayhem") {
+        result = result
+          .filter((g) => g.volume24h >= 1000 && Math.abs(g.priceChange24h) >= 10)
+          .sort(
+            (a, b) =>
+              b.volume24h * Math.abs(b.priceChange24h) -
+              a.volume24h * Math.abs(a.priceChange24h)
+          );
+      } else if (filter === "new") {
+        result = result
+          .filter(isRecentlyAdded)
+          .sort(
+            (a, b) =>
+              new Date(b.addedAt!).getTime() - new Date(a.addedAt!).getTime()
+          );
+      } else if (filter === "market cap") {
+        result = result.sort((a, b) => b.marketCap - a.marketCap);
+      } else {
+        result = result.filter(
+          (g) =>
+            g.genre.toLowerCase() === filter ||
+            g.status.toLowerCase() === filter ||
+            g.tags.some((tag) => tag.toLowerCase() === filter)
+        );
+      }
     }
 
     return result;
-  }, [activeTab, activeFilter, searchQuery, savedIds, allGames]);
+  }, [activeTab, activeFilter, searchQuery, savedIds, allGames, isRecentlyAdded]);
 
   const showTrendingHero =
     activeTab === "trending" && activeFilter === "All" && !searchQuery;

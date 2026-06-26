@@ -217,10 +217,34 @@ function SidebarContent({
   const [roadmapOpen, setRoadmapOpen] = useState(false);
   const { savedIds } = useSavedGames();
 
+  const NEW_LISTING_DAYS = 30;
+
+  const isRecentlyAdded = (game: Game): boolean => {
+    if (!game.addedAt) return false;
+    const added = new Date(game.addedAt).getTime();
+    return Date.now() - added <= NEW_LISTING_DAYS * 24 * 60 * 60 * 1000;
+  };
+
   const getCount = (filter: string) => {
     if (filter === "Saved") return savedIds.length;
     if (filter === "All") return allGames.length;
     const lower = filter.toLowerCase();
+
+    if (lower === "movers") {
+      return allGames.filter((g) => g.priceChange24h > 0).length;
+    }
+    if (lower === "mayhem") {
+      return allGames.filter(
+        (g) => g.volume24h >= 1000 && Math.abs(g.priceChange24h) >= 10
+      ).length;
+    }
+    if (lower === "new") {
+      return allGames.filter(isRecentlyAdded).length;
+    }
+    if (lower === "market cap") {
+      return allGames.length;
+    }
+
     return allGames.filter(
       (g) =>
         g.genre.toLowerCase() === lower ||

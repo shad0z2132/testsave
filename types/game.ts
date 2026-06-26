@@ -33,4 +33,5 @@ export interface Game {
   playUrl?: string;
   tags: string[];
   trending?: boolean;
+  addedAt?: string; // ISO date the project was listed on SavePoint
 }
