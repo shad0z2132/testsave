@@ -76,7 +76,9 @@ export default function Home() {
     );
   }, [sortedGames]);
 
-  const featuredGame = sortedGames[0] || null;
+  const featuredGame = useMemo(() => {
+    return sortedGames.find((g) => g.featured) || sortedGames[0] || null;
+  }, [sortedGames]);
 
   const NEW_LISTING_DAYS = 30;
 

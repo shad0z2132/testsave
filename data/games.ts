@@ -301,6 +301,7 @@ export const games: Game[] = [
     playUrl: "https://lootscape.xyz/",
     tags: ["RPG", "Loot", "Adventure"],
     trending: false,
+    featured: true,
     addedAt: "2026-06-26",
   },
   {

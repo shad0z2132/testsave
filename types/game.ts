@@ -33,5 +33,6 @@ export interface Game {
   playUrl?: string;
   tags: string[];
   trending?: boolean;
+  featured?: boolean; // Editorial featured pick surfaced on Discover
   addedAt?: string; // ISO date the project was listed on SavePoint
 }
