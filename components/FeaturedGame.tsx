@@ -141,7 +141,7 @@ export function FeaturedGame({
           </span>
           <span className="flex h-2 w-2 rounded-full bg-primary shadow-[0_0_8px_rgba(204, 255, 0, 0.8)] animate-pulse-live" />
         </div>
-        <div className="flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-2.5 py-1 text-xs font-semibold text-primary">
+        <div className="flex items-center gap-1.5 rounded-full border border-primary/20 bg-[#0a0a0a] px-2.5 py-1 text-xs font-semibold text-primary">
           <Flame size={12} className="animate-pulse" />
           HOT
         </div>
