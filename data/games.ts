@@ -26,6 +26,7 @@ export const games: Game[] = [
     playUrl: "https://kintara.gg/play",
     tags: ["MMO", "P2E", "Fantasy"],
     trending: true,
+    featured: true,
   },
   {
     id: "pokequest",
@@ -301,7 +302,7 @@ export const games: Game[] = [
     playUrl: "https://lootscape.xyz/",
     tags: ["RPG", "Loot", "Adventure"],
     trending: false,
-    featured: true,
+    featured: false,
     addedAt: "2026-06-26",
   },
   {
